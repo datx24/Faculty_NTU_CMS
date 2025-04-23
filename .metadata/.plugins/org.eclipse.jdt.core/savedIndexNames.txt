@@ -1,4 +1,0 @@
-INDEX VERSION 1.134+E:\64CNTT_CLC2\Faculty_NTU_CMS\.metadata\.plugins\org.eclipse.jdt.core
-3413270776.index
-2517576518.index
-1865797976.index
