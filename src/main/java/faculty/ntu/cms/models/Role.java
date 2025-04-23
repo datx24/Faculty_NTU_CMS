@@ -35,10 +35,9 @@ public class Role {
     }
 
     public Role(String name, String decription, List<User> users) {
+        this(); // constructor mặc định để gán createdAt và updatedAt
         this.name = name;
         this.decription = decription;
-        this.created_at = LocalDateTime.now();
-        this.updated_at = LocalDateTime.now();
         this.users = users;
     }
 
