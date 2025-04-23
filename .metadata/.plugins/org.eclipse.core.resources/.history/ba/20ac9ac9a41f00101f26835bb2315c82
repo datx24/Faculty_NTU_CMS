@@ -1,0 +1,32 @@
+<div class="sidebar" style="width: 250px; height: 100vh; background-color: #f8f9fa; position: fixed; top: 0; left: 0; padding-top: 20px;">
+    <div class="p-3 text-center">
+        <!-- Logo và thông tin trường -->
+        <img src="/images/logo-ntu.png" alt="Logo ĐH Nha Trang" width="150" class="mb-3">
+        <h5>Khoa CNTT</h5>
+        <small>Đại học Nha Trang</small>
+    </div>
+    
+    <nav class="nav flex-column">
+        <!-- Link đến trang Dashboard -->
+        <a class="nav-link active" href="/admin/dashboard">
+            <i class="fas fa-home me-2"></i><span>Dashboard</span>
+        </a>
+        
+        <!-- Các mục menu khác -->
+        <a class="nav-link" href="/admin/users">
+            <i class="fas fa-users me-2"></i><span>Quản lý người dùng</span>
+        </a>
+        <a class="nav-link" href="/admin/posts">
+            <i class="fas fa-file-alt me-2"></i><span>Quản lý bài viết</span>
+        </a>
+        <a class="nav-link" href="/admin/videos">
+            <i class="fas fa-video me-2"></i><span>Quản lý video</span>
+        </a>
+        <a class="nav-link" href="/admin/events">
+            <i class="fas fa-calendar-alt me-2"></i><span>Quản lý sự kiện</span>
+        </a>
+        <a class="nav-link" href="/admin/settings">
+            <i class="fas fa-cogs me-2"></i><span>Cài đặt hệ thống</span>
+        </a>
+    </nav>
+</div>

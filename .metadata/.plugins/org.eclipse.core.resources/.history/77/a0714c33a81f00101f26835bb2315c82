@@ -1,0 +1,5 @@
+package faculty.ntu.cms.controllers;
+
+public class HomeController {
+
+}
