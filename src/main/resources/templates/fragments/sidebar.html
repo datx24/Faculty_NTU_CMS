@@ -1,3 +1,4 @@
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div class="sidebar">
         <div class="p-3 text-center">
             <img src="/images/logo-ntu.png" alt="Logo ĐH Nha Trang" width="200" class="mb-3">
@@ -20,8 +21,10 @@
             <a class="nav-link" href="/admin/settings">
                 <i class="fas fa-cog me-2"></i><span>Cài đặt</span>
             </a>
-            <a class="nav-link" href="/logout">
-                <i class="fas fa-sign-out-alt me-2"></i><span>Đăng xuất</span>
-            </a>
+            <form th:action="@{/logout}" method="post" style="margin: 0;">
+                <button type="submit" class="nav-link">
+                    <i class="fas fa-sign-out-alt me-2"></i><span>Đăng xuất</span>
+                </button>
+            </form>
         </nav>
     </div>
