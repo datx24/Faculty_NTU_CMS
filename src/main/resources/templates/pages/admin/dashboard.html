@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -30,6 +30,19 @@
             transition: all 0.3s;
         }
         .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .sidebar .nav-link[type="submit"] {
+            background: none;
+            border: none;
+            text-align: left;
+            width: 92%;
+            cursor: pointer;
+            appearance: none;
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+        }
+        .sidebar .nav-link[type="submit"]:hover {
             background-color: #2563eb;
             color: white;
         }
@@ -99,6 +112,7 @@
         <!-- Dashboard Content -->
         <div class="container-fluid mt-4">
             <h2 class="mb-4">Dashboard - Khoa CNTT</h2>
+            <p>Xin chào, <span th:text="${name != '' ? name : 'Admin'}">Admin</span>!</p>
             <div class="row">
                 <!-- Card 1: Tổng số Sinh viên -->
                 <div class="col-md-3 mb-4">
