@@ -2,15 +2,21 @@ package faculty.ntu.cms.models;
 
 import lombok.*;
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
+import java.util.Collections;
 
 @Entity
 @Table(name = "users")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
@@ -51,4 +57,11 @@ public class User {
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL)
     private List<Notification> notifications;
+
+    // UserDetails Implementation
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        String roleName = role != null ? role.getName() : "ROLE_USER";
+        return Collections.singletonList(new SimpleGrantedAuthority(roleName));
+    }
 }
