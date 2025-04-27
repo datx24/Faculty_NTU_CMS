@@ -19,7 +19,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // Cho phép truy cập không cần đăng nhập
                         .requestMatchers("/dashboard/**").authenticated() // Yêu cầu đăng nhập để vào dashboard
-                        .anyRequest().authenticated()
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login") // Trang đăng nhập tùy chỉnh
