@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Thông báo</title>
+</head>
+<body>
+<h1>Thông báo Khoa CNTT</h1>
+<ul>
+  <li th:each="n : ${notifications}">
+    <a th:href="@{/khoa-it/thong-bao/{id}(id=${n.id})}" th:text="${n.title}"></a>
+  </li>
+</ul>
+</body>
+</html>
