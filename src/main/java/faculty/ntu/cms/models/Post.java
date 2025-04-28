@@ -36,11 +36,11 @@ public class Post {
 
     @Enumerated(EnumType.STRING)
     @Column(length = 20)
-    private PostStatus status = PostStatus.DRAFT;
+    private PostStatus status = PostStatus.draft;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "posts_status", length = 20)
-    private PostsStatus postsStatus = PostsStatus.ACTIVE;
+    private PostsStatus postsStatus = PostsStatus.active;
 
     @Column(name = "view_count")
     private Integer viewCount = 0;
@@ -52,10 +52,10 @@ public class Post {
     private LocalDateTime updatedAt = LocalDateTime.now();
 
     public enum PostStatus {
-        PUBLISHED, DRAFT, PENDING
+        published, draft, pending
     }
 
     public enum PostsStatus {
-        ACTIVE, INACTIVE
+        active, inactive
     }
 }
