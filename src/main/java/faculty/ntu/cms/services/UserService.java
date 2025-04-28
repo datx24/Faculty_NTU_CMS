@@ -20,7 +20,7 @@ public class UserService implements UserDetailsService {
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
         return user;
     }
-
+    
     //phương thức đăng kí
     public void registerUser(User user) {
         userRepository.save(user);

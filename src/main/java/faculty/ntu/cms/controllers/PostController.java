@@ -1,6 +1,9 @@
 package faculty.ntu.cms.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +12,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import faculty.ntu.cms.models.Post;
+import faculty.ntu.cms.models.User;
+import faculty.ntu.cms.services.CategoryService;
 import faculty.ntu.cms.services.PostService;
+import faculty.ntu.cms.services.UserService;
 
 @Controller
 @RequestMapping("/admin/posts")
@@ -17,26 +23,39 @@ public class PostController {
     
     @Autowired
     private PostService postService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private CategoryService categoryService;
 
 
     public PostController() {
- 
+        super();
     }
     
-    @GetMapping
+    @GetMapping("")
     public String listPosts(Model model) {
         model.addAttribute("posts", postService.getAllPosts());
-        return "admin/posts/list"; 
+        return "pages/admin/posts/list"; 
     }
 
     @GetMapping("/create")
     public String showCreateForm(Model model) {
+        model.addAttribute("categories",categoryService.getAllCategories());
         model.addAttribute("post", new Post());
-        return "admin/posts/create"; 
+        return "pages/admin/posts/create"; 
     }
 
     @PostMapping("/create")
     public String createPost(@ModelAttribute("post") Post post) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if(auth != null && auth.getPrincipal() instanceof UserDetails){
+            UserDetails userdetails = (UserDetails) auth.getPrincipal();
+            // User author = userService.loadUserByUsername(userdetails.getUsername());
+            post.setAuthor((User) userdetails);
+            System.err.println(userdetails);
+        }
+
         postService.savePost(post);
         return "redirect:/admin/posts";
     }
@@ -47,8 +66,6 @@ public class PostController {
                 .ifPresentOrElse(
                         post -> model.addAttribute("post", post),
                         () -> {
-                            // Handle not found scenario (e.g., redirect with error message)
-                            // For simplicity, redirecting back to the list
                             throw new IllegalArgumentException("Post with ID " + id + " not found.");
                         }
                 );
@@ -59,8 +76,6 @@ public class PostController {
     public String updatePost(@PathVariable Integer id, @ModelAttribute("post") Post updatedPost) {
         Post savedPost = postService.updatePost(id, updatedPost);
         if (savedPost == null) {
-            // Handle update failure (e.g., post not found)
-            // For simplicity, redirecting back to the list
             throw new IllegalArgumentException("Post with ID " + id + " not found for update.");
         }
         return "redirect:/admin/posts";
