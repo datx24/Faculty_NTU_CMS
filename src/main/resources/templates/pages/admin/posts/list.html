@@ -120,19 +120,21 @@
                         <table class="table table-bordered">
                             <thead>
                                 <tr>
-                                    <th>Mã Sinh viên</th>
-                                    <th>Tên Sinh viên</th>
-                                    <th>Năm nhập học</th>
-                                    <th>Ngành học</th>
+                                    <th>id bài viết</th>
+                                    <th>Tiêu đề</th>
+                                    <th>slug</th>
+                                    <th>trạng thái</th>
+                                    <th>tác giả </th>
                                     <th>CRUD Action</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <tr th:each="post : ${posts}"> 
-                                    <td th:text="${post.postId}"></td>
-                                    <td th:text="${post.postName}"></td>
-                                    <td th:text="${post.admissionYear}"></td>
-                                    <td th:text="${post.major}"></td>
+                                    <td th:text="${post.id}"></td>
+                                    <td th:text="${post.title}"></td>
+                                    <td th:text="${post.slug}"></td>
+                                    <td th:text="${post.postsStatus}"></td>
+                                    <!-- <td th:text="${post.author}"></td> stack overflow, what the fuck? bidirectional mapping something, fix later (Bidirectional Relationship with Flawed toString() or Implicit Eager Loading)--> 
                                     <td>
                                         <a href="#" class="btn btn-sm btn-primary">Xem</a>
                                         <a href="#" class="btn btn-sm btn-warning">Sửa</a>

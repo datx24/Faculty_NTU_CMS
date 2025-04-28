@@ -53,7 +53,6 @@ public class PostController {
             UserDetails userdetails = (UserDetails) auth.getPrincipal();
             // User author = userService.loadUserByUsername(userdetails.getUsername());
             post.setAuthor((User) userdetails);
-            System.err.println(userdetails);
         }
 
         postService.savePost(post);
