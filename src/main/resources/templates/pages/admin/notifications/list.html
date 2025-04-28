@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Danh sách thông báo</title>
+</head>
+<body>
+<h1>Danh sách thông báo</h1>
+<a href="/admin/khoa-it/notifications/new">Thêm mới</a>
+<table border="1">
+  <tr>
+    <th>ID</th>
+    <th>Tiêu đề</th>
+    <th>Trạng thái</th>
+    <th>Hành động</th>
+  </tr>
+  <tr th:each="n : ${notifications}">
+    <td th:text="${n.id}"></td>
+    <td th:text="${n.title}"></td>
+    <td th:text="${n.isActive} ? 'Hoạt động' : 'Không hoạt động'"></td>
+    <td>
+      <a th:href="@{/admin/khoa-it/notifications/{id}/edit(id=${n.id})}">Sửa</a>
+      <a th:href="@{/admin/khoa-it/notifications/{id}/delete(id=${n.id})}">Xóa</a>
+    </td>
+  </tr>
+</table>
+</body>
+</html>
