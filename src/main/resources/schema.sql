@@ -105,4 +105,5 @@ link_type ENUM('internal', 'external', 'custom') NOT NULL,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     FOREIGN KEY (parent_id) REFERENCES menu_items(id),
     FOREIGN KEY (menu_items_link_type_external) REFERENCES menu_items(id) 
-);-- Giả định liên kết đến chính bảng
+);
+
