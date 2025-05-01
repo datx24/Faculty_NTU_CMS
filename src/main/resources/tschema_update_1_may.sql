@@ -9,7 +9,7 @@ ADD CONSTRAINT fk_events_recap_post FOREIGN KEY (recap_post) REFERENCES posts(id
 
 ALTER TABLE notifications 
 ADD COLUMN announcement_type ENUM('info', 'warning', 'success') DEFAULT 'info' AFTER is_active,
-ADD COLUMN priority INT AFTER announcement_type;
+ADD COLUMN piority INT AFTER announcement_type;
 
 ALTER TABLE notifications CHANGE COLUMN piority priority INT;
 
