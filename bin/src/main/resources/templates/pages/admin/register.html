@@ -27,28 +27,26 @@
 <body>
 <div class="register-container">
   <h2 class="text-center mb-4">Đăng ký</h2>
-  <form th:action="@{/register}" method="post" th:object="${user}">
+  <form th:action="@{/register}" method="post">
     <div class="mb-3">
-      <label class="form-label">Họ và tên</label>
-      <input type="text" class="form-control" th:field="*{name}" required>
+      <label for="name" class="form-label">Họ và tên</label>
+      <input type="text" class="form-control" id="name" name="name" required>
     </div>
     <div class="mb-3">
-      <label class="form-label">Tên đăng nhập</label>
-      <input type="text" class="form-control" th:field="*{username}" required>
+      <label for="username" class="form-label">Tên đăng nhập</label>
+      <input type="text" class="form-control" id="username" name="username" required>
     </div>
     <div class="mb-3">
-      <label class="form-label">Email</label>
-      <input type="email" class="form-control" th:field="*{email}" required>
+      <label for="email" class="form-label">Email</label>
+      <input type="email" class="form-control" id="email" name="email" required>
     </div>
     <div class="mb-3">
-      <label class="form-label">Mật khẩu</label>
-      <input type="password" class="form-control" th:field="*{password}" required>
+      <label for="password" class="form-label">Mật khẩu</label>
+      <input type="password" class="form-control" id="password" name="password" required>
     </div>
-    <div th:if="${error}" class="text-danger mb-2" th:text="${error}"></div>
     <button type="submit" class="btn btn-primary w-100">Đăng ký</button>
   </form>
   <p class="text-center mt-3">Đã có tài khoản? <a th:href="@{/login}">Đăng nhập</a></p>
 </div>
 </body>
-
 </html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Thêm/Sửa thông báo</title>
+</head>
+<body>
+<h1>Thêm/Sửa thông báo</h1>
+<form th:action="@{/admin/khoa-it/notifications}" th:object="${notification}" method="post" enctype="multipart/form-data">
+  <input type="hidden" th:field="*{id}" />
+  <label>Tiêu đề:</label>
+  <input type="text" th:field="*{title}" required />
+  <br/>
+  <label>Nội dung:</label>
+  <textarea th:field="*{message}" required></textarea>
+  <br/>
+  <label>Ngày bắt đầu:</label>
+  <input type="datetime-local" th:field="*{startDate}" required />
+  <br/>
+  <label>Ngày kết thúc:</label>
+  <input type="datetime-local" th:field="*{endDate}" required />
+  <br/>
+  <label>Hoạt động:</label>
+  <input type="checkbox" th:field="*{isActive}" />
+  <br/>
+<!--  <label>Tập tin:</label>-->
+<!--  <input type="file" name="file" />-->
+<!--  <br/>-->
+  <button type="submit">Lưu</button>
+</form>
+</body>
+</html>
