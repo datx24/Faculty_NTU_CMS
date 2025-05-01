@@ -9,6 +9,7 @@ hướng dẫn db migration:
 - đối với anh Đạt (đã có db trong máy, chạy script update db): 
     git pull về và chỉ chạy file tschema_update_1_may.sql vào mysql ( USE facultyntucms)
 
+nhớ chạy 1 lần thôi nha ae, lỗi thì drop toàn bộ db làm lại từ đầu :)) 
 ps: với cả để mật khẩu cho mysql đi , 123 cũng được
 
 
