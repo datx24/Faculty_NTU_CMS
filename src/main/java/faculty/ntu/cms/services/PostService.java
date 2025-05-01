@@ -41,7 +41,6 @@ public class PostService {
             existingPost.setSlug(updatedPost.getSlug());
             existingPost.setExcerpt(updatedPost.getExcerpt());
             existingPost.setContent(updatedPost.getContent());
-            existingPost.setAuthor(updatedPost.getAuthor());
             existingPost.setCategory(updatedPost.getCategory());
             existingPost.setStatus(updatedPost.getStatus());
             existingPost.setPostsStatus(updatedPost.getPostsStatus());

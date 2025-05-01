@@ -15,7 +15,7 @@ import faculty.ntu.cms.models.Post;
 import faculty.ntu.cms.models.User;
 import faculty.ntu.cms.services.CategoryService;
 import faculty.ntu.cms.services.PostService;
-import faculty.ntu.cms.services.UserService;
+
 
 @Controller
 @RequestMapping("/admin/posts")
@@ -23,8 +23,7 @@ public class PostController {
     
     @Autowired
     private PostService postService;
-    @Autowired
-    private UserService userService;
+    
     @Autowired
     private CategoryService categoryService;
 
@@ -61,6 +60,7 @@ public class PostController {
 
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
+        model.addAttribute("categories",categoryService.getAllCategories());
         postService.getPostById(id)
                 .ifPresentOrElse(
                         post -> model.addAttribute("post", post),
@@ -68,7 +68,7 @@ public class PostController {
                             throw new IllegalArgumentException("Post with ID " + id + " not found.");
                         }
                 );
-        return "admin/posts/edit";
+        return "pages/admin/posts/edit";
     }
 
     @PostMapping("/edit/{id}")

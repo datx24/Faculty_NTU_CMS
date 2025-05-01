@@ -111,6 +111,7 @@
         <!-- Dashboard Content -->
         <div class="container-fluid mt-4">
             <h2 class="mb-4">Bài đăng</h2>
+            <a th:href="@{/admin/posts/create}" class="btn btn-success mb-4">Thêm mới</a>
             
             <!-- Table Section (Replaces Chart Section) -->
             <div class="row">
@@ -137,7 +138,7 @@
                                     <!-- <td th:text="${post.author}"></td> stack overflow, what the fuck? bidirectional mapping something, fix later (Bidirectional Relationship with Flawed toString() or Implicit Eager Loading)--> 
                                     <td>
                                         <a href="#" class="btn btn-sm btn-primary">Xem</a>
-                                        <a href="#" class="btn btn-sm btn-warning">Sửa</a>
+                                        <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
                                         <a href="#" class="btn btn-sm btn-danger">Xóa</a>
                                     </td>
                                 </tr>

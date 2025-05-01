@@ -172,6 +172,29 @@
     <!-- Include Footer -->
  	<th:block th:replace="~{fragments/footer}"></th:block>
 
-   
+   <script>
+        function generateSlug(str) {
+            let slug = str.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-') 
+                .replace(/-+/g, '-') 
+                .replace(/^-|-$/g, '');
+
+            if (slug.length > 100) {
+                slug = slug.substring(0, 100);
+            }
+            return slug;
+        }
+
+        const titleInput = document.getElementById('title');
+        const slugInput = document.getElementById('slug');
+
+        titleInput.addEventListener('input', () => {
+
+            const slug = generateSlug(titleInput.value);
+            
+
+            slugInput.value = slug;
+        });
+   </script>
 </body>
 </html>

@@ -13,7 +13,7 @@ public class DashboardController {
 	public String getDashBoard(Model m) {
 		String name = "";
 		Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-		if (principal instanceof User) { // Ép kiểu trực tiếp về User
+		if (principal instanceof User) { 
 			name = ((User) principal).getName();
 		}
 		m.addAttribute("name", name);
