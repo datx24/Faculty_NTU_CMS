@@ -8,7 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin/khoa-it/notifications")
+@RequestMapping("/admin/notifications")
 public class NotificationController {
     @Autowired
     private NotificationService notificationService;
