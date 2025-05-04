@@ -111,7 +111,7 @@
         <div class="container-fluid mt-4">
             <h2 class="mb-4">Tạo Bài Viết Mới</h2>
 
-            <form th:action="@{/admin/posts/create}" th:method="post">
+            <form th:action="@{/admin/posts/create}" th:method="post" enctype="multipart/form-data">
                 <div class="card p-4 mb-4">
                     <div class="form-group">
                         <label for="title">Tiêu đề:</label>
@@ -122,6 +122,22 @@
                         <label for="slug">Slug (URL thân thiện):</label>
                         <input type="text" class="form-control" id="slug" name="slug">
                         <small class="form-text text-muted">Để trống sẽ tự động tạo.</small>
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="thumbnail">Ảnh minh họa:</label>
+                        <div class="custom-file mb-2">
+                            <input type="file" class="custom-file-input" id="thumbnailUpload" name="thumbnailFile" accept="image/*">
+
+                        </div>
+                        <!-- Hidden field to store the final image path -->
+                        <input type="hidden" id="thumbnail" name="thumbnail">
+                        <!-- Image preview container -->
+                        <div id="thumbnailPreviewContainer" class="mt-2" style="display: none;">
+                            <img id="thumbnailPreview" src="#" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                            <button type="button" class="btn btn-sm btn-danger ml-2" onclick="clearThumbnail()">Xóa ảnh</button>
+                        </div>
+                        <small class="form-text text-muted">Tải lên ảnh minh họa cho bài viết.</small>
                     </div>
 
                     <div class="form-group">
@@ -195,6 +211,27 @@
 
             slugInput.value = slug;
         });
+
+        document.getElementById('thumbnailUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    document.getElementById('thumbnailPreview').src = event.target.result;
+                    document.getElementById('thumbnailPreviewContainer').style.display = 'block';
+                    document.getElementById('thumbnail').value = file.name; // Or set to a temporary path
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function clearThumbnail() {
+            document.getElementById('thumbnailUpload').value = '';
+            document.getElementById('thumbnail').value = '';
+            document.getElementById('thumbnailPreviewContainer').style.display = 'none';
+        }
    </script>
 </body>
 </html>

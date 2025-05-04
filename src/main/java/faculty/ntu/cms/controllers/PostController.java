@@ -11,11 +11,14 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+
 import faculty.ntu.cms.models.Post;
 import faculty.ntu.cms.models.User;
 import faculty.ntu.cms.services.CategoryService;
 import faculty.ntu.cms.services.PostService;
-
+import faculty.ntu.cms.services.FileStorageService;
 
 @Controller
 @RequestMapping("/admin/posts")
@@ -26,6 +29,9 @@ public class PostController {
     
     @Autowired
     private CategoryService categoryService;
+
+    @Autowired
+    private FileStorageService fileStorageService;
 
 
     public PostController() {
@@ -46,12 +52,21 @@ public class PostController {
     }
 
     @PostMapping("/create")
-    public String createPost(@ModelAttribute("post") Post post) {
+    public String createPost(@ModelAttribute("post") Post post,  @RequestParam("thumbnailFile") MultipartFile thumbnailFile) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null && auth.getPrincipal() instanceof UserDetails){
             UserDetails userdetails = (UserDetails) auth.getPrincipal();
             // User author = userService.loadUserByUsername(userdetails.getUsername());
             post.setAuthor((User) userdetails);
+        }
+        if (!thumbnailFile.isEmpty()) {
+            try {
+                String thumbnailPath = fileStorageService.storeFile(thumbnailFile);
+                post.setThumbnail(thumbnailPath);
+            } catch (Exception e) {
+                
+                return "redirect:/admin/posts/create";
+            }
         }
 
         postService.savePost(post);
