@@ -13,36 +13,43 @@ import java.util.List;
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id;
+    private Long id;
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "menu_name", nullable = false)
+    private String menuName = "primary";
+
+    @Column(nullable = false)
     private String label;
 
-    @Enumerated(EnumType.STRING)
-    @Column(name = "link_type", nullable = false, length = 20)
-    private LinkType linkType;
-
-    @ManyToOne
-    @JoinColumn(name = "menu_items_link_type_external")
-    private MenuItem menuItemsLinkTypeExternal;
-
-    @Column(name = "custom_url", length = 255)
-    private String customUrl;
+    @Column(nullable = false)
+    private String path = "#";
 
     @ManyToOne
     @JoinColumn(name = "parent_id")
     private MenuItem parent;
 
-    @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
-    private List<MenuItem> children;
+    @Column(name = "menu_order", nullable = false)
+    private Integer order = 0;
 
-    @Column(name = "created_at", nullable = false, updatable = false)
+    @Column(name = "is_active")
+    private Boolean active = true;
+
+    @Column(name = "created_at", updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
 
-    public enum LinkType {
-        INTERNAL, EXTERNAL, CUSTOM
+    @OneToMany(mappedBy = "parent")
+    private List<MenuItem> children;
+
+    public void addChild(MenuItem child) {
+        children.add(child);
+        child.setParent(this);
+    }
+
+    public void removeChild(MenuItem child) {
+        children.remove(child);
+        child.setParent(null);
     }
 }

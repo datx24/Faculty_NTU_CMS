@@ -29,6 +29,10 @@ public class Notification {
     @Column(name = "is_active")
     private Boolean isActive = true;
 
+    @Enumerated(EnumType.STRING)
+    @Column(name = "announcement_type")
+    private AnnouncementType announcementType = AnnouncementType.INFO;
+
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
@@ -38,4 +42,9 @@ public class Notification {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    public enum AnnouncementType {
+        INFO, WARNING, SUCCESS
+    }
+
 }

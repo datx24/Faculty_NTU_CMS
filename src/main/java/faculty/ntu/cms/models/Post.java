@@ -45,6 +45,9 @@ public class Post {
     @Column(name = "view_count")
     private Integer viewCount = 0;
 
+    @Column(length = 255)
+    private String thumbnail;
+    
     @Column(name = "created_at", nullable = false, updatable = false)
     private LocalDateTime createdAt = LocalDateTime.now();
 

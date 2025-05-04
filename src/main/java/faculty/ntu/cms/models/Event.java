@@ -28,6 +28,16 @@ public class Event {
 
     @Column(name = "is_active")
     private Boolean isActive = true;
+    
+    @Column(length = 255)
+    private String banner;
+
+    @Column(name = "registration_url", length = 275)
+    private String registrationUrl;
+
+    @ManyToOne
+    @JoinColumn(name = "recap_post")
+    private Post recapPost;
 
     @ManyToOne
     @JoinColumn(name = "created_by", nullable = false)
