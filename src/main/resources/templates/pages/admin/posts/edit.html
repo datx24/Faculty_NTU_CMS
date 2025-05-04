@@ -126,6 +126,21 @@ margin-left: 70px;
                     <input type="text" class="form-control" id="slug" th:field="*{slug}">
                     <small class="form-text text-muted">Để trống sẽ tự động tạo nếu chưa có.</small>
                 </div>
+                <div class="form-group ">
+                    <label for="thumbnail">Ảnh minh họa:</label>
+                    <div class="custom-file mb-2">
+                        <input type="file" class="custom-file-input" id="thumbnailUpload" name="thumbnailFile" accept="image/*">
+
+                    </div>
+                    <!-- Hidden field to store the final image path -->
+                    <input type="hidden" id="thumbnail" name="thumbnail">
+                    <!-- Image preview container -->
+                    <div id="thumbnailPreviewContainer" class="mt-2" >
+                        <img id="thumbnailPreview" th:src="*{thumbnail}" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                        <button type="button" class="btn btn-sm btn-danger ml-2" onclick="clearThumbnail()">Xóa ảnh</button>
+                    </div>
+                    <small class="form-text text-muted">Tải lên ảnh minh họa cho bài viết.</small>
+                </div>
 
                 <div class="form-group">
                     <label for="excerpt">Mô tả ngắn:</label>
