@@ -2,30 +2,261 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
   <title>Thêm/Sửa thông báo</title>
+  <!-- Google Fonts: Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+  <!-- Font Awesome for icons -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <!-- CKEditor 5 -->
+  <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
+  <!-- Custom CSS -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f7fa;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    /* Sidebar */
+    .sidebar {
+      min-height: 100vh;
+      background-color: #1e3a8a;
+      color: white;
+      position: fixed;
+      width: 250px;
+      transition: width 0.3s ease;
+      z-index: 1000;
+    }
+    .sidebar .nav-link {
+      color: #d1d5db;
+      padding: 12px 20px;
+      border-radius: 5px;
+      margin: 5px 10px;
+      display: flex;
+      align-items: center;
+      transition: background-color 0.3s, color 0.3s;
+    }
+    .sidebar .nav-link:hover, .sidebar .nav-link.active {
+      background-color: #2563eb;
+      color: white;
+    }
+    .sidebar .nav-link[type="submit"] {
+      background: none;
+      border: none;
+      text-align: left;
+      width: 100%;
+      cursor: pointer;
+    }
+    .sidebar .nav-link[type="submit"]:hover {
+      background-color: #2563eb;
+      color: white;
+    }
+    /* Content */
+    .content {
+      margin-left: 250px;
+      padding: 20px;
+      min-height: 100vh;
+      transition: margin-left 0.3s ease;
+    }
+    /* Form Container */
+    .form-container {
+      max-width: 600px;
+      margin: 40px auto;
+      padding: 30px;
+      background: #ffffff;
+      border-radius: 10px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-container:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
+    }
+    h1 {
+      color: #343a40;
+      font-weight: 700;
+      text-align: center;
+      margin-bottom: 25px;
+    }
+    .form-label {
+      font-weight: 500;
+      color: #495057;
+    }
+    .form-control, .form-check-input {
+      border-radius: 8px;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .form-control:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+    .btn-primary {
+      background-color: #2563eb;
+      border: none;
+      padding: 12px 30px;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+    .btn-primary:hover {
+      background-color: #1e3a8a;
+      transform: scale(1.05);
+    }
+    .form-check-label {
+      margin-left: 10px;
+      color: #495057;
+    }
+    /* CKEditor Styling */
+    .ck-editor__editable {
+      min-height: 200px;
+      border-radius: 8px;
+      border: 1px solid #ced4da;
+      transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    }
+    .ck-editor__editable:focus {
+      border-color: #2563eb;
+      box-shadow: 0 0 8px rgba(37, 99, 235, 0.3);
+    }
+    .ck-toolbar {
+      border-radius: 8px 8px 0 0;
+      border: 1px solid #ced4da;
+      background: #f8f9fa;
+    }
+    /* Footer */
+    .footer {
+      background-color: #1e3a8a;
+      color: white;
+      padding: 40px 20px;
+      margin-left: 250px;
+      border-top: 4px solid #2563eb;
+      width: calc(100% - 250px);
+    }
+    .footer a {
+      color: #d1d5db;
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer a:hover {
+      color: #ffffff;
+    }
+    .footer .social-icons a {
+      font-size: 1.5rem;
+      margin: 0 10px;
+      color: #d1d5db;
+    }
+    .footer .social-icons a:hover {
+      color: #ffffff;
+    }
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .sidebar {
+        width: 70px;
+      }
+      .sidebar .nav-link span {
+        display: none;
+      }
+      .content {
+        margin-left: 70px;
+      }
+      .footer {
+        margin-left: 70px;
+        width: calc(100% - 70px);
+      }
+      .form-container {
+        margin: 20px;
+        padding: 20px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+      .ck-editor__editable {
+        min-height: 150px;
+      }
+    }
+  </style>
 </head>
 <body>
-<h1>Thêm/Sửa thông báo</h1>
-<form th:action="@{/admin/khoa-it/notifications}" th:object="${notification}" method="post" enctype="multipart/form-data">
-  <input type="hidden" th:field="*{id}" />
-  <label>Tiêu đề:</label>
-  <input type="text" th:field="*{title}" required />
-  <br/>
-  <label>Nội dung:</label>
-  <textarea th:field="*{message}" required></textarea>
-  <br/>
-  <label>Ngày bắt đầu:</label>
-  <input type="datetime-local" th:field="*{startDate}" required />
-  <br/>
-  <label>Ngày kết thúc:</label>
-  <input type="datetime-local" th:field="*{endDate}" required />
-  <br/>
-  <label>Hoạt động:</label>
-  <input type="checkbox" th:field="*{isActive}" />
-  <br/>
-<!--  <label>Tập tin:</label>-->
-<!--  <input type="file" name="file" />-->
-<!--  <br/>-->
-  <button type="submit">Lưu</button>
-</form>
+<!-- Sidebar Fragment -->
+<th:block th:replace="~{fragments/sidebar}"></th:block>
+
+<!-- Main Content -->
+<div class="content">
+  <!-- Navbar Fragment -->
+  <th:block th:replace="~{fragments/navbar}"></th:block>
+
+  <!-- Form -->
+  <div class="container">
+    <div class="form-container">
+      <h1>Thêm/Sửa thông báo</h1>
+      <form th:action="@{/admin/khoa-it/notifications}" th:object="${notification}" method="post" enctype="multipart/form-data">
+        <input type="hidden" th:field="*{id}" />
+
+        <div class="mb-3">
+          <label for="title" class="form-label">Tiêu đề:</label>
+          <input type="text" th:field="*{title}" class="form-control" id="title" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="message" class="form-label">Nội dung:</label>
+          <textarea th:field="*{message}" class="form-control" id="message" required></textarea>
+        </div>
+
+        <div class="mb-3">
+          <label for="startDate" class="form-label">Ngày bắt đầu:</label>
+          <input type="datetime-local" th:field="*{startDate}" class="form-control" id="startDate" required />
+        </div>
+
+        <div class="mb-3">
+          <label for="endDate" class="form-label">Ngày kết thúc:</label>
+          <input type="datetime-local" th:field="*{endDate}" class="form-control" id="endDate" required />
+        </div>
+
+        <div class="mb-3 form-check">
+          <input type="checkbox" th:field="*{isActive}" class="form-check-input" id="isActive" />
+          <label for="isActive" class="form-check-label">Hoạt động</label>
+        </div>
+
+        <!-- Uncomment if file upload is needed -->
+        <!--
+        <div class="mb-3">
+          <label for="file" class="form-label">Tập tin:</label>
+          <input type="file" name="file" class="form-control" id="file" />
+        </div>
+        -->
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary">Lưu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Footer Fragment -->
+<th:block th:replace="~{fragments/footer}"></th:block>
+
+<!-- Bootstrap 5 JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
+<!-- CKEditor 5 Initialization -->
+<script>
+  ClassicEditor
+    .create(document.querySelector('#message'), {
+      toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
+      height: '200px'
+    })
+    .then(editor => {
+      // Sync CKEditor content with Thymeleaf form field
+      editor.model.document.on('change:data', () => {
+        const data = editor.getData();
+        document.querySelector('#message').value = data;
+      });
+      // Ensure initial content is loaded from Thymeleaf
+      editor.setData(document.querySelector('#message').value);
+    })
+    .catch(error => {
+      console.error('CKEditor initialization failed:', error);
+    });
+</script>
 </body>
 </html>
