@@ -72,7 +72,7 @@
             color: var(--primary-color);
             font-weight: 700;
         }
-        .event-section, .notifications-section {
+        .notifications-section {
             background: linear-gradient(135deg, #ffffff, #f8f9fa);
             padding: 20px;
             margin-top: 30px;
@@ -80,23 +80,20 @@
             box-shadow: 0 6px 20px var(--shadow-color);
             transition: transform 0.3s ease;
         }
-        .event-section h3, .notifications-section h4 {
+        .notifications-section h4 {
             text-align: center;
             margin-bottom: 20px;
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 1.6rem;
+            font-size: 1.4rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        .notifications-section h4 {
-            font-size: 1.4rem;
-        }
-        .event-section .list-group, .notifications-section .list-group {
+        .notifications-section .list-group {
             border-radius: 8px;
             overflow: hidden;
         }
-        .event-section .list-group-item, .notification-item {
+        .notification-item {
             background-color: #ffffff;
             border: none;
             padding: 12px;
@@ -105,42 +102,19 @@
             box-shadow: 0 2px 8px var(--shadow-color);
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .event-section .list-group-item:hover, .notification-item:hover {
+        .notification-item:hover {
             background-color: var(--event-hover-color);
             transform: translateY(-3px);
         }
-        .event-banner {
-            width: 70px;
-            height: 70px;
-            object-fit: cover;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px var(--shadow-color);
-            transition: transform 0.3s ease;
-        }
-        .event-banner:hover {
-            transform: scale(1.1);
-        }
-        .event-content {
-            flex-grow: 1;
-        }
-        .event-title, .notification-title {
+        .notification-title {
             font-size: 0.9rem;
             font-weight: 600;
             color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        .event-title:hover, .notification-title:hover {
+        .notification-title:hover {
             color: var(--accent-color);
-        }
-        .event-time, .notification-dates {
-            font-size: 0.8rem;
-            color: #6c757d;
-            margin-top: 5px;
-        }
-        .event-time i, .notification-dates i {
-            color: var(--accent-color);
-            margin-right: 5px;
         }
         .notification-message {
             font-size: 0.8rem;
@@ -171,6 +145,15 @@
         .notification-type.error {
             background-color: #f8d7da;
             color: #721c24;
+        }
+        .notification-dates {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .notification-dates i {
+            color: var(--accent-color);
+            margin-right: 5px;
         }
         .card {
             border: none;
@@ -203,6 +186,86 @@
             background-color: var(--secondary-color);
             transform: translateY(-2px);
         }
+        .event-section {
+            background: linear-gradient(135deg, #ffffff, #f8f9fa);
+            padding: 20px;
+            margin-top: 30px;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px var(--shadow-color);
+            transition: transform 0.3s ease;
+        }
+        .event-section h3 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: var(--primary-color);
+            font-weight: 700;
+            font-size: 1.6rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        .event-section .list-group {
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .event-item {
+            background-color: #ffffff;
+            border: none;
+            padding: 12px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: background-color 0.3s ease, transform 0.3s ease;
+            display: flex;
+            align-items: center;
+        }
+        .event-item:hover {
+            background-color: var(--event-hover-color);
+            transform: translateY(-3px);
+        }
+        .event-banner {
+            width: 70px;
+            height: 70px;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            transition: transform 0.3s ease;
+            margin-right: 15px;
+        }
+        .event-banner:hover {
+            transform: scale(1.1);
+        }
+        .event-content {
+            flex-grow: 1;
+        }
+        .event-title {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--primary-color);
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        .event-title:hover {
+            color: var(--accent-color);
+        }
+        .event-time {
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-top: 5px;
+        }
+        .event-time i {
+            color: var(--accent-color);
+            margin-right: 5px;
+        }
+        .event-status {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: inline-block;
+            background-color: #e7f3fe;
+            color: #31708f;
+        }
         .footer {
             background-color: var(--primary-color);
             color: white;
@@ -228,7 +291,21 @@
             .navbar a {
                 padding: 10px 15px;
             }
-            .news-section, .event-section, .notifications-section {
+            .news-section, .notifications-section {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .notification-title {
+                font-size: 0.85rem;
+            }
+            .notification-message, .notification-dates {
+                font-size: 0.75rem;
+            }
+            .notification-type {
+                font-size: 0.7rem;
+                padding: 2px 6px;
+            }
+            .event-section {
                 padding: 15px;
                 margin: 15px 0;
             }
@@ -236,16 +313,13 @@
                 width: 50px;
                 height: 50px;
             }
-            .event-title, .notification-title {
+            .event-title {
                 font-size: 0.85rem;
             }
-            .event-time, .notification-dates {
+            .event-time {
                 font-size: 0.75rem;
             }
-            .notification-message {
-                font-size: 0.75rem;
-            }
-            .notification-type {
+            .event-status {
                 font-size: 0.7rem;
                 padding: 2px 6px;
             }
