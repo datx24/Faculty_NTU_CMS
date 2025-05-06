@@ -118,33 +118,73 @@
                 <div class="col-md-12">
                     <div class="card p-4 mb-4">
                         <h5>Danh sách Sinh viên</h5>
+<!--                        <table class="table table-bordered">-->
+<!--                            <thead>-->
+<!--                                <tr>-->
+<!--                                    <th>id bài viết</th>-->
+<!--                                    <th>Tiêu đề</th>-->
+<!--                                    <th>slug</th>-->
+<!--                                    <th>trạng thái</th>-->
+<!--                                    <th>tác giả </th>-->
+<!--                                    <th>CRUD Action</th>-->
+<!--                                </tr>-->
+<!--                            </thead>-->
+<!--                            <tbody>-->
+<!--                                <tr th:each="post : ${posts}">-->
+<!--                                    <td th:text="${post.id}"></td>-->
+<!--                                    <td th:text="${post.title}"></td>-->
+<!--                                    <td th:text="${post.slug}"></td>-->
+<!--                                    <td th:text="${post.postsStatus}"></td>-->
+<!--&lt;!&ndash;                                     <td th:text="${post.author}"></td> stack overflow, what the fuck? bidirectional mapping something, fix later (Bidirectional Relationship with Flawed toString() or Implicit Eager Loading)&ndash;&gt;-->
+<!--&lt;!&ndash;                                    <td>&ndash;&gt;-->
+<!--                                        <a href="#" class="btn btn-sm btn-primary">Xem</a>-->
+<!--                                        <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>-->
+<!--                                        <a href="#" class="btn btn-sm btn-danger">Xóa</a>-->
+<!--                                    </td>-->
+<!--                                </tr>-->
+<!--                            </tbody>-->
+<!--                        </table>-->
                         <table class="table table-bordered">
                             <thead>
-                                <tr>
-                                    <th>id bài viết</th>
-                                    <th>Tiêu đề</th>
-                                    <th>slug</th>
-                                    <th>trạng thái</th>
-                                    <th>tác giả </th>
-                                    <th>CRUD Action</th>
-                                </tr>
+                            <tr>
+                                <th>ID Bài viết</th>
+                                <th>Tiêu đề</th>
+                                <th>Slug</th>
+                                <th>Trích dẫn</th>
+                                <th>Danh mục</th>
+                                <th>Trạng thái</th>
+                                <th>Tác giả</th>
+                                <th>Lượt xem</th>
+<!--                                <th>Hình ảnh</th>-->
+                                <th>Ngày tạo</th>
+                                <th>Ngày cập nhật</th>
+                                <th>CRUD Action</th>
+                            </tr>
                             </thead>
                             <tbody>
-                                <tr th:each="post : ${posts}"> 
-                                    <td th:text="${post.id}"></td>
-                                    <td th:text="${post.title}"></td>
-                                    <td th:text="${post.slug}"></td>
-                                    <td th:text="${post.postsStatus}"></td>
-                                    <!-- <td th:text="${post.author}"></td> stack overflow, what the fuck? bidirectional mapping something, fix later (Bidirectional Relationship with Flawed toString() or Implicit Eager Loading)--> 
-                                    <td>
-                                        <a href="#" class="btn btn-sm btn-primary">Xem</a>
-                                        <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                                        <a href="#" class="btn btn-sm btn-danger">Xóa</a>
-                                    </td>
-                                </tr>
+                            <tr th:each="post : ${posts}">
+                                <td th:text="${post.id}"></td>
+                                <td th:text="${post.title}"></td>
+                                <td th:text="${post.slug}"></td>
+                                <td th:text="${post.excerpt}"></td>
+                                <td th:text="${post.category != null} ? ${post.category.name} : 'Chưa có danh mục'"></td>
+                                <td th:text="${post.postsStatus}"></td>
+                                <td th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></td>
+                                <td th:text="${post.viewCount}"></td>
+<!--                                <td>-->
+<!--                                    <img th:if="${post.thumbnail != null}" th:src="@{${post.thumbnail}}" alt="Thumbnail" style="max-width: 100px;" />-->
+<!--                                    <span th:if="${post.thumbnail == null}">Không có hình</span>-->
+<!--                                </td>-->
+                                <td th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td th:text="${#temporals.format(post.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
+                                <td>
+                                    <a th:href="@{/admin/posts/view/{id}(id=${post.id})}" class="btn btn-sm btn-primary">Xem</a>
+                                    <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
+                                    <a th:href="@{/admin/posts/delete/{id}(id=${post.id})}" class="btn btn-sm btn-danger">Xóa</a>
+                                </td>
+                            </tr>
                             </tbody>
                         </table>
-                        
                     </div>
                 </div>
             </div>
