@@ -8,31 +8,25 @@
 <th:block th:fragment="event-list">
     <div class="event-section">
         <h3>Sự kiện sắp tới</h3>
-        <!-- Danh sách sự kiện -->
-        <ul class="list-group">
-            <!-- Lặp qua danh sách sự kiện -->
-            <li th:each="event : ${events}" class="list-group-item list-group-item-action d-flex align-items-center">
-                <!-- Hiển thị banner nếu có -->
-                <div th:if="${event.banner}" class="me-3">
-                    <img th:src="${event.banner}" alt="Banner sự kiện" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
+        <div class="list-group">
+            <div th:each="event : ${events}" class="event-item">
+                <!-- Banner or placeholder -->
+                <img th:if="${event.banner}" th:src="${event.banner}" alt="Banner sự kiện" class="event-banner">
+                <img th:unless="${event.banner}" src="https://via.placeholder.com/70x70" alt="No banner" class="event-banner">
+                <!-- Event details -->
+                <div class="event-content">
+                    <span class="event-status">Sắp diễn ra</span>
+                    <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.title}" class="event-title"></a>
+                    <div class="event-time">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}">Thời gian</span>
+                    </div>
                 </div>
-                <!-- Hiển thị placeholder nếu không có banner -->
-                <div th:unless="${event.banner}" class="me-3">
-                    <img src="https://via.placeholder.com/60x60" alt="No banner" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
-                </div>
-                <!-- Tiêu đề và thời gian sự kiện -->
-                <div>
-                    <i class="fas fa-calendar-alt me-2"></i>
-                    <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.title + ' - ' + event.startTime}">
-                        Sự kiện
-                    </a>
-                </div>
-            </li>
-            <!-- Hiển thị thông báo nếu không có sự kiện -->
-            <li th:if="${events.isEmpty()}" class="list-group-item">
+            </div>
+            <div th:if="${events.isEmpty()}" class="text-muted text-center">
                 <i class="fas fa-info-circle"></i> Hiện tại không có sự kiện sắp tới.
-            </li>
-        </ul>
+            </div>
+        </div>
     </div>
 </th:block>
 </body>
