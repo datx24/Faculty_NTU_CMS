@@ -189,7 +189,7 @@
   <div class="container">
     <div class="form-container">
       <h1>Thêm/Sửa thông báo</h1>
-      <form th:action="@{/admin/khoa-it/notifications}" th:object="${notification}" method="post" enctype="multipart/form-data">
+      <form th:action="@{notifications/admin}" th:object="${notification}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}" />
 
         <div class="mb-3">
@@ -216,14 +216,6 @@
           <input type="checkbox" th:field="*{isActive}" class="form-check-input" id="isActive" />
           <label for="isActive" class="form-check-label">Hoạt động</label>
         </div>
-
-        <!-- Uncomment if file upload is needed -->
-        <!--
-        <div class="mb-3">
-          <label for="file" class="form-label">Tập tin:</label>
-          <input type="file" name="file" class="form-control" id="file" />
-        </div>
-        -->
 
         <div class="text-center">
           <button type="submit" class="btn btn-primary">Lưu</button>
