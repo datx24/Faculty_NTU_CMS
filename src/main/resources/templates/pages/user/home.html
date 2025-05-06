@@ -72,37 +72,40 @@
             color: var(--primary-color);
             font-weight: 700;
         }
-        .event-section {
+        .event-section, .notifications-section {
             background: linear-gradient(135deg, #ffffff, #f8f9fa);
-            padding: 30px;
+            padding: 20px;
             margin-top: 30px;
             border-radius: 12px;
             box-shadow: 0 6px 20px var(--shadow-color);
             transition: transform 0.3s ease;
         }
-        .event-section h3 {
+        .event-section h3, .notifications-section h4 {
             text-align: center;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             color: var(--primary-color);
             font-weight: 700;
-            font-size: 1.8rem;
+            font-size: 1.6rem;
             text-transform: uppercase;
             letter-spacing: 1px;
         }
-        .event-section .list-group {
+        .notifications-section h4 {
+            font-size: 1.4rem;
+        }
+        .event-section .list-group, .notifications-section .list-group {
             border-radius: 8px;
             overflow: hidden;
         }
-        .event-section .list-group-item {
+        .event-section .list-group-item, .notification-item {
             background-color: #ffffff;
             border: none;
-            padding: 15px;
+            padding: 12px;
             margin-bottom: 10px;
             border-radius: 8px;
             box-shadow: 0 2px 8px var(--shadow-color);
             transition: background-color 0.3s ease, transform 0.3s ease;
         }
-        .event-section .list-group-item:hover {
+        .event-section .list-group-item:hover, .notification-item:hover {
             background-color: var(--event-hover-color);
             transform: translateY(-3px);
         }
@@ -120,23 +123,54 @@
         .event-content {
             flex-grow: 1;
         }
-        .event-title {
-            font-size: 1.2rem;
+        .event-title, .notification-title {
+            font-size: 0.9rem;
             font-weight: 600;
             color: var(--primary-color);
             text-decoration: none;
             transition: color 0.3s ease;
         }
-        .event-title:hover {
+        .event-title:hover, .notification-title:hover {
             color: var(--accent-color);
         }
-        .event-time {
-            font-size: 0.9rem;
+        .event-time, .notification-dates {
+            font-size: 0.8rem;
             color: #6c757d;
             margin-top: 5px;
         }
-        .event-time i {
+        .event-time i, .notification-dates i {
             color: var(--accent-color);
+            margin-right: 5px;
+        }
+        .notification-message {
+            font-size: 0.8rem;
+            color: #495057;
+            margin: 5px 0;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .notification-type {
+            font-size: 0.75rem;
+            padding: 3px 8px;
+            border-radius: 10px;
+            font-weight: 500;
+            margin-bottom: 5px;
+            display: inline-block;
+        }
+        .notification-type.info {
+            background-color: #e7f3fe;
+            color: #31708f;
+        }
+        .notification-type.warning {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+        .notification-type.error {
+            background-color: #f8d7da;
+            color: #721c24;
         }
         .card {
             border: none;
@@ -194,18 +228,26 @@
             .navbar a {
                 padding: 10px 15px;
             }
-            .event-section {
-                padding: 20px;
+            .news-section, .event-section, .notifications-section {
+                padding: 15px;
+                margin: 15px 0;
             }
             .event-banner {
                 width: 50px;
                 height: 50px;
             }
-            .event-title {
-                font-size: 1rem;
+            .event-title, .notification-title {
+                font-size: 0.85rem;
             }
-            .event-time {
-                font-size: 0.8rem;
+            .event-time, .notification-dates {
+                font-size: 0.75rem;
+            }
+            .notification-message {
+                font-size: 0.75rem;
+            }
+            .notification-type {
+                font-size: 0.7rem;
+                padding: 2px 6px;
             }
         }
     </style>
@@ -234,7 +276,6 @@
             <li class="nav-item"><a href="/news">Tin tức</a></li>
             <li class="nav-item"><a href="/events">Sự kiện</a></li>
             <li class="nav-item"><a href="/contact">Liên hệ</a></li>
-            <!-- Liên kết quản lý sự kiện cho admin -->
             <li class="nav-item" sec:authorize="hasRole('ADMIN')">
                 <a href="/events/admin">Quản lý sự kiện</a>
             </li>
@@ -275,10 +316,10 @@
     </button>
 </div>
 
-<!-- Nội dung chính -->
+<!-- Main Content -->
 <div class="container">
     <div class="row">
-        <!-- Tin tức -->
+        <!-- News -->
         <div class="col-md-8">
             <div class="news-section">
                 <h3>Tin tức mới nhất</h3>
@@ -321,10 +362,13 @@
             </div>
         </div>
 
-        <!-- Sự kiện -->
+        <!-- Events and Notifications -->
         <div class="col-md-4">
-            <!-- Gọi fragment danh sách sự kiện -->
+            <!-- Events -->
             <th:block th:replace="~{pages/user/events/list :: event-list}"></th:block>
+
+            <!-- Notifications -->
+            <th:block th:replace="~{pages/user/notifications/list :: notification-list}"></th:block>
         </div>
     </div>
 </div>
