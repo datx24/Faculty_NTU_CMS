@@ -1,12 +1,17 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Chi tiết thông báo</title>
+    <title th:text="${notification.title}">Thông báo</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
-<h1 th:text="${notification.title}"></h1>
-<p th:text="${notification.message}"></p>
-<p>Ngày bắt đầu: <span th:text="${notification.startDate}"></span></p>
-<p>Ngày kết thúc: <span th:text="${notification.endDate}"></span></p>
+<div class="container">
+    <h1 th:text="${notification.title}"></h1>
+    <div th:utext="${notification.message}"></div>
+    <p><strong>Loại:</strong> <span th:text="${notification.announcementType}"></span></p>
+    <p><strong>Thời gian:</strong>
+        <span th:text="${#temporals.format(notification.startDate, 'dd/MM/yyyy')} + ' - ' + ${#temporals.format(notification.endDate, 'dd/MM/yyyy')}"></span>
+    </p>
+</div>
 </body>
 </html>
