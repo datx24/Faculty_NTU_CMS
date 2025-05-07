@@ -48,10 +48,4 @@ public class NotificationController {
         notificationService.deleteNotification(id);
         return "redirect:/admin/notifications";
     }
-
-    @GetMapping("/{id}")
-    public String viewNotification(@PathVariable Integer id, Model m) {
-        notificationService.getNotificationById(id).ifPresent(n -> m.addAttribute("notification", n));
-        return "pages/user/notifications/detail";
-    }
 }

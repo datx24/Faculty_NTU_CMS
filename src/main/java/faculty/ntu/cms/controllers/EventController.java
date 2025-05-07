@@ -44,22 +44,6 @@ public class EventController {
         return "redirect:/events/admin";
     }
 
-    //Xử lý xem chi tiết sự kiện đối với người dùng
-    @GetMapping("/{id}")
-    public String viewEvent(@PathVariable Integer id,
-                            Model m,
-                            RedirectAttributes redirectAttributes) {
-        try {
-            Event event = eventService.getEventById(id)
-                    .orElseThrow(() -> new RuntimeException("Sự kiện không tồn tại"));
-            m.addAttribute("event", event);
-            return "pages/user/events/view";
-        }catch (RuntimeException e) {
-            redirectAttributes.addAttribute("error","Sự kiện không tồn tại!");
-            return "redirect:/events";
-        }
-    }
-
     //Hiển thị form chỉnh sửa sự kiện
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id,
