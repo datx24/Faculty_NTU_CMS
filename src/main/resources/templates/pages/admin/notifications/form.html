@@ -18,39 +18,37 @@
       margin: 0;
       overflow-x: hidden;
     }
-    /* Sidebar */
-    .sidebar {
-      min-height: 100vh;
-      background-color: #1e3a8a;
-      color: white;
-      position: fixed;
-      width: 250px;
-      transition: width 0.3s ease;
-      z-index: 1000;
-    }
-    .sidebar .nav-link {
-      color: #d1d5db;
-      padding: 12px 20px;
-      border-radius: 5px;
-      margin: 5px 10px;
-      display: flex;
-      align-items: center;
-      transition: background-color 0.3s, color 0.3s;
-    }
+   .sidebar {
+            min-height: 100vh;
+            background-color: #1e3a8a;
+            color: white;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link {
+            color: #d1d5db;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px 10px;
+            transition: all 0.3s;
+        }
     .sidebar .nav-link:hover, .sidebar .nav-link.active {
-      background-color: #2563eb;
-      color: white;
-    }
+            background-color: #2563eb;
+            color: white;
+        }
     .sidebar .nav-link[type="submit"] {
-      background: none;
-      border: none;
-      text-align: left;
-      width: 100%;
-      cursor: pointer;
-    }
+            background: none;
+            border: none;
+            text-align: left;
+            width: 92%;
+            cursor: pointer;
+            appearance: none;
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+        }
     .sidebar .nav-link[type="submit"]:hover {
-      background-color: #2563eb;
-      color: white;
+            background-color: #2563eb;
+            color: white;
     }
     /* Content */
     .content {

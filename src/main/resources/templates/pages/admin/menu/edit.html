@@ -1,67 +1,183 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title th:text="${menuItem.id != null} ? 'Chỉnh sửa Menu Item' : 'Tạo mới Menu Item'"></title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <title>Admin CMS - Khoa CNTT ĐH Nha Trang</title>
+  <!-- Liên kết Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Liên kết Font Awesome cho các biểu tượng -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+  <!-- CSS tùy chỉnh -->
   <style>
     body {
         font-family: 'Roboto', sans-serif;
         background-color: #f4f7fa;
-        color: #333;
+        overflow-x: hidden; /* Ngăn cuộn ngang */
     }
-    .container {
-        margin-top: 30px;
+    .sidebar {
+            min-height: 100vh;
+            background-color: #1e3a8a;
+            color: white;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link {
+            color: #d1d5db;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px 10px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .sidebar .nav-link[type="submit"] {
+            background: none;
+            border: none;
+            text-align: left;
+            width: 92%;
+            cursor: pointer;
+            appearance: none;
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+        }
+        .sidebar .nav-link[type="submit"]:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+    .content {
+        margin-left: 250px;
+        padding: 20px;
+        transition: margin-left 0.3s;
+    }
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        padding: 0.5rem 1rem;
+    }
+    .card {
+        border: none;
+        border-radius: 10px;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        transition: all 0.3s;
+    }
+    .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    }
+    .footer {
+        background-color: #1e3a8a;
+        color: white;
+        padding: 40px 0;
+        margin-left: 250px;
+        margin-top: 40px;
+        border-top: 4px solid #2563eb;
+        position: relative;
+        bottom: 0;
+        width: calc(100% - 250px);
+    }
+    .footer a {
+        color: #d1d5db;
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+    .footer a:hover {
+        color: #ffffff;
+    }
+    .footer .social-icons a {
+        font-size: 1.5rem;
+        margin: 0 10px;
+        color: #d1d5db;
+    }
+    .footer .social-icons a:hover {
+        color: #ffffff;
+    }
+    @media (max-width: 768px) {
+        .sidebar {
+            width: 70px;
+        }
+        .sidebar .nav-link span {
+            display: none;
+        }
+        .content {
+            margin-left: 70px;
+        }
+        .footer {
+            margin-left: 70px;
+            width: calc(100% - 70px);
+        }
     }
   </style>
 </head>
 <body>
-<div class="container">
-  <h1 class="mb-4">Chỉnh sửa Menu Item </h1>
-  <form th:action="@{/admin/menu/edit/{id}(id=${menuItem.id})}" th:object="${menuItem}" method="post">
-    <div class="mb-3">
-      <label for="menuName" class="form-label">Tên Menu</label>
-      <input type="text" class="form-control" id="menuName" th:field="*{menuName}" required>
-    </div>
-    <div class="mb-3">
-      <label for="label" class="form-label">Label</label>
-      <input type="text" class="form-control" id="label" th:field="*{label}" required>
-    </div>
-    <div class="mb-3">
-      <label for="path" class="form-label">Đường dẫn</label>
-      <input type="text" class="form-control" id="path" th:field="*{path}" required>
-    </div>
-    <div class="mb-3">
-      <label for="parent" class="form-label">Menu Cha</label>
-      <select class="form-select" id="parent" th:field="*{parent.id}">
-        <option value="">Không có</option>
-        <th:block th:each="parent : ${parentItems}">
-          <option th:if="${menuItem.id == null or parent.id != menuItem.id}" th:value="${parent.id}" th:text="${parent.label}" th:selected="${menuItem.parent != null and menuItem.parent.id == parent.id}"></option>
-        </th:block>
-      </select>
-    </div>
-    <div class="mb-3">
-      <label for="order" class="form-label">Thứ tự</label>
-      <input type="number" class="form-control" id="order" th:field="*{order}" required>
-    </div>
-    <div class="mb-3">
-      <label class="form-label">Trạng thái</label>
-      <div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" id="activeTrue" th:field="*{active}" value="true">
-          <label class="form-check-label" for="activeTrue">Kích hoạt</label>
-        </div>
-        <div class="form-check form-check-inline">
-          <input class="form-check-input" type="radio" id="activeFalse" th:field="*{active}" value="false">
-          <label class="form-check-label" for="activeFalse">Không kích hoạt</label>
+
+<!-- Bao gồm Sidebar từ fragment -->
+<th:block th:replace="~{fragments/sidebar}"></th:block>
+
+<div class="content">
+  <!-- Bao gồm Navbar từ fragment -->
+  <th:block th:replace="~{fragments/navbar}"></th:block>
+
+  <!-- Nội dung Dashboard -->
+  <div class="container-fluid mt-4">
+    <div class="row justify-content-center">
+      <div class="col-md-8 col-lg-6">
+        <div class="card p-4 shadow-sm border-0">
+          <h1 class="mb-4">Chỉnh sửa Menu Item </h1>
+          <form th:action="@{/admin/menu/edit/{id}(id=${menuItem.id})}" th:object="${menuItem}" method="post">
+            <div class="mb-3">
+              <label for="menuName" class="form-label">Tên Menu</label>
+              <input type="text" class="form-control" id="menuName" th:field="*{menuName}" required>
+            </div>
+            <div class="mb-3">
+              <label for="label" class="form-label">Label</label>
+              <input type="text" class="form-control" id="label" th:field="*{label}" required>
+            </div>
+            <div class="mb-3">
+              <label for="path" class="form-label">Đường dẫn</label>
+              <input type="text" class="form-control" id="path" th:field="*{path}" required>
+            </div>
+            <div class="mb-3">
+              <label for="parent" class="form-label">Menu Cha</label>
+              <select class="form-select" id="parent" th:field="*{parent.id}">
+                <option value="">Không có</option>
+                <th:block th:each="parent : ${parentItems}">
+                  <option th:if="${menuItem.id == null or parent.id != menuItem.id}" th:value="${parent.id}" th:text="${parent.label}" th:selected="${menuItem.parent != null and menuItem.parent.id == parent.id}"></option>
+                </th:block>
+              </select>
+            </div>
+            <div class="mb-3">
+              <label for="order" class="form-label">Thứ tự</label>
+              <input type="number" class="form-control" id="order" th:field="*{order}" required>
+            </div>
+            <div class="mb-3">
+              <label class="form-label">Trạng thái</label>
+              <div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="activeTrue" th:field="*{active}" value="true">
+                  <label class="form-check-label" for="activeTrue">Kích hoạt</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" id="activeFalse" th:field="*{active}" value="false">
+                  <label class="form-check-label" for="activeFalse">Không kích hoạt</label>
+                </div>
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary">Lưu</button>
+            <a th:href="@{/admin/menu}" class="btn btn-secondary">Hủy</a>
+          </form>
         </div>
       </div>
     </div>
-    <button type="submit" class="btn btn-primary">Lưu</button>
-    <a th:href="@{/admin/menu}" class="btn btn-secondary">Hủy</a>
-  </form>
+  </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<!-- Bao gồm Footer từ fragment -->
+<th:block th:replace="~{fragments/footer}"></th:block>
+
+<!-- Bootstrap JS và các thư viện cần thiết -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
 </body>
 </html>
