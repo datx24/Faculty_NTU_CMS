@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Chi tiết sự kiện</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <!-- Hiển thị tiêu đề sự kiện -->
+  <h1 th:text="${event.title}">Tiêu đề sự kiện</h1>
+  <!-- Hiển thị banner nếu có -->
+  <img th:if="${event.banner}" th:src="${event.banner}" class="img-fluid mb-3" alt="Banner sự kiện" style="max-height: 300px; border-radius: 10px;">
+  <!-- Hiển thị placeholder nếu không có banner -->
+  <img th:unless="${event.banner}" src="https://via.placeholder.com/1200x300" class="img-fluid mb-3" alt="No banner" style="max-height: 300px; border-radius: 10px;">
+  <!-- Hiển thị mô tả -->
+  <p th:text="${event.description}">Mô tả sự kiện</p>
+  <!-- Hiển thị thời gian -->
+  <p><strong>Bắt đầu:</strong> <span th:text="${event.startTime}"></span></p>
+  <p><strong>Kết thúc:</strong> <span th:text="${event.endTime}"></span></p>
+  <!-- Hiển thị người tạo -->
+  <p><strong>Người tạo:</strong> <span th:text="${event.createdBy.username}"></span></p>
+  <!-- Hiển thị nút đăng ký nếu có URL -->
+  <p th:if="${event.registrationUrl}">
+    <a th:href="${event.registrationUrl}" class="btn btn-primary">Đăng ký ngay</a>
+  </p>
+  <!-- Nút quay lại -->
+  <a href="/" class="btn btn-secondary">Quay lại trang chủ</a>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

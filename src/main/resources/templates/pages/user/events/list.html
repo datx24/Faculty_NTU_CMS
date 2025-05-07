@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+</head>
+<body>
+<!-- Định nghĩa fragment cho danh sách sự kiện -->
+<th:block th:fragment="event-list">
+    <div class="event-section">
+        <h3>Sự kiện sắp tới</h3>
+        <div class="list-group">
+            <div th:each="event : ${events}" class="event-item">
+                <!-- Banner or placeholder -->
+                <img th:if="${event.banner}" th:src="${event.banner}" alt="Banner sự kiện" class="event-banner">
+                <img th:unless="${event.banner}" src="https://via.placeholder.com/70x70" alt="No banner" class="event-banner">
+                <!-- Event details -->
+                <div class="event-content">
+                    <span class="event-status">Sắp diễn ra</span>
+                    <a th:href="@{/events/{id}(id=${event.id})}" th:text="${event.title}" class="event-title"></a>
+                    <div class="event-time">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span th:text="${#temporals.format(event.startTime, 'dd/MM/yyyy HH:mm')}">Thời gian</span>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${events.isEmpty()}" class="text-muted text-center">
+                <i class="fas fa-info-circle"></i> Hiện tại không có sự kiện sắp tới.
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>
