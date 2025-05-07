@@ -18,8 +18,10 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // Cho phép truy cập không cần đăng nhập
-                        .requestMatchers("/dashboard/**","/admin/**").authenticated() // Yêu cầu đăng nhập để vào dashboard
-                        .anyRequest().permitAll()
+                        .requestMatchers("/dashboard/**", "/admin/**").authenticated() // Yêu cầu đăng nhập để vào dashboard và admin
+                        .requestMatchers("/menu").hasAnyAuthority("USER", "ADMIN") // Cho phép cả user và admin xem danh sách menu
+                        .requestMatchers("/menu/create", "/menu/edit/**", "/menu/delete/**").hasAuthority("ADMIN") // Chỉ admin quản lý menu
+                        .anyRequest().permitAll() // Các URL khác cho phép tất cả
                 )
                 .formLogin(form -> form
                         .loginPage("/login") // Trang đăng nhập tùy chỉnh
@@ -27,8 +29,8 @@ public class SecurityConfig {
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // URL để đăng xuất (phải khớp với liên kết trong navbar)
-                        .logoutSuccessUrl("/login?logout") // Chuyển hướng sau khi đăng xuất thành công
+                        .logoutUrl("/logout") // URL để đăng xuất
+                        .logoutSuccessUrl("/login?logout") // Chuyển hướng sau khi đăng xuất
                         .invalidateHttpSession(true) // Hủy session
                         .deleteCookies("JSESSIONID") // Xóa cookie phiên
                         .permitAll()
