@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <!-- Tiêu đề trang -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tạo Menu Mới - Đại học Nha Trang</title>
+    <!-- Liên kết đến CSS và font tương tự trang chủ -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #005670;
+            --secondary-color: #007b9b;
+            --accent-color: #00a8cc;
+            --background-color: #f4f7fa;
+            --text-color: #333;
+            --navbar-color: #007bff;
+            --navbar-active-color: #00a8cc;
+            --event-hover-color: #e6f3fa;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+        }
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            margin: 0;
+        }
+        .header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 30px 0;
+            box-shadow: 0 2px 10px var(--shadow-color);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.8rem;
+            font-weight: 700;
+        }
+        .form-section {
+            background: white;
+            padding: 30px;
+            margin: 30px 0;
+            border-radius: 12px;
+            box-shadow: 0 6px 20px var(--shadow-color);
+        }
+        .form-section h2 {
+            color: var(--primary-color);
+            font-weight: 700;
+            margin-bottom: 25px;
+        }
+        .form-label {
+            font-weight: 600;
+            color: var(--text-color);
+        }
+        .form-control:focus {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 5px rgba(0, 168, 204, 0.5);
+        }
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2rem;
+            }
+            .form-section {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            .form-control {
+                font-size: 0.9rem;
+            }
+            .btn-primary {
+                padding: 8px 15px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+<!-- Header giống trang chủ -->
+<header class="header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-2">
+                <img src="/images/logo.png" alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
+            </div>
+            <div class="col-md-10">
+                <h1>Đại học Nha Trang - Khoa Công nghệ Thông tin</h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Form tạo menu -->
+<div class="container">
+    <div class="form-section">
+        <h2>Tạo Menu Mới</h2>
+        <form th:action="@{/menu/create}" th:object="${menuItem}" method="post">
+            <!-- Nhãn (Label) -->
+            <div class="mb-3">
+                <label for="label" class="form-label">Nhãn</label>
+                <input type="text" id="label" th:field="*{label}" class="form-control" required>
+            </div>
+            <!-- Đường dẫn (Path) -->
+            <div class="mb-3">
+                <label for="path" class="form-label">Đường dẫn</label>
+                <input type="text" id="path" th:field="*{path}" class="form-control" required>
+            </div>
+            <!-- Trạng thái (Active) -->
+            <div class="mb-3">
+                <label class="form-label">Trạng thái</label>
+                <div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" id="activeYes" th:field="*{active}" value="true" class="form-check-input" checked>
+                        <label for="activeYes" class="form-check-label">Kích hoạt</label>
+                    </div>
+                    <div class="form-check form-check-inline">
+                        <input type="radio" id="activeNo" th:field="*{active}" value="false" class="form-check-input">
+                        <label for="activeNo" class="form-check-label">Tắt</label>
+                    </div>
+                </div>
+            </div>
+            <!-- Thứ tự (Order) -->
+            <div class="mb-3">
+                <label for="order" class="form-label">Thứ tự</label>
+                <input type="number" id="order" th:field="*{order}" class="form-control" min="0" required>
+            </div>
+            <!-- Menu cha (Parent) -->
+            <div class="mb-3">
+                <label for="parent" class="form-label">Menu cha</label>
+                <select id="parent" name="parent.id" class="form-select">
+                    <option value="">Không có (Menu cha)</option>
+                    <th:block th:each="item : ${menuItems}">
+                        <option th:value="${item.id}" th:text="${item.label}"
+                                th:selected="${menuItem.parent != null} ? ${item.id} == ${menuItem.parent.id} : false">
+                        </option>
+                    </th:block>
+                </select>
+            </div>
+            <!-- Nút submit -->
+            <button type="submit" class="btn btn-primary">Tạo Menu</button>
+        </form>
+    </div>
+</div>
+
+<!-- Footer (tái sử dụng từ trang chủ) -->
+<th:block th:replace="~{fragments/footer}"></th:block>
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
