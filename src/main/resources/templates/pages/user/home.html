@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +14,8 @@
             --accent-color: #00a8cc;
             --background-color: #f4f7fa;
             --text-color: #333;
+            --navbar-color: #007bff;
+            --navbar-active-color: #00a8cc;
             --event-hover-color: #e6f3fa;
             --shadow-color: rgba(0, 0, 0, 0.1);
         }
@@ -22,6 +24,7 @@
             background-color: var(--background-color);
             color: var(--text-color);
             line-height: 1.6;
+            margin: 0;
         }
         .header {
             background-color: var(--primary-color);
@@ -34,21 +37,56 @@
             font-size: 2.8rem;
             font-weight: 700;
         }
-        .navbar {
-            background-color: var(--secondary-color);
-            padding: 15px 0;
+        .navbar-custom {
+            background-color: var(--navbar-color);
+            padding: 10px 0;
             box-shadow: 0 2px 5px var(--shadow-color);
         }
-        .navbar a {
+        .navbar-custom .nav-link {
             color: white;
             text-decoration: none;
             padding: 12px 20px;
+            margin: 0 5px;
             border-radius: 5px;
-            transition: background-color 0.3s ease, transform 0.2s ease;
+            transition: background-color 0.3s ease, color 0.3s ease;
+            font-weight: 700;
+            font-size: 1rem;
+            position: relative; /* Đảm bảo vị trí cho dropdown */
         }
-        .navbar a:hover {
+        .navbar-custom .nav-link:hover {
             background-color: var(--accent-color);
-            transform: translateY(-2px);
+            color: white;
+        }
+        .navbar-custom .nav-link.active {
+            background-color: var(--navbar-active-color);
+            color: white;
+        }
+        .dropdown-menu {
+            background-color: var(--navbar-color);
+            border: none;
+            position: absolute;
+            top: 100%; /* Đặt dropdown ngay dưới menu cha */
+            left: 0;
+            min-width: 10rem;
+            box-shadow: 0 2px 5px var(--shadow-color);
+            z-index: 1000;
+            display: none; /* Ẩn mặc định, hiển thị khi trigger */
+            border-radius: 5px;
+        }
+        .dropdown-menu.show {
+            display: block; /* Hiển thị khi Bootstrap thêm class 'show' */
+        }
+        .dropdown-menu .dropdown-item {
+            color: white;
+            padding: 10px 20px;
+            white-space: nowrap; /* Ngăn text wrap */
+        }
+        .dropdown-menu .dropdown-item:hover {
+            background-color: var(--accent-color);
+            color: white;
+        }
+        .dropdown:hover .dropdown-menu {
+            display: block; /* Hiển thị dropdown khi hover (tùy chọn) */
         }
         .carousel-item img {
             height: 500px;
@@ -58,19 +96,6 @@
         .carousel-caption {
             background: rgba(0, 0, 0, 0.5);
             border-radius: 5px;
-        }
-        .news-section {
-            background-color: white;
-            padding: 30px;
-            margin-top: 30px;
-            border-radius: 10px;
-            box-shadow: 0 4px 15px var(--shadow-color);
-        }
-        .news-section h3 {
-            text-align: center;
-            margin-bottom: 25px;
-            color: var(--primary-color);
-            font-weight: 700;
         }
         .notifications-section {
             background: linear-gradient(135deg, #ffffff, #f8f9fa);
@@ -281,6 +306,19 @@
         .footer a:hover {
             color: var(--accent-color);
         }
+        .news-section {
+            background-color: white;
+            padding: 30px;
+            margin-top: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px var(--shadow-color);
+        }
+        .news-section h3 {
+            text-align: center;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            font-weight: 700;
+        }
         @media (max-width: 768px) {
             .header h1 {
                 font-size: 2rem;
@@ -288,40 +326,17 @@
             .carousel-item img {
                 height: 300px;
             }
-            .navbar a {
+            .navbar-custom .nav-link {
                 padding: 10px 15px;
+                font-size: 0.9rem;
             }
-            .news-section, .notifications-section {
+            .dropdown-menu .dropdown-item {
+                font-size: 0.85rem;
+                padding: 8px 15px;
+            }
+            .news-section {
                 padding: 15px;
                 margin: 15px 0;
-            }
-            .notification-title {
-                font-size: 0.85rem;
-            }
-            .notification-message, .notification-dates {
-                font-size: 0.75rem;
-            }
-            .notification-type {
-                font-size: 0.7rem;
-                padding: 2px 6px;
-            }
-            .event-section {
-                padding: 15px;
-                margin: 15px 0;
-            }
-            .event-banner {
-                width: 50px;
-                height: 50px;
-            }
-            .event-title {
-                font-size: 0.85rem;
-            }
-            .event-time {
-                font-size: 0.75rem;
-            }
-            .event-status {
-                font-size: 0.7rem;
-                padding: 2px 6px;
             }
         }
     </style>
@@ -341,21 +356,8 @@
     </div>
 </header>
 
-<!-- Navbar -->
-<nav class="navbar">
-    <div class="container-fluid">
-        <ul class="nav justify-content-center">
-            <li class="nav-item"><a href="/">Trang chủ</a></li>
-            <li class="nav-item"><a href="/about">Giới thiệu</a></li>
-            <li class="nav-item"><a href="/news">Tin tức</a></li>
-            <li class="nav-item"><a href="/events">Sự kiện</a></li>
-            <li class="nav-item"><a href="/contact">Liên hệ</a></li>
-            <li class="nav-item" sec:authorize="hasRole('ADMIN')">
-                <a href="/events/admin">Quản lý sự kiện</a>
-            </li>
-        </ul>
-    </div>
-</nav>
+<!-- Menu List Fragment -->
+<th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}"></th:block>
 
 <!-- Carousel -->
 <div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
@@ -439,10 +441,10 @@
         <!-- Events and Notifications -->
         <div class="col-md-4">
             <!-- Events -->
-            <th:block th:replace="~{pages/user/events/list :: event-list}"></th:block>
+            <div th:replace="~{pages/user/events/list :: event-list(events=${events})}"></div>
 
             <!-- Notifications -->
-            <th:block th:replace="~{pages/user/notifications/list :: notification-list}"></th:block>
+            <div th:replace="~{pages/user/notifications/list :: notification-list(notifications=${notifications})}"></div>
         </div>
     </div>
 </div>
