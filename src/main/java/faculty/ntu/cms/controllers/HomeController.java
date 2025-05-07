@@ -22,7 +22,7 @@ public class HomeController {
 	private NotificationService notificationService;
 	@Autowired
 	private MenuItemService menuItemService;
-
+	
 	@GetMapping("/")
 	public String getHome(Model m, HttpServletRequest request) {
 		String requestURI = request != null ? request.getRequestURI() : "/";
