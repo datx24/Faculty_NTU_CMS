@@ -21,7 +21,7 @@ import faculty.ntu.cms.services.PostService;
 import faculty.ntu.cms.services.FileStorageService;
 
 @Controller
-@RequestMapping("/admin/posts")
+@RequestMapping("")
 public class PostController {
     
     @Autowired
@@ -38,20 +38,20 @@ public class PostController {
         super();
     }
     
-    @GetMapping("")
+    @GetMapping("/admin/posts")
     public String listPosts(Model model) {
         model.addAttribute("posts", postService.getAllPosts());
         return "pages/admin/posts/list"; 
     }
 
-    @GetMapping("/create")
+    @GetMapping("/admin/posts/create")
     public String showCreateForm(Model model) {
         model.addAttribute("categories",categoryService.getAllCategories());
         model.addAttribute("post", new Post());
         return "pages/admin/posts/create"; 
     }
 
-    @PostMapping("/create")
+    @PostMapping("/admin/posts/create")
     public String createPost(@ModelAttribute("post") Post post,  @RequestParam("thumbnailFile") MultipartFile thumbnailFile) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if(auth != null && auth.getPrincipal() instanceof UserDetails){
@@ -64,7 +64,7 @@ public class PostController {
                 String thumbnailPath = fileStorageService.storeFile(thumbnailFile);
                 post.setThumbnail(thumbnailPath);
             } catch (Exception e) {
-                
+
                 return "redirect:/admin/posts/create";
             }
         }
@@ -73,7 +73,7 @@ public class PostController {
         return "redirect:/admin/posts";
     }
 
-    @GetMapping("/edit/{id}")
+    @GetMapping("/admin/posts/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
         model.addAttribute("categories",categoryService.getAllCategories());
         postService.getPostById(id)
@@ -86,7 +86,7 @@ public class PostController {
         return "pages/admin/posts/edit";
     }
 
-    @PostMapping("/edit/{id}")
+    @PostMapping("/admin/posts/edit/{id}")
     public String updatePost(@PathVariable Integer id, @ModelAttribute("post") Post updatedPost) {
         Post savedPost = postService.updatePost(id, updatedPost);
         if (savedPost == null) {
@@ -95,9 +95,20 @@ public class PostController {
         return "redirect:/admin/posts";
     }
 
-    @GetMapping("/delete/{id}")
+    @GetMapping("/admin/posts/delete/{id}")
     public String deletePost(@PathVariable Integer id) {
         postService.deletePost(id);
         return "redirect:/admin/posts";
+    }
+    @GetMapping("/{slug}")
+    public String viewPost(@PathVariable String slug, Model model) {
+        System.out.println("Processing slug: " + slug); // Debug
+        Post post = postService.findBySlug(slug);
+        if (post == null) {
+            System.out.println("Post not found for slug: " + slug); // Debug
+            return "error"; // Trang lỗi tùy chỉnh
+        }
+        model.addAttribute("post", post);
+        return "pages/user/post/post_detail";
     }
 }

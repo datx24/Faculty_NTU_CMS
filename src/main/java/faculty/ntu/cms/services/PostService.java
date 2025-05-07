@@ -53,4 +53,8 @@ public class PostService {
     public void deletePost(Integer id) {
         postRepository.deleteById(id);
     }
+
+    public Post findBySlug(String slug) {
+        return postRepository.findBySlug(slug);
+    }
 }
