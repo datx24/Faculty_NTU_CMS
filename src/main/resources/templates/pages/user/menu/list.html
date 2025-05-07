@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<nav class="navbar-custom" th:fragment="menuList(menuItems, currentPath)">
+  <div class="container">
+    <ul class="nav justify-content-center">
+      <th:block th:each="item : ${menuItems}" th:if="${item.active}">
+        <th:block th:if="${#lists.isEmpty(item.children)}">
+          <!-- Menu không có con -->
+          <li class="nav-item">
+            <a th:href="${item.path}" th:text="${item.label}" class="nav-link"
+               th:classappend="${currentPath == item.path} ? 'active'"></a>
+          </li>
+        </th:block>
+        <th:block th:if="${item.children != null and not #lists.isEmpty(item.children)}">
+          <!-- Menu có con (dropdown) -->
+          <li class="nav-item dropdown">
+            <a th:href="${item.path}" th:text="${item.label}" class="nav-link dropdown-toggle"
+               data-bs-toggle="dropdown" th:classappend="${currentPath == item.path} ? 'active'"
+               aria-expanded="false" id="dropdownMenuButton-[[${itemStat.index}]]"></a>
+            <ul class="dropdown-menu" th:aria-labelledby="'dropdownMenuButton-' + ${itemStat.index}">
+              <th:block th:each="child : ${item.children}" th:if="${child.active}">
+                <li>
+                  <a th:href="${child.path}" th:text="${child.label}" class="dropdown-item"
+                     th:classappend="${currentPath == child.path} ? 'active'"></a>
+                </li>
+              </th:block>
+            </ul>
+          </li>
+        </th:block>
+      </th:block>
+    </ul>
+  </div>
+</nav>
