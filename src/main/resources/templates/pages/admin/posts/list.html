@@ -10,6 +10,43 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
     <style>
+        .action-container {
+            position: relative;
+            display: inline-block;
+        }
+        .detail-btn {
+            margin: 0;
+        }
+        .actions {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background-color: #fff;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 1000;
+        }
+        .action-container:hover .actions {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        .actions a {
+            display: block;
+            margin: 2px 0;
+        }
         body {
             font-family: 'Roboto', sans-serif;
             background-color: #f4f7fa;
@@ -101,99 +138,76 @@
 </head>
 <body>
 
-    <!-- Include Sidebar -->
-    <th:block th:replace="~{fragments/sidebar}"></th:block>
+<!-- Include Sidebar -->
+<th:block th:replace="~{fragments/sidebar}"></th:block>
 
-    <div class="content">
-        <!-- Include Navbar -->
-        <th:block th:replace="~{fragments/navbar}"></th:block>
-    
-        <!-- Dashboard Content -->
-        <div class="container-fluid mt-4">
-            <h2 class="mb-4">Bài đăng</h2>
-            <a th:href="@{/admin/posts/create}" class="btn btn-success mb-4">Thêm mới</a>
-            
-            <!-- Table Section (Replaces Chart Section) -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card p-4 mb-4">
-                        <h5>Danh sách Sinh viên</h5>
-<!--                        <table class="table table-bordered">-->
-<!--                            <thead>-->
-<!--                                <tr>-->
-<!--                                    <th>id bài viết</th>-->
-<!--                                    <th>Tiêu đề</th>-->
-<!--                                    <th>slug</th>-->
-<!--                                    <th>trạng thái</th>-->
-<!--                                    <th>tác giả </th>-->
-<!--                                    <th>CRUD Action</th>-->
-<!--                                </tr>-->
-<!--                            </thead>-->
-<!--                            <tbody>-->
-<!--                                <tr th:each="post : ${posts}">-->
-<!--                                    <td th:text="${post.id}"></td>-->
-<!--                                    <td th:text="${post.title}"></td>-->
-<!--                                    <td th:text="${post.slug}"></td>-->
-<!--                                    <td th:text="${post.postsStatus}"></td>-->
-<!--&lt;!&ndash;                                     <td th:text="${post.author}"></td> stack overflow, what the fuck? bidirectional mapping something, fix later (Bidirectional Relationship with Flawed toString() or Implicit Eager Loading)&ndash;&gt;-->
-<!--&lt;!&ndash;                                    <td>&ndash;&gt;-->
-<!--                                        <a href="#" class="btn btn-sm btn-primary">Xem</a>-->
-<!--                                        <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>-->
-<!--                                        <a href="#" class="btn btn-sm btn-danger">Xóa</a>-->
-<!--                                    </td>-->
-<!--                                </tr>-->
-<!--                            </tbody>-->
-<!--                        </table>-->
-                        <table class="table table-bordered">
-                            <thead>
-                            <tr>
-                                <th>ID Bài viết</th>
-                                <th>Tiêu đề</th>
-                                <th>Slug</th>
-                                <th>Trích dẫn</th>
-                                <th>Danh mục</th>
-                                <th>Trạng thái</th>
-                                <th>Tác giả</th>
-                                <th>Lượt xem</th>
-<!--                                <th>Hình ảnh</th>-->
-                                <th>Ngày tạo</th>
-                                <th>Ngày cập nhật</th>
-                                <th>CRUD Action</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr th:each="post : ${posts}">
-                                <td th:text="${post.id}"></td>
-                                <td th:text="${post.title}"></td>
-                                <td th:text="${post.slug}"></td>
-                                <td th:text="${post.excerpt}"></td>
-                                <td th:text="${post.category != null} ? ${post.category.name} : 'Chưa có danh mục'"></td>
-                                <td th:text="${post.postsStatus}"></td>
-                                <td th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></td>
-                                <td th:text="${post.viewCount}"></td>
-<!--                                <td>-->
-<!--                                    <img th:if="${post.thumbnail != null}" th:src="@{${post.thumbnail}}" alt="Thumbnail" style="max-width: 100px;" />-->
-<!--                                    <span th:if="${post.thumbnail == null}">Không có hình</span>-->
-<!--                                </td>-->
-                                <td th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-                                <td th:text="${#temporals.format(post.updatedAt, 'dd/MM/yyyy HH:mm')}"></td>
-                                <td>
-                                    <a th:href="@{/admin/posts/view/{id}(id=${post.id})}" class="btn btn-sm btn-primary">Xem</a>
-                                    <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                                    <a th:href="@{/admin/posts/delete/{id}(id=${post.id})}" class="btn btn-sm btn-danger">Xóa</a>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </div>
+<div class="content">
+    <!-- Include Navbar -->
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+
+    <!-- Dashboard Content -->
+    <div class="container-fluid mt-4">
+        <h2 class="mb-4">Bài đăng</h2>
+        <a th:href="@{/admin/posts/create}" class="btn btn-success mb-4">Thêm mới</a>
+
+        <!-- Table Section (Replaces Chart Section) -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="card p-4 mb-4">
+                    <h5>Danh sách bài viết</h5>
+                    <table class="table table-bordered">
+                        <thead>
+                        <tr>
+                            <th>ID Bài viết</th>
+                            <th>Tiêu đề</th>
+                            <th>Slug</th>
+                            <th>Trích dẫn</th>
+                            <th>Danh mục</th>
+                            <th>Trạng thái</th>
+                            <th>Tác giả</th>
+                            <th>Lượt xem</th>
+                            <th>Hình ảnh</th>
+                            <th>Ngày tạo</th>
+                            <th>CRUD Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="post : ${posts}">
+                            <td th:text="${post.id}"></td>
+                            <td th:text="${post.title}"></td>
+                            <td th:text="${post.slug}"></td>
+                            <td th:text="${post.excerpt}"></td>
+                            <td th:text="${post.category != null} ? ${post.category.name} : 'Chưa có danh mục'"></td>
+                            <td th:text="${post.postsStatus}"></td>
+                            <td th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></td>
+                            <td th:text="${post.viewCount}"></td>
+                            <td>
+                                <img th:if="${post.thumbnail != null}" th:src="@{'/images/'+ ${post.thumbnail}}" alt="Thumbnail" style="max-width: 100px;" />
+                                <span th:if="${post.thumbnail == null}">Không có hình</span>
+                            </td>
+                            <td th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                            <td>
+                                <div class="action-container">
+                                    <button class="btn btn-sm btn-info detail-btn">Chi tiết</button>
+                                    <div class="actions">
+                                        <a th:href="'/' + ${post.slug}" class="btn btn-sm btn-primary">Xem</a>
+                                        <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
+                                        <a th:href="@{/admin/posts/delete/{id}(id=${post.id})}" class="btn btn-sm btn-danger">Xóa</a>
+                                    </div>
+                                </div>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
         </div>
     </div>
+</div>
 
-    <!-- Include Footer -->
- 	<th:block th:replace="~{fragments/footer}"></th:block>
+<!-- Include Footer -->
+<th:block th:replace="~{fragments/footer}"></th:block>
 
-  
+
 </body>
 </html>
