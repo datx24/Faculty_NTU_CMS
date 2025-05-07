@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Quản Lý Menu</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-5">
+  <h2>Quản Lý Menu</h2>
+  <a th:href="@{/menu/create}" class="btn btn-primary mb-3">Thêm Menu Mới</a>
+  <table class="table table-bordered">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nhãn</th>
+      <th>Đường dẫn</th>
+      <th>Tên Menu</th>
+      <th>Menu Cha</th>
+      <th>Thứ tự</th>
+      <th>Hoạt động</th>
+      <th>Hành động</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="item : ${menuItems}">
+      <td th:text="${item.id}"></td>
+      <td th:text="${item.label}"></td>
+      <td th:text="${item.path}"></td>
+      <td th:text="${item.menuName}"></td>
+      <td th:text="${item.parent != null ? item.parent.label : 'Không có'}"></td>
+      <td th:text="${item.order}"></td>
+      <td th:text="${item.active}"></td>
+      <td>
+        <a th:href="@{/menu/edit/{id}(id=${item.id})}" class="btn btn-sm btn-warning">Sửa</a>
+        <a th:href="@{/menu/delete/{id}(id=${item.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
