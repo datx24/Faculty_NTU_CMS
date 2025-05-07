@@ -13,7 +13,7 @@ import java.util.List;
 public class MenuItem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "menu_name", nullable = false)
     private String menuName = "primary";
