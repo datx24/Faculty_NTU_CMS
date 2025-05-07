@@ -1,3 +1,4 @@
+
 package faculty.ntu.cms.services;
 
 import faculty.ntu.cms.models.Post;
@@ -47,10 +48,14 @@ public class PostService {
             existingPost.setUpdatedAt(LocalDateTime.now());
             return postRepository.save(existingPost);
         }
-        return null; 
+        return null;
     }
 
     public void deletePost(Integer id) {
         postRepository.deleteById(id);
+    }
+
+    public Post findBySlug(String slug) {
+        return postRepository.findBySlug(slug);
     }
 }
