@@ -11,10 +11,10 @@
         :root {
             --primary-color: #005670;
             --secondary-color: #007b9b;
-            --accent-color: #00a8cc;
             --background-color: #f4f7fa;
             --text-color: #333;
-            --navbar-color: #007bff;
+            --navbar-color: #1e3a8a;
+            --accent-color: #3498db;
             --navbar-active-color: #00a8cc;
             --event-hover-color: #e6f3fa;
             --shadow-color: rgba(0, 0, 0, 0.1);
@@ -27,19 +27,21 @@
             margin: 0;
         }
         .header {
-            background-color: var(--primary-color);
+            background-color: white;
             color: white;
             padding: 30px 0;
             box-shadow: 0 2px 10px var(--shadow-color);
         }
         .header h1 {
+            color: black;
             margin: 0;
             font-size: 2.8rem;
             font-weight: 700;
         }
         .navbar-custom {
             background-color: var(--navbar-color);
-            padding: 10px 0;
+            padding: 5px 0;
+            margin-bottom: 30px;
             box-shadow: 0 2px 5px var(--shadow-color);
         }
         .navbar-custom .nav-link {
@@ -292,19 +294,23 @@
             color: #31708f;
         }
         .footer {
-            background-color: var(--primary-color);
+            background-color: #1e3a8a;
             color: white;
-            padding: 30px 0;
+            padding: 40px 0;
             margin-top: 40px;
-            box-shadow: 0 -2px 10px var(--shadow-color);
+            border-top: 4px solid #2563eb;
         }
         .footer a {
-            color: white;
+            color: #d1d5db;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: color 0.3s;
         }
         .footer a:hover {
-            color: var(--accent-color);
+            color: #ffffff;
+        }
+        .footer .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
         }
         .news-section {
             background-color: white;
@@ -360,24 +366,24 @@
 <th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}"></th:block>
 
 <!-- Carousel -->
-<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+<div id="carouselExample" class="container carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active">
-            <img src="https://via.placeholder.com/1200x500" class="d-block w-100" alt="Slide 1">
+            <img src="https://khoacntt.ntu.edu.vn/uploads/54/images/news/7323/img/khanh-thanh-phong-thuc-hanh-an-ninh-mang-do-koica-tai-tro-xay-dung-tai-truong-dh.jpg" class="d-block w-100" alt="Slide 1">
             <div class="carousel-caption d-none d-md-block">
                 <h5>Chào mừng đến với Khoa CNTT</h5>
                 <p>Khám phá các chương trình đào tạo chất lượng cao.</p>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="https://via.placeholder.com/1200x500" class="d-block w-100" alt="Slide 2">
+            <img src="https://khoacntt.ntu.edu.vn/uploads/54/images/news/7323/img/khanh-thanh-phong-thuc-hanh-an-ninh-mang-do-koica-tai-tro-xay-dung-tai-truong-dh.jpg" class="d-block w-100" alt="Slide 2">
             <div class="carousel-caption d-none d-md-block">
                 <h5>Sự kiện nổi bật</h5>
                 <p>Tham gia các sự kiện công nghệ sắp tới.</p>
             </div>
         </div>
         <div class="carousel-item">
-            <img src="https://via.placeholder.com/1200x500" class="d-block w-100" alt="Slide 3">
+            <img src="https://khoacntt.ntu.edu.vn/uploads/54/images/news/7323/img/khanh-thanh-phong-thuc-hanh-an-ninh-mang-do-koica-tai-tro-xay-dung-tai-truong-dh.jpg" class="d-block w-100" alt="Slide 3">
             <div class="carousel-caption d-none d-md-block">
                 <h5>Tin tức mới nhất</h5>
                 <p>Cập nhật thông tin từ Khoa CNTT.</p>
