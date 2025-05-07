@@ -130,7 +130,7 @@
     <div th:if="${message}" class="alert alert-success" th:text="${message}"></div>
     <div th:if="${error}" class="alert alert-danger" th:text="${error}"></div>
     <!-- Nút tạo sự kiện mới -->
-    <a href="/events/admin/create" class="btn btn-primary mb-3">Tạo sự kiện mới</a>
+    <a href="/admin/events/create" class="btn btn-primary mb-3">Tạo sự kiện mới</a>
     <!-- Danh sách sự kiện -->
     <table class="table table-striped">
       <thead>
@@ -157,8 +157,8 @@
           <span th:unless="${event.banner}">Không có</span>
         </td>
         <td>
-          <a th:href="@{/events/admin/edit/{id}(id=${event.id})}" class="btn btn-sm btn-warning">Sửa</a>
-          <a th:href="@{/events/admin/delete/{id}(id=${event.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')">Xóa</a>
+          <a th:href="@{/admin/events/edit/{id}(id=${event.id})}" class="btn btn-sm btn-warning">Sửa</a>
+          <a th:href="@{/admin/events/delete/{id}(id=${event.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa sự kiện này?')">Xóa</a>
         </td>
       </tr>
       <tr th:if="${events.isEmpty}">

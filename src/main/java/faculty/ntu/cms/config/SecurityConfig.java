@@ -4,10 +4,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
+import org.springframework.security.web.authentication.logout.LogoutSuccessHandler;
 
 @Configuration
 @EnableWebSecurity
@@ -15,26 +17,47 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        // Matcher để phát hiện URL sai (/admin/admin/**)
+        RequestMatcher wrongAdminUrlMatcher = new AntPathRequestMatcher("/admin/admin/**");
+
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll() // Cho phép truy cập không cần đăng nhập
-                        .requestMatchers("/dashboard/**", "/admin/**").authenticated() // Yêu cầu đăng nhập để vào dashboard và admin
-                        .requestMatchers("/menu").hasAnyAuthority("USER", "ADMIN") // Cho phép cả user và admin xem danh sách menu
-                        .requestMatchers("/menu/create", "/menu/edit/**", "/menu/delete/**").hasAuthority("ADMIN") // Chỉ admin quản lý menu
-                        .anyRequest().permitAll() // Các URL khác cho phép tất cả
+                        .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
+                        .requestMatchers("/dashboard/**", "/admin/**").authenticated()
+                        .requestMatchers("/menu").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/menu/create", "/menu/edit/**", "/menu/delete/**").hasAuthority("ADMIN")
+                        .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
-                        .loginPage("/login") // Trang đăng nhập tùy chỉnh
-                        .defaultSuccessUrl("/dashboard", true) // Chuyển hướng đến dashboard sau khi đăng nhập thành công
+                        .loginPage("/login")
+                        .defaultSuccessUrl("/dashboard", true)
                         .permitAll()
                 )
                 .logout(logout -> logout
-                        .logoutUrl("/logout") // URL để đăng xuất
-                        .logoutSuccessUrl("/login?logout") // Chuyển hướng sau khi đăng xuất
-                        .invalidateHttpSession(true) // Hủy session
-                        .deleteCookies("JSESSIONID") // Xóa cookie phiên
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/login?logout")
+                        .invalidateHttpSession(true)
+                        .deleteCookies("JSESSIONID")
                         .permitAll()
+                )
+                // Xử lý URL sai bằng cách redirect
+                .exceptionHandling(ex -> ex
+                        .defaultAuthenticationEntryPointFor(
+                                (request, response, authException) -> {
+                                    String requestUri = request.getRequestURI();
+                                    if (wrongAdminUrlMatcher.matches(request)) {
+                                        // Redirect từ /admin/admin/... về /admin/...
+                                        String correctedUri = requestUri.replaceFirst("/admin/admin", "/admin");
+                                        response.sendRedirect(correctedUri);
+                                    } else {
+                                        response.sendRedirect("/login");
+                                    }
+                                },
+                                wrongAdminUrlMatcher
+                        )
+                        .accessDeniedPage("/403") // Trang lỗi 403 nếu không có quyền
                 );
+
         return http.build();
     }
 

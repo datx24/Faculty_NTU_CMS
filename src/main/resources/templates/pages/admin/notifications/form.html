@@ -189,7 +189,7 @@
   <div class="container">
     <div class="form-container">
       <h1>Thêm/Sửa thông báo</h1>
-      <form th:action="@{notifications/admin}" th:object="${notification}" method="post" enctype="multipart/form-data">
+      <form th:action="@{/admin/notifications}" th:object="${notification}" method="post" enctype="multipart/form-data">
         <input type="hidden" th:field="*{id}" />
 
         <div class="mb-3">

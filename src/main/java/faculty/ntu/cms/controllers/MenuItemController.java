@@ -13,13 +13,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/menu")
+@RequestMapping("/admin/menu")
 public class MenuItemController {
     @Autowired
     private MenuItemService menuItemService;
 
     // Hiển thị danh sách menu cho admin dựa vào role
-    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping()
     public String getMenuItems(Model m) {
         m.addAttribute("menuItems", menuItemService.getAllMenuItems());
@@ -40,10 +39,11 @@ public class MenuItemController {
     @PostMapping("/create")
     public String createMenuItem(@ModelAttribute MenuItem menuItem) {
         menuItemService.saveMenuItem(menuItem);
-        return "redirect:/menu";
+        return "redirect:/admin/menu";
     }
 
     //Hiển thị form chỉnh sửa menu item
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id,Model m) {
         Optional<MenuItem> menuItem = menuItemService.getMenuItemById(id);
@@ -52,10 +52,11 @@ public class MenuItemController {
             m.addAttribute("parentItems", menuItemService.getAllMenuItems());
             return "pages/admin/menu/edit";
         }
-        return "redirect:/menu";
+        return "redirect:/admin/menu";
     }
 
     //Xử lý cập nhật menu item
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/edit/{id}")
     public String updateMenuItem(@PathVariable Integer id, @ModelAttribute MenuItem menuItem) {
         Optional<MenuItem> existingMenuItem = menuItemService.getMenuItemById(id);
@@ -64,14 +65,15 @@ public class MenuItemController {
             menuItem.setCreatedAt(existingMenuItem.get().getCreatedAt());
             menuItemService.saveMenuItem(menuItem);
         }
-        return "redirect:/menu";
+        return "redirect:/admin/menu";
     }
 
     //Xử lý xóa menu item
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/delete/{id}")
     public String deleteMenuItem(@PathVariable int id) {
         menuItemService.deleteMenuItem(id);
-        return "redirect:/menu";
+        return "redirect:/admin/menu";
     }
 
 }

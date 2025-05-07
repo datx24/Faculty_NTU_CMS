@@ -3,6 +3,7 @@ package faculty.ntu.cms.controllers;
 import faculty.ntu.cms.models.Event;
 import faculty.ntu.cms.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -12,22 +13,14 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import java.util.List;
 
 @Controller
-@RequestMapping("/events")
+@RequestMapping("/admin/events")
 public class EventController {
     @Autowired
     private EventService eventService;
 
-    //Hiển thị danh sách sự kiện cho người dùng
-    @GetMapping
-    public String listEvents(Model m) {
-        //Lấy danh sách sự kiện đang hoạt động
-        List<Event> events = eventService.getAllActiveEvents();
-        m.addAttribute("events", events);
-        return "pages/user/events/list";
-    }
-
     //Hiển thị danh sách sự kiện cho admin
-    @GetMapping("/admin")
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping()
     public String adminListEvents(Model m) {
         //Lấy tất cả danh sách sự kiện
         List<Event> events = eventService.getAllEvents();
@@ -36,14 +29,14 @@ public class EventController {
     }
 
     //Hiển thị form tạo sự kiện mới cho admin
-    @GetMapping("/admin/create")
+    @GetMapping("create")
     public String showCreateForm(Model m) {
         m.addAttribute("event", new Event());
         return "pages/admin/events/create";
     }
 
     //Xử lý tạo sự kiện mới với file banner
-    @PostMapping("/admin")
+    @PostMapping()
     public String createEvent(@ModelAttribute Event event,
                               @RequestParam("bannerFile")
                               MultipartFile bannerFile){
@@ -68,7 +61,7 @@ public class EventController {
     }
 
     //Hiển thị form chỉnh sửa sự kiện
-    @GetMapping("/admin/edit/{id}")
+    @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id,
                                Model m,
                                RedirectAttributes redirectAttributes) {
@@ -84,7 +77,7 @@ public class EventController {
     }
 
     //Xử lý cập nhật sự kiện
-    @PostMapping("admin/edit/{id}")
+    @PostMapping("edit/{id}")
     public String updateEvent(@PathVariable Integer id,
                               @ModelAttribute Event event,
                               @RequestParam("bannerFile") MultipartFile bannerFile,
@@ -92,15 +85,15 @@ public class EventController {
         try {
             eventService.updateEvent(id, event, bannerFile);
             redirectAttributes.addFlashAttribute("message","Cập nhật sự kiện thành công !");
-            return "redirect:/events/admin";
+            return "redirect:/admin/events";
         }catch (Exception e) {
             redirectAttributes.addFlashAttribute("error","Lỗi khi cập nhật sự kiện: " + e.getMessage());
-            return "redirect:/events/admin/edit" + id;
+            return "redirect:/admin/events/edit" + id;
         }
     }
 
     //Xử lý xóa sự kiện
-    @GetMapping("/admin/delete/{id}")
+    @GetMapping("/delete/{id}")
     public String deleteEvent(@PathVariable Integer id,
                               RedirectAttributes redirectAttributes) {
         try {
@@ -109,6 +102,6 @@ public class EventController {
         }catch (Exception e) {
             redirectAttributes.addFlashAttribute("error", "Lỗi khi xóa sự kiện " + e.getMessage());
         }
-        return "redirect:/events/admin";
+        return "redirect:/admin/events";
     }
 }

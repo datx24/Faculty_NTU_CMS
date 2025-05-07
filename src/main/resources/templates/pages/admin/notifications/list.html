@@ -128,7 +128,7 @@
     <!-- Tiêu đề danh sách thông báo -->
     <h2 class="mb-4 text-primary">Danh sách Thông Báo</h2>
     <!-- Nút thêm mới với style Bootstrap -->
-    <a href="/notifications/admin/new" class="btn btn-success mb-3">Thêm mới</a>
+    <a href="/admin/notifications/new" class="btn btn-success mb-3">Thêm mới</a>
 
     <!-- Bảng hiển thị thông báo với Bootstrap -->
     <div class="table-responsive">
@@ -147,8 +147,8 @@
           <td th:text="${n.title}"></td>
           <td th:text="${n.isActive} ? 'Hoạt động' : 'Không hoạt động'"></td>
           <td>
-            <a th:href="@{/notifications/admin/edit/{id}(id=${n.id})}" class="btn btn-warning btn-sm me-2">Sửa</a>
-            <a th:href="@{/notifications/admin/delete/{id}(id=${n.id})}" class="btn btn-danger btn-sm">Xóa</a>
+            <a th:href="@{/admin/notifications/edit/{id}(id=${n.id})}" class="btn btn-warning btn-sm me-2">Sửa</a>
+            <a th:href="@{/admin/notifications/delete/{id}(id=${n.id})}" class="btn btn-danger btn-sm">Xóa</a>
           </td>
         </tr>
         </tbody>

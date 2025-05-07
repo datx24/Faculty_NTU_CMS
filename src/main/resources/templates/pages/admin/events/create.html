@@ -128,7 +128,7 @@
         <!-- Tiêu đề trang -->
         <h1>Tạo sự kiện mới</h1>
         <!-- Form tạo sự kiện, hỗ trợ tải lên file -->
-        <form th:action="@{/events/admin}" th:object="${event}" method="post" enctype="multipart/form-data">
+        <form th:action="@{/admin/events}" th:object="${event}" method="post" enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="title" class="form-label">Tiêu đề</label>
                 <input type="text" class="form-control" id="title" th:field="*{title}" required>
@@ -158,10 +158,9 @@
                 <input type="checkbox" id="isActive" th:field="*{isActive}" checked>
             </div>
             <!-- Nút submit form -->
-            Workers
             <button type="submit" class="btn btn-primary">Tạo sự kiện</button>
             <!-- Nút hủy -->
-            <a href="/events/admin" class="btn btn-secondary">Hủy</a>
+            <a href="/admin/events" class="btn btn-secondary">Hủy</a>
         </form>
     </div>
 </div>
