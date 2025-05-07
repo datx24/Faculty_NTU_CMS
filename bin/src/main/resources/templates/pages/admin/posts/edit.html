@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin CMS - Chỉnh sửa Bài Viết</title>
+<!-- Bootstrap 5 CSS -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Font Awesome -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+<!-- Custom CSS (you can extract this to a separate file if needed) -->
+<style>
+body {
+font-family: 'Roboto', sans-serif;
+background-color: #f4f7fa;
+}
+.sidebar {
+min-height: 100vh;
+background-color: #1e3a8a;
+color: white;
+position: fixed;
+width: 250px;
+transition: all 0.3s;
+}
+.sidebar .nav-link {
+color: #d1d5db;
+padding: 10px 20px;
+border-radius: 5px;
+margin: 5px 10px;
+transition: all 0.3s;
+}
+.sidebar .nav-link:hover, .sidebar .nav-link.active {
+background-color: #2563eb;
+color: white;
+}
+.sidebar .nav-link button {
+background: none;
+border: none;
+color: #d1d5db;
+padding: 10px 20px;
+border-radius: 5px;
+margin: 5px 10px;
+text-align: left;
+width: 100%;
+cursor: pointer;
+transition: all 0.3s;
+}
+.sidebar .nav-link button:hover {
+background-color: #2563eb;
+color: white;
+}
+.content {
+margin-left: 250px;
+padding: 20px;
+}
+.navbar {
+background-color: white;
+box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+.card {
+border: none;
+border-radius: 10px;
+box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+transition: all 0.3s;
+}
+.card:hover {
+transform: translateY(-5px);
+}
+.footer {
+background-color: #1e3a8a;
+color: white;
+padding: 40px 0;
+margin-left: 250px;
+margin-top: 40px;
+border-top: 4px solid #2563eb;
+}
+.footer a {
+color: #d1d5db;
+text-decoration: none;
+transition: color 0.3s;
+}
+.footer a:hover {
+color: #ffffff;
+}
+.footer .social-icons a {
+font-size: 1.5rem;
+margin: 0 10px;
+}
+@media (max-width: 768px) {
+.sidebar {
+width: 70px;
+}
+.sidebar .nav-link span {
+display: none;
+}
+.content {
+margin-left: 70px;
+}
+.footer {
+margin-left: 70px;
+}
+}
+</style>
+</head>
+<body>
+<!-- Include Sidebar -->
+<th:block th:replace="~{fragments/sidebar}"></th:block>
+
+<div class="content">
+    <!-- Include Navbar -->
+    <th:block th:replace="~{fragments/navbar}"></th:block>
+
+    <div class="container-fluid mt-4">
+        <h2 class="mb-4">Chỉnh sửa Bài Viết</h2>
+
+        <form th:action="@{/admin/posts/edit/{id}(id=${post.id})}" th:method="post" th:object="${post}">
+            <input type="hidden" th:field="*{id}"> <!-- Hidden field to pass the post ID -->
+            <div class="card p-4 mb-4">
+                <div class="form-group">
+                    <label for="title">Tiêu đề:</label>
+                    <input type="text" class="form-control" id="title" th:field="*{title}" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="slug">Slug (URL thân thiện):</label>
+                    <input type="text" class="form-control" id="slug" th:field="*{slug}">
+                    <small class="form-text text-muted">Để trống sẽ tự động tạo nếu chưa có.</small>
+                </div>
+                <div class="form-group ">
+                    <label for="thumbnail">Ảnh minh họa:</label>
+                    <div class="custom-file mb-2">
+                        <input type="file" class="custom-file-input" id="thumbnailUpload" name="thumbnailFile" accept="image/*">
+
+                    </div>
+                    <!-- Hidden field to store the final image path -->
+                    <input type="hidden" id="thumbnail" name="thumbnail">
+                    <!-- Image preview container -->
+                    <div id="thumbnailPreviewContainer" class="mt-2" >
+                        <img id="thumbnailPreview" th:src="*{thumbnail}" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                        <button type="button" class="btn btn-sm btn-danger ml-2" onclick="clearThumbnail()">Xóa ảnh</button>
+                    </div>
+                    <small class="form-text text-muted">Tải lên ảnh minh họa cho bài viết.</small>
+                </div>
+
+                <div class="form-group">
+                    <label for="excerpt">Mô tả ngắn:</label>
+                    <textarea class="form-control" id="excerpt" th:field="*{excerpt}" rows="3"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Nội dung:</label>
+                    <textarea class="form-control" id="content" th:field="*{content}" rows="10" required></textarea>
+                    <!-- You might want to integrate a rich text editor here -->
+                </div>
+
+                <div class="form-group">
+                    <label for="category">Danh mục:</label>
+                    <select class="form-control" id="category" name="category">
+                    <option value="">-- Chọn danh mục (tùy chọn) --</option>
+                    <option th:each="category : ${categories}"
+                    th:value="${category.id}"
+                    th:text="${category.name}"
+                    th:selected="${post.category != null and post.category.id == category.id}"></option>
+                    </select>
+                    </div>
+
+                <div class="form-group">
+                    <label for="status">Trạng thái:</label>
+                    <select class="form-control" id="status" th:field="*{status}">
+                        <option value="draft">Bản nháp</option>
+                        <option value="published">Đã xuất bản</option>
+                        <option value="pending">Đang chờ duyệt</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="postsStatus">Trạng thái hiển thị:</label>
+                    <select class="form-control" id="postsStatus" th:field="*{postsStatus}">
+                        <option value="active">Hiển thị</option>
+                        <option value="inactive">Ẩn</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Cập Nhật Bài Viết</button>
+                <a th:href="@{/admin/posts}" class="btn btn-secondary ml-2">Hủy</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Include Footer -->
+<th:block th:replace="~{fragments/footer}"></th:block>
+
+<!-- Bootstrap 5 JS (Optional) -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>

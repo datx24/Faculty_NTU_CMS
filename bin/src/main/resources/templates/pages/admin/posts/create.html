@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin CMS - Khoa CNTT ĐH Nha Trang</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f4f7fa;
+        }
+        .sidebar {
+            min-height: 100vh;
+            background-color: #1e3a8a;
+            color: white;
+            position: fixed;
+            width: 250px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link {
+            color: #d1d5db;
+            padding: 10px 20px;
+            border-radius: 5px;
+            margin: 5px 10px;
+            transition: all 0.3s;
+        }
+        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+            background-color: #2563eb;
+            color: white;
+        }
+        .sidebar .nav-link[type="submit"] {
+            background: none;
+            border: none;
+            text-align: left;
+            width: 92%;
+            cursor: pointer;
+            appearance: none;
+            box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+        }
+        .sidebar .nav-link[type="submit"]:hover {
+            background-color: #2563eb;
+            color: white;
+        }
+        .content {
+            margin-left: 250px;
+            padding: 20px;
+        }
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .card {
+            border: none;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 40px 0;
+            margin-left: 250px;
+            margin-top: 40px;
+            border-top: 4px solid #2563eb;
+        }
+        .footer a {
+            color: #d1d5db;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        .footer a:hover {
+            color: #ffffff;
+        }
+        .footer .social-icons a {
+            font-size: 1.5rem;
+            margin: 0 10px;
+        }
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 70px;
+            }
+            .sidebar .nav-link span {
+                display: none;
+            }
+            .content {
+                margin-left: 70px;
+            }
+            .footer {
+                margin-left: 70px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Include Sidebar -->
+    <th:block th:replace="~{fragments/sidebar}"></th:block>
+
+    <div class="content">
+        <!-- Include Navbar -->
+        <th:block th:replace="~{fragments/navbar}"></th:block>
+
+        <div class="container-fluid mt-4">
+            <h2 class="mb-4">Tạo Bài Viết Mới</h2>
+
+            <form th:action="@{/admin/posts/create}" th:method="post" enctype="multipart/form-data">
+                <div class="card p-4 mb-4">
+                    <div class="form-group">
+                        <label for="title">Tiêu đề:</label>
+                        <input type="text" class="form-control" id="title" name="title" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="slug">Slug (URL thân thiện):</label>
+                        <input type="text" class="form-control" id="slug" name="slug">
+                        <small class="form-text text-muted">Để trống sẽ tự động tạo.</small>
+                    </div>
+
+                    <div class="form-group ">
+                        <label for="thumbnail">Ảnh minh họa:</label>
+                        <div class="custom-file mb-2">
+                            <input type="file" class="custom-file-input" id="thumbnailUpload" name="thumbnailFile" accept="image/*">
+
+                        </div>
+                        <!-- Hidden field to store the final image path -->
+                        <input type="hidden" id="thumbnail" name="thumbnail">
+                        <!-- Image preview container -->
+                        <div id="thumbnailPreviewContainer" class="mt-2" style="display: none;">
+                            <img id="thumbnailPreview" src="#" alt="Preview" class="img-thumbnail" style="max-height: 200px;">
+                            <button type="button" class="btn btn-sm btn-danger ml-2" onclick="clearThumbnail()">Xóa ảnh</button>
+                        </div>
+                        <small class="form-text text-muted">Tải lên ảnh minh họa cho bài viết.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="excerpt">Mô tả ngắn:</label>
+                        <textarea class="form-control" id="excerpt" name="excerpt" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="content">Nội dung:</label>
+                        <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                        <!-- You might want to integrate a rich text editor here -->
+                    </div>
+
+                    
+                    <div class="form-group">
+                        <label for="category">Danh mục:</label>
+                        <select class="form-control" id="category" name="category">
+                            <option value="">-- Chọn danh mục (tùy chọn) --</option>
+                            <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                            <!-- Assuming you pass a list of categories named 'categories' to the template -->
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">Trạng thái:</label>
+                        <select class="form-control" id="status" name="status">
+                            <option value="draft" selected>Bản nháp</option>
+                            <option value="published">Đã xuất bản</option>
+                            <option value="pending">Đang chờ duyệt</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="postsStatus">Trạng thái hiển thị:</label>
+                        <select class="form-control" id="postsStatus" name="postsStatus">
+                            <option value="active" selected>Hiển thị</option>
+                            <option value="inactive">Ẩn</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Lưu Bài Viết</button>
+                    <a th:href="@{/admin/posts}" class="btn btn-secondary ml-2">Hủy</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Include Footer -->
+ 	<th:block th:replace="~{fragments/footer}"></th:block>
+
+   <script>
+        function generateSlug(str) {
+            let slug = str.toLowerCase()
+                .replace(/[^a-z0-9]+/g, '-') 
+                .replace(/-+/g, '-') 
+                .replace(/^-|-$/g, '');
+
+            if (slug.length > 100) {
+                slug = slug.substring(0, 100);
+            }
+            return slug;
+        }
+
+        const titleInput = document.getElementById('title');
+        const slugInput = document.getElementById('slug');
+
+        titleInput.addEventListener('input', () => {
+
+            const slug = generateSlug(titleInput.value);
+            
+
+            slugInput.value = slug;
+        });
+
+        document.getElementById('thumbnailUpload').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                
+                reader.onload = function(event) {
+                    document.getElementById('thumbnailPreview').src = event.target.result;
+                    document.getElementById('thumbnailPreviewContainer').style.display = 'block';
+                    document.getElementById('thumbnail').value = file.name; // Or set to a temporary path
+                }
+                
+                reader.readAsDataURL(file);
+            }
+        });
+
+        function clearThumbnail() {
+            document.getElementById('thumbnailUpload').value = '';
+            document.getElementById('thumbnail').value = '';
+            document.getElementById('thumbnailPreviewContainer').style.display = 'none';
+        }
+   </script>
+</body>
+</html>

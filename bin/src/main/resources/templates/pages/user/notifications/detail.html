@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết thông báo</title>
+</head>
+<body>
+<h1 th:text="${notification.title}"></h1>
+<p th:text="${notification.message}"></p>
+<p>Ngày bắt đầu: <span th:text="${notification.startDate}"></span></p>
+<p>Ngày kết thúc: <span th:text="${notification.endDate}"></span></p>
+</body>
+</html>
