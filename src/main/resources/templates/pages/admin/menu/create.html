@@ -159,7 +159,7 @@
                         <!-- Menu cha (Parent) -->
                         <div class="mb-3">
                             <label for="parent" class="form-label">Menu cha</label>
-                            <select id="parent" name="parent.id" class="form-select">
+                            <select id="parent" name="parent" class="form-select">
                                 <option value="">Không có (Menu cha)</option>
                                 <th:block th:each="item : ${menuItems}">
                                     <option th:value="${item.id}" th:text="${item.label}"
