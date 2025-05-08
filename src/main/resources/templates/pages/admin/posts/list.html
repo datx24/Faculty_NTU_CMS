@@ -190,7 +190,7 @@
                                 <div class="action-container">
                                     <button class="btn btn-sm btn-info detail-btn">Chi tiết</button>
                                     <div class="actions">
-                                        <a th:href="'/' + ${post.slug}" class="btn btn-sm btn-primary">Xem</a>
+                                        <a th:href="'/posts/' + ${post.slug}" class="btn btn-sm btn-primary">Xem</a>
                                         <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
                                         <a th:href="@{/admin/posts/delete/{id}(id=${post.id})}" class="btn btn-sm btn-danger">Xóa</a>
                                     </div>

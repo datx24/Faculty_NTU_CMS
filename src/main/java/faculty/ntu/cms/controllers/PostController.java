@@ -100,7 +100,7 @@ public class PostController {
         postService.deletePost(id);
         return "redirect:/admin/posts";
     }
-    @GetMapping("/{slug}")
+    @GetMapping("posts/{slug}")
     public String viewPost(@PathVariable String slug, Model model) {
         System.out.println("Processing slug: " + slug); // Debug
         Post post = postService.findBySlug(slug);
