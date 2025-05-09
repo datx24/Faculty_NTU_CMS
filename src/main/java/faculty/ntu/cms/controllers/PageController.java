@@ -90,6 +90,7 @@ public class PageController {
 
     // Public View
     @GetMapping("/{slug}")
+    @ResponseBody
     public String viewPage(@PathVariable String slug, Model model) {
         Page page = pageService.findBySlug(slug);
         if (page == null || !page.getIsActive()) {
@@ -100,7 +101,7 @@ public class PageController {
         return page.getContent();
         
         //nếu chỉ lưu body tag
-        // model.addAttribute("page", page);
-        // return "pages/user/page/page_detail";
+        //model.addAttribute("page", page);
+        //return "pages/user/page/page_detail";
     }
 }
