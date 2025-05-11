@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
             font-family: 'Roboto', sans-serif;
             background-color: #f4f7fa;
         }
+
         .sidebar {
             min-height: 100vh;
             background-color: #1e3a8a;
@@ -22,6 +24,7 @@
             width: 250px;
             transition: all 0.3s;
         }
+
         .sidebar .nav-link {
             color: #d1d5db;
             padding: 10px 20px;
@@ -29,10 +32,13 @@
             margin: 5px 10px;
             transition: all 0.3s;
         }
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+
+        .sidebar .nav-link:hover,
+        .sidebar .nav-link.active {
             background-color: #2563eb;
             color: white;
         }
+
         .sidebar .nav-link[type="submit"] {
             background: none;
             border: none;
@@ -40,29 +46,36 @@
             width: 92%;
             cursor: pointer;
             appearance: none;
-            box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
+            box-sizing: border-box;
+            /* Đảm bảo padding không làm tăng chiều rộng */
         }
+
         .sidebar .nav-link[type="submit"]:hover {
             background-color: #2563eb;
             color: white;
         }
+
         .content {
             margin-left: 250px;
             padding: 20px;
         }
+
         .navbar {
             background-color: white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
+
         .card {
             border: none;
             border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             transition: all 0.3s;
         }
+
         .card:hover {
             transform: translateY(-5px);
         }
+
         .footer {
             background-color: #1e3a8a;
             color: white;
@@ -71,34 +84,42 @@
             margin-top: 40px;
             border-top: 4px solid #2563eb;
         }
+
         .footer a {
             color: #d1d5db;
             text-decoration: none;
             transition: color 0.3s;
         }
+
         .footer a:hover {
             color: #ffffff;
         }
+
         .footer .social-icons a {
             font-size: 1.5rem;
             margin: 0 10px;
         }
+
         @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
             }
+
             .sidebar .nav-link span {
                 display: none;
             }
+
             .content {
                 margin-left: 70px;
             }
+
             .footer {
                 margin-left: 70px;
             }
         }
     </style>
 </head>
+
 <body>
 
     <!-- Include Sidebar -->
@@ -111,50 +132,84 @@
         <div class="container-fluid mt-4">
             <h2 class="mb-4">Tạo Trang Mới</h2>
 
-            <form th:action="@{/admin/pages/create}" th:method="post" enctype="multipart/form-data">
+            <form id="createPageForm" th:action="@{/admin/pages/create}" th:method="post" enctype="multipart/form-data">
                 <div class="card p-4 mb-4">
-                    <div class="form-group">
-                        <label for="title">Tiêu đề:</label>
+                    <div class="mb-3">
+                        <label for="title" class="form-label">Tiêu đề:</label>
                         <input type="text" class="form-control" id="title" name="title" required>
                     </div>
 
-                    <div class="form-group">
-                        <label for="slug">Slug (URL thân thiện):</label>
+                    <div class="mb-3">
+                        <label for="slug" class="form-label">Slug (URL thân thiện):</label>
                         <input type="text" class="form-control" id="slug" name="slug">
                         <small class="form-text text-muted">Để trống sẽ tự động tạo.</small>
                     </div>
+                    <div class="form-group mb-3">
+                        <label for="headerTemplate" class="form-label">Chọn Header:</label>
+                        <select class="form-select" id="headerTemplate" name="headerTemplate">
+                            <option value="default_header">Header Mặc định</option>
+                            <option value="minimal_header">Header Tối giản</option>
+                            <!-- Add more options populated from your system -->
+                        </select>
+                    </div>
+                    <div class="form-group mb-3">
+                        <label for="footerTemplate" class="form-label">Chọn Footer:</label>
+                        <select class="form-select" id="footerTemplate" name="footerTemplate">
+                            <option value="default_footer">Footer Mặc định</option>
+                            <option value="simple_footer">Footer Đơn giản</option>
+                            <!-- Add more options populated from your system -->
+                        </select>
+                    </div>
+                    <div class="form-group mb-3 flex-grow-1 d-flex flex-column">
+                        <label for="content" class="form-label">Nội dung (HTML):</label>
+                        <textarea class="form-control flex-grow-1 " rows="10" id="content" name="content" required></textarea>
+                        <!-- "whatever2 page editor" would enhance this textarea or work with its value -->
+                    </div>
+  
 
-                    
-                
-                    <div class="form-group">
-                        <label for="content">Nội dung:</label>
-                        <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
-                        <!-- You might want to integrate a rich text editor here -->
+                    <!-- Preview Column -->
+                    <div style="min-height: 800px;" class="preview-column">
+                        <div class="card  h-100 p-1">
+                            <div class="card-header">
+                                Xem trước trực tiếp
+                            </div>
+                            <div class="card-body h-100">
+                                <iframe width="100%" height="780px" id="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
+                                <!-- sandbox attribute is important for security if user HTML contains scripts -->
+                                <!-- 'allow-same-origin' allows the iframe to be treated as same-origin for CSS/JS from your domain if needed -->
+                                <!-- 'allow-scripts' allows scripts within the user's HTML to run (e.g., for carousels, maps) -->
+                            </div>
+                        </div>
                     </div>
 
-                    
 
-                    <div class="form-group">
+            
+
+
+                    <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
                         <label class="form-check-label" for="isActive">Xuất bản</label>
                     </div>
 
-
-                    <button type="submit" class="btn btn-primary">Lưu Trang</button>
-                    <a th:href="@{/admin/pages}" class="btn btn-secondary ml-2">Hủy</a>
+                    <div class="d-flex">
+                        <button type="submit" class="btn btn-primary me-2">Lưu Trang</button>
+                        
+                        <a th:href="@{/admin/pages}" class="btn btn-secondary">Hủy</a>
+                    </div>
                 </div>
             </form>
         </div>
     </div>
+ 
 
     <!-- Include Footer -->
- 	<th:block th:replace="~{fragments/footer}"></th:block>
+    <th:block th:replace="~{fragments/footer}"></th:block>
 
-   <script>
+    <script>
         function generateSlug(str) {
             let slug = str.toLowerCase()
-                .replace(/[^a-z0-9]+/g, '-') 
-                .replace(/-+/g, '-') 
+                .replace(/[^a-z0-9]+/g, '-')
+                .replace(/-+/g, '-')
                 .replace(/^-|-$/g, '');
 
             if (slug.length > 100) {
@@ -169,31 +224,66 @@
         titleInput.addEventListener('input', () => {
 
             const slug = generateSlug(titleInput.value);
-            
+
 
             slugInput.value = slug;
         });
 
-        document.getElementById('thumbnailUpload').addEventListener('change', function(e) {
-            const file = e.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                
-                reader.onload = function(event) {
-                    document.getElementById('thumbnailPreview').src = event.target.result;
-                    document.getElementById('thumbnailPreviewContainer').style.display = 'block';
-                    document.getElementById('thumbnail').value = file.name; // Or set to a temporary path
-                }
-                
-                reader.readAsDataURL(file);
-            }
-        });
+        
 
-        function clearThumbnail() {
-            document.getElementById('thumbnailUpload').value = '';
-            document.getElementById('thumbnail').value = '';
-            document.getElementById('thumbnailPreviewContainer').style.display = 'none';
+        const contentTextArea = document.getElementById('content');
+        const previewIframe = document.getElementById('preview-iframe');
+        const headerSelect = document.getElementById('headerTemplate');
+        const footerSelect = document.getElementById('footerTemplate');
+        function updatePreview() {
+            const rawContent = contentTextArea.value;
+
+
+            // Basic HTML structure for the preview.
+            // You might want to include common CSS links your site uses here as well
+            // or link to a dedicated preview CSS file.
+            const fullHtml = `
+                <!DOCTYPE html>
+                <html lang="en">
+                <head>
+                    <meta charset="UTF-8">
+                    
+                    <title>Preview</title>
+                    <!-- You might want to link your site's global CSS here for more accurate preview -->
+                    <!-- <link rel="stylesheet" href="/path/to/your/site/global.css"> -->
+                    <style>
+                        body { margin: 0; font-family: sans-serif; }
+                        /* Add any other essential base styles for preview */
+                    </style>
+                </head>
+                <body>
+                    
+                    <main id="page-content-preview" style="padding: 15px;">
+                        ${rawContent}
+                    </main>
+                    
+                </body>
+                </html>
+            `;
+            // Using srcdoc is generally safer and easier for dynamic content
+            previewIframe.srcdoc = fullHtml;
         }
-   </script>
+
+        // Event Listeners
+        if (titleInput && slugInput) {
+            titleInput.addEventListener('input', () => {
+                const slug = generateSlug(titleInput.value);
+                slugInput.value = slug;
+            });
+        }
+
+        if (contentTextArea && previewIframe) {
+            contentTextArea.addEventListener('input', updatePreview);
+            // Initial preview update
+            updatePreview();
+        }
+
+    </script>
 </body>
+
 </html>

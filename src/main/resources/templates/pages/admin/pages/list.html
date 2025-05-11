@@ -180,7 +180,7 @@
                                     <div class="actions">
                                         <a th:href="'/' + ${page.slug}" class="btn btn-sm btn-primary">Xem</a>
                                         <a th:href="@{/admin/pages/edit/{id}(id=${page.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                                        <a th:href="@{/admin/pages/delete/{id}(id=${page.id})}" class="btn btn-sm btn-danger">Xóa</a>
+                                        <a th:href="@{/admin/pages/delete/{id}(id=${page.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa trang này?')">Xóa</a>
                                     </div>
                                 </div>
                             </td>
