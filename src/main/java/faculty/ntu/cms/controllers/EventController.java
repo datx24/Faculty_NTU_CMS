@@ -41,7 +41,7 @@ public class EventController {
                               @RequestParam("bannerFile")
                               MultipartFile bannerFile){
         eventService.createEvent(event, bannerFile);
-        return "redirect:/events/admin";
+        return "redirect:admin/events";
     }
 
     //Hiển thị form chỉnh sửa sự kiện
