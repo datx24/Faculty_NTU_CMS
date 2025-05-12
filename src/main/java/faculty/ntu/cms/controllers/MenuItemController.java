@@ -29,9 +29,17 @@ public class MenuItemController {
     // Hiển thị form tạo menu cho admin
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/create")
-    public String showCreateForm(Model m) {
-        m.addAttribute("menuItem", new MenuItem());
+    public String showCreateForm(@RequestParam(required = false) String menuName, Model m) {
+        
+        MenuItem menuItem = new MenuItem();
+
+        if (menuName != null && !menuName.isBlank()) {
+            menuItem.setMenuName(menuName);
+        }
+    
+        m.addAttribute("menuItem", menuItem);
         m.addAttribute("menuItems", menuItemService.getAllMenuItems());
+        m.addAttribute("menuNames", menuItemService.getMenuNameList());
         return "pages/admin/menu/create";
     }
 
