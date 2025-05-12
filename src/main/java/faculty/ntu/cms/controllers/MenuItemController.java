@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -87,8 +88,9 @@ public class MenuItemController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/{name}")
-    public String getMenuByMenuName(@PathVariable int id) {
-        menuItemService.deleteMenuItem(id);
-        return "redirect:/admin/menu";
+    @ResponseBody
+    public List<MenuItem> getMenuByMenuName(@PathVariable String name) {
+        
+        return menuItemService.getActiveMenuItemsByMenuName(name);
     }
 }

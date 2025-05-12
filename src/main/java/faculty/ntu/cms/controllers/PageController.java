@@ -7,12 +7,20 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
+import faculty.ntu.cms.models.MenuItem;
 import faculty.ntu.cms.models.Page;
 import faculty.ntu.cms.models.User;
 import faculty.ntu.cms.services.PageService;
 import faculty.ntu.cms.services.FileStorageService;
+import faculty.ntu.cms.services.MenuItemService;
+import jakarta.servlet.http.HttpServletRequest;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("")
@@ -24,6 +32,9 @@ public class PageController {
     @Autowired
     private FileStorageService fileStorageService;
 
+    @Autowired
+    private MenuItemService menuItemService;
+
     // Admin List View
     @GetMapping("/admin/pages")
     public String listPages(Model model) {
@@ -33,8 +44,15 @@ public class PageController {
 
     // Create Form
     @GetMapping("/admin/pages/create")
-    public String showCreateForm(Model model) {
+    public String showCreateForm(Model model, HttpServletRequest request) {
+        String requestURI = request != null ? request.getRequestURI() : "/";
         model.addAttribute("page", new Page());
+        model.addAttribute("currentPath", requestURI);
+
+        Map<String, List<MenuItem>> menuItemsByMenuName = menuItemService.getAllMenuItems().stream()
+        .collect(Collectors.groupingBy(MenuItem::getMenuName));
+        model.addAttribute("menuItemsByMenuName", menuItemsByMenuName);
+        model.addAttribute("menuNames", new ArrayList<>(menuItemsByMenuName.keySet()));
         return "pages/admin/pages/create";
     }
 

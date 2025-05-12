@@ -147,9 +147,11 @@
                     <div class="form-group mb-3">
                         <label for="headerTemplate" class="form-label">Chọn Header:</label>
                         <select class="form-select" id="headerTemplate" name="headerTemplate">
-                            <option value="default_header">Header Mặc định</option>
-                            <option value="minimal_header">Header Tối giản</option>
-                            <!-- Add more options populated from your system -->
+                            <option th:each="template : ${menuNames}" 
+                                    th:value="${template}"
+                                    th:text="${template}"
+                                    th:selected="${template == 'primary2'}">
+                            </option>
                         </select>
                     </div>
                     <div class="form-group mb-3">
@@ -200,7 +202,12 @@
             </form>
         </div>
     </div>
- 
+    <div id="header-templates" style="display: none;">
+        <div th:each="menuName : ${menuNames}" th:id="'template-'+${menuName}">
+            <th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItemsByMenuName.get(menuName)}, currentPath=${currentPath})}"></th:block>
+        </div>
+    </div>
+    
 
     <!-- Include Footer -->
     <th:block th:replace="~{fragments/footer}"></th:block>
@@ -237,7 +244,11 @@
         const footerSelect = document.getElementById('footerTemplate');
         function updatePreview() {
             const rawContent = contentTextArea.value;
-
+            const selectedHeaderKey = headerSelect.value;
+            const headerTemplateElement = document.getElementById(`template-${selectedHeaderKey}`);
+            if (headerTemplateElement) {
+                headerHtml = headerTemplateElement.innerHTML;
+            }
 
             // Basic HTML structure for the preview.
             // You might want to include common CSS links your site uses here as well
@@ -248,16 +259,14 @@
                 <head>
                     <meta charset="UTF-8">
                     
-                    <title>Preview</title>
-                    <!-- You might want to link your site's global CSS here for more accurate preview -->
-                    <!-- <link rel="stylesheet" href="/path/to/your/site/global.css"> -->
-                    <style>
-                        body { margin: 0; font-family: sans-serif; }
-                        /* Add any other essential base styles for preview */
-                    </style>
+                    <title>Đại học Nha Trang - Khoa CNTT</title>
+                    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+                    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+                    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+                    <link rel="stylesheet" href="/css/public.css">
                 </head>
                 <body>
-                    
+                    ${headerHtml}
                     <main id="page-content-preview" style="padding: 15px;">
                         ${rawContent}
                     </main>
@@ -279,8 +288,14 @@
 
         if (contentTextArea && previewIframe) {
             contentTextArea.addEventListener('input', updatePreview);
-            // Initial preview update
+            
             updatePreview();
+        }
+        if (headerSelect) {
+            headerSelect.addEventListener('change', updatePreview);
+        }
+        if (footerSelect) {
+            footerSelect.addEventListener('change', updatePreview);
         }
 
     </script>

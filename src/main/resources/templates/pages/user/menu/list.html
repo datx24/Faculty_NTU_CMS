@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <nav class="navbar-custom" th:fragment="menuList(menuItems, currentPath)">
+  
   <div class="container">
     <ul class="nav justify-content-center">
       <th:block th:each="item, itemStat : ${menuItems}" th:if="${item.active}">

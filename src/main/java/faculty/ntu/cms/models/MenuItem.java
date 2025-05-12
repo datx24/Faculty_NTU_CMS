@@ -5,6 +5,8 @@ import jakarta.persistence.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "menu_items")
 @Data
@@ -25,6 +27,7 @@ public class MenuItem {
     private String path = "#";
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "parent_id")
     private MenuItem parent;
 
