@@ -100,4 +100,9 @@ public class EventService {
     public void deleteEvent(int id) {
         eventRepository.deleteById(id);
     }
+    // Tìm và xóa các sự kiện liên quan đến bài viết
+    public void deleteEventsByRecapPostId(Integer postId) {
+        List<Event> events = eventRepository.findByRecapPostId(postId);
+        eventRepository.deleteAll(events);
+    }
 }

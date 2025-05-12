@@ -1,5 +1,6 @@
 package faculty.ntu.cms.controllers;
 
+import faculty.ntu.cms.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -20,6 +21,9 @@ import faculty.ntu.cms.services.CategoryService;
 import faculty.ntu.cms.services.PostService;
 import faculty.ntu.cms.services.FileStorageService;
 
+import java.io.IOException;
+import java.nio.file.*;
+
 @Controller
 @RequestMapping("")
 public class PostController {
@@ -32,7 +36,9 @@ public class PostController {
 
     @Autowired
     private FileStorageService fileStorageService;
-
+    @Autowired
+    private EventService eventService;
+    private final String uploadDir = "/uploads/";
 
     public PostController() {
         super();
@@ -87,7 +93,31 @@ public class PostController {
     }
 
     @PostMapping("/admin/posts/edit/{id}")
-    public String updatePost(@PathVariable Integer id, @ModelAttribute("post") Post updatedPost) {
+    public String updatePost(@PathVariable Integer id, @ModelAttribute("post") Post updatedPost,
+                             @RequestParam(value = "thumbnailFile", required = false) MultipartFile thumbnailFile) {
+        // Lấy bài viết hiện tại để kiểm tra ảnh cũ
+        Post existingPost = postService.getPostById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bài viết với ID " + id + " không tồn tại để cập nhật."));
+
+        // Xử lý thay thế ảnh nếu có ảnh mới
+        if (thumbnailFile != null && !thumbnailFile.isEmpty()) {
+            try {
+                // Xóa ảnh cũ nếu tồn tại
+                if (existingPost.getThumbnail() != null && !existingPost.getThumbnail().isEmpty()) {
+                    Path oldFilePath = Paths.get(existingPost.getThumbnail().substring(1)); // Bỏ dấu "/" đầu tiên
+                    Files.deleteIfExists(oldFilePath);
+                }
+                // Lưu ảnh mới
+                String thumbnailPath = fileStorageService.storeFile(thumbnailFile);
+                updatedPost.setThumbnail(thumbnailPath);
+            } catch (IOException e) {
+                throw new RuntimeException("Lỗi khi lưu ảnh: " + e.getMessage());
+            }
+        } else {
+            // Giữ nguyên ảnh cũ nếu không upload ảnh mới
+            updatedPost.setThumbnail(existingPost.getThumbnail());
+        }
+
         Post savedPost = postService.updatePost(id, updatedPost);
         if (savedPost == null) {
             throw new IllegalArgumentException("Post with ID " + id + " not found for update.");
@@ -97,6 +127,22 @@ public class PostController {
 
     @GetMapping("/admin/posts/delete/{id}")
     public String deletePost(@PathVariable Integer id) {
+        // Lấy bài viết để kiểm tra
+        Post post = postService.getPostById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Bài viết với ID " + id + " không tồn tại."));
+
+        // Xóa các sự kiện liên quan trước
+        eventService.deleteEventsByRecapPostId(id);
+
+        // Xóa ảnh liên quan
+        if (post.getThumbnail() != null && !post.getThumbnail().isEmpty()) {
+            try {
+                Path filePath = Paths.get(post.getThumbnail().substring(1));
+                Files.deleteIfExists(filePath);
+            } catch (IOException e) {
+                // Log lỗi nếu cần
+            }
+        }
         postService.deletePost(id);
         return "redirect:/admin/posts";
     }

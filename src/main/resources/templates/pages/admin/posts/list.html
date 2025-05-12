@@ -182,7 +182,7 @@
                             <td th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></td>
                             <td th:text="${post.viewCount}"></td>
                             <td>
-                                <img th:if="${post.thumbnail != null}" th:src="@{'/images/'+ ${post.thumbnail}}" alt="Thumbnail" style="max-width: 100px;" />
+                                <img th:if="${post.thumbnail != null}" th:src="@{ ${post.thumbnail}}" alt="Thumbnail" style="max-width: 100px;" />
                                 <span th:if="${post.thumbnail == null}">Không có hình</span>
                             </td>
                             <td th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></td>

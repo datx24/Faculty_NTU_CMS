@@ -45,6 +45,10 @@ public class PostService {
             existingPost.setCategory(updatedPost.getCategory());
             existingPost.setStatus(updatedPost.getStatus());
             existingPost.setPostsStatus(updatedPost.getPostsStatus());
+            // Cập nhật thumbnail nếu có
+            if (updatedPost.getThumbnail() != null) {
+                existingPost.setThumbnail(updatedPost.getThumbnail());
+            }
             existingPost.setUpdatedAt(LocalDateTime.now());
             return postRepository.save(existingPost);
         }

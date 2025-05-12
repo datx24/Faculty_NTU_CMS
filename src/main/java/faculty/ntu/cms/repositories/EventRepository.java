@@ -10,5 +10,7 @@ import java.util.List;
 public interface EventRepository extends JpaRepository<Event, Integer>{
     //Tìm tất cả sự kiện đang hoạt động (isActive = True) và chưa kết thúc
     List<Event> findByIsActiveTrueAndEndTimeAfter(LocalDateTime now);
+
+    List<Event> findByRecapPostId(Integer postId);
 }
 
