@@ -141,7 +141,7 @@
             </div>
             <div class="mb-3">
               <label for="parent" class="form-label">Menu Cha</label>
-              <select class="form-select" id="parent" th:field="*{parent.id}">
+              <select class="form-select" id="parent" name="parent">
                 <option value="">Không có</option>
                 <th:block th:each="parent : ${parentItems}">
                   <option th:if="${menuItem.id == null or parent.id != menuItem.id}" th:value="${parent.id}" th:text="${parent.label}" th:selected="${menuItem.parent != null and menuItem.parent.id == parent.id}"></option>
