@@ -22,6 +22,7 @@ public class MenuItemController {
     @GetMapping()
     public String getMenuItems(Model m) {
         m.addAttribute("menuItems", menuItemService.getAllMenuItems());
+        m.addAttribute("distinctMenuNames",menuItemService.getMenuNameList());
         return "pages/admin/menu/list";
     }
 
@@ -76,4 +77,10 @@ public class MenuItemController {
         return "redirect:/admin/menu";
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/{name}")
+    public String getMenuByMenuName(@PathVariable int id) {
+        menuItemService.deleteMenuItem(id);
+        return "redirect:/admin/menu";
+    }
 }

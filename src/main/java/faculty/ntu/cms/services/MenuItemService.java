@@ -42,4 +42,7 @@ public class MenuItemService {
     public List<MenuItem> getSubMenuItems(int parentId) {
         return menuItemRepository.findByParentId(parentId);
     }
+    public List<String> getMenuNameList(){
+        return menuItemRepository.findDistinctMenuNames();
+    }
 }
