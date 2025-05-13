@@ -300,25 +300,36 @@
                 <div class="form-section">
                     <h2>Thông tin liên hệ</h2>
                     <!-- Email liên hệ -->
-                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'contact_email'}">
+                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'site_email'}">
                         <div class="mb-3">
-                            <label for="contact_email" class="form-label">Email liên hệ</label>
+                            <label for="site_email" class="form-label">Email liên hệ</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-envelope"></i></span>
-                                <input type="email" th:value="${s.settingValue}" name="contact_email" class="form-control" id="contact_email">
+                                <input type="email" th:value="${s.settingValue}" name="site_email" class="form-control" id="site_email">
                             </div>
                             <div class="form-text">Địa chỉ email chính cho biểu mẫu liên hệ và hiển thị.</div>
                         </div>
                     </th:block>
                     <!-- Địa chỉ -->
-                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'contact_address'}">
+                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'site_address'}">
                         <div class="mb-3">
-                            <label for="contact_address" class="form-label">Địa chỉ</label>
+                            <label for="site_address" class="form-label">Địa chỉ</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
-                                <input type="text" th:value="${s.settingValue}" name="contact_address" class="form-control" id="contact_address">
+                                <input type="text" th:value="${s.settingValue}" name="site_address" class="form-control" id="site_address">
                             </div>
                             <div class="form-text">Địa chỉ vật lý của khoa.</div>
+                        </div>
+                    </th:block>
+                    <!-- Số điện thoại -->
+                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'site_hotline'}">
+                        <div class="mb-3">
+                            <label for="site_hotline" class="form-label">Địa chỉ</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-map-marker-alt"></i></span>
+                                <input type="text" th:value="${s.settingValue}" name="site_hotline" class="form-control" id="site_hotline">
+                            </div>
+                            <div class="form-text">Số điện thoại của khoa.</div>
                         </div>
                     </th:block>
                 </div>
