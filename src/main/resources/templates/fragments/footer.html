@@ -1,11 +1,11 @@
- <footer class="footer">
+<footer class="footer" xmlns:th="http://www.w3.org/1999/xhtml">
         <div class="container">
             <div class="row">
                 <!-- About Section -->
                 <div class="col-md-4 mb-4">
-                    <h5>Khoa Công nghệ Thông tin</h5>
-                    <p>Trường Đại học Nha Trang<br>
-                    Sứ mệnh: Đào tạo nguồn nhân lực CNTT chất lượng cao, phục vụ sự nghiệp công nghiệp hóa, hiện đại hóa đất nước.</p>
+                    <h5 th:text="${settingMap['site_department'] != null ? settingMap['site_department'] : 'Khoa CNTT'}"></h5>
+                    <p th:text="${settingMap['site_university'] != null ? settingMap['site_university'] : 'Khoa CNTT'}"></p>
+                    <p th:text="${settingMap['about_content'] != null ? settingMap['about_content'] : 'Khoa CNTT'}"></p>
                 </div>
                 <!-- Quick Links -->
                 <div class="col-md-4 mb-4">
@@ -19,9 +19,18 @@
                 <!-- Contact Info -->
                 <div class="col-md-4 mb-4">
                     <h5>Liên hệ</h5>
-                    <p><i class="fas fa-map-marker-alt me-2"></i> 02 Nguyễn Đình Chiểu, Nha Trang, Khánh Hòa</p>
-                    <p><i class="fas fa-envelope me-2"></i> cntt@ntu.edu.vn</p>
-                    <p><i class="fas fa-phone me-2"></i> (0258) 123 4567</p>
+                    <p>
+                        <i class="fas fa-map-marker-alt me-2"></i>
+                        <span th:text="${settingMap['site_address'] != null ? settingMap['site_address'] : 'Khoa CNTT'}"></span>
+                    </p>
+                    <p>
+                        <i class="fas fa-envelope me-2"></i>
+                        <span th:text="${settingMap['site_email'] != null ? settingMap['site_email'] : 'Khoa CNTT'}"></span>
+                    </p>
+                    <p>
+                        <i class="fas fa-phone me-2"></i>
+                        <span th:text="${settingMap['site_hotline'] != null ? settingMap['site_hotline'] : 'Khoa CNTT'}"></span>
+                    </p>
                     <div class="social-icons">
                         <a href="#" target="_blank"><i class="fab fa-facebook"></i></a>
                         <a href="#" target="_blank"><i class="fab fa-youtube"></i></a>
@@ -31,7 +40,10 @@
             </div>
             <hr class="bg-light">
             <div class="text-center">
-                <p class="mb-0">© <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span> Khoa CNTT - Đại học Nha Trang. All rights reserved.</p>
+                <p class="mb-0">
+                    © <span th:text="${#dates.format(#dates.createNow(), 'yyyy')}">2025</span>
+                    <span th:text="${settingMap['site_department'] + ' - ' + settingMap['site_university']}">Khoa CNTT - Đại học Nha Trang</span>. All rights reserved.
+                </p>
             </div>
         </div>
     </footer>
