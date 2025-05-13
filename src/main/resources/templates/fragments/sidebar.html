@@ -1,9 +1,9 @@
 <html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <div class="sidebar">
         <div class="p-3 text-center">
-            <img src="/images/logo-ntu.png" alt="Logo ĐH Nha Trang" width="200" class="mb-3">
-            <h5>Khoa CNTT</h5>
-            <small>Đại học Nha Trang</small>
+            <img th:src="${settingMap['site_logo'] != null ? settingMap['site_logo'] : '/images/logo-ntu.png'}" alt="Logo ĐH Nha Trang" width="200" class="mb-3">
+            <h5 th:text="${settingMap['site_department'] != null ? settingMap['site_department'] : 'Khoa CNTT'}"></h5>
+            <small th:text="${settingMap['site_university'] != null ? settingMap['site_university'] : 'Khoa CNTT'}"></small>
         </div>
         <nav class="nav flex-column">
             <a class="nav-link" href="/dashboard">
