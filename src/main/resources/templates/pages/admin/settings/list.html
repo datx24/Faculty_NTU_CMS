@@ -279,6 +279,21 @@
                             <div class="form-text">Tải lên logo của khoa (định dạng JPG, PNG, GIF).</div>
                         </div>
                     </th:block>
+                    <!-- Banner -->
+                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'site_banner'}">
+                        <div class="mb-3">
+                            <label for="site_banner" class="form-label">Logo</label>
+                            <div class="input-group">
+                                <span class="input-group-text"><i class="fas fa-image"></i></span>
+                                <input type="file" name="site_banner" class="form-control" id="site_banner" accept="image/*">
+                            </div>
+                            <div th:if="${s.settingValue != null and s.settingValue.startsWith('/uploads/')}" class="mt-2">
+                                <img th:src="@{${s.settingValue}}" class="image-preview" alt="Current Logo" />
+                                <div class="form-text">Banner hiện tại. Tải lên Banner mới để thay thế.</div>
+                            </div>
+                            <div class="form-text">Tải lên Banner của khoa (định dạng JPG, PNG, GIF).</div>
+                        </div>
+                    </th:block>
                 </div>
 
                 <!-- Contact Information -->
