@@ -16,11 +16,11 @@ public class Setting {
     private Integer id;
 
     @Column(name = "setting_key", nullable = false, unique = true, length = 100)
-    private String key;
+    private String settingKey;
 
     @Lob
     @Column(name = "setting_value")
-    private String value;
+    private String settingValue;
 
     @Lob
     private String description;
@@ -34,4 +34,15 @@ public class Setting {
 
     @Column(name = "updated_at")
     private LocalDateTime updatedAt = LocalDateTime.now();
+
+    @PrePersist
+    protected void onCreate() {
+        createdAt = LocalDateTime.now();
+        updatedAt = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        updatedAt = LocalDateTime.now();
+    }
 }
