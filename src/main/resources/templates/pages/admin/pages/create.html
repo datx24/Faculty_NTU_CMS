@@ -10,6 +10,7 @@
     <!-- Font Awesome -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
     <!-- Custom CSS -->
+    <script src="https://cdn.ckeditor.com/ckeditor5/41.0.0/classic/ckeditor.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
@@ -117,6 +118,9 @@
                 margin-left: 70px;
             }
         }
+        .ck-editor__editable {
+            min-height: 200px;
+        }
     </style>
 </head>
 
@@ -162,12 +166,16 @@
                             <!-- Add more options populated from your system -->
                         </select>
                     </div>
-                    <div class="form-group mb-3 flex-grow-1 d-flex flex-column">
+                    <div class="form-group mb-3 " style="display: none;">
                         <label for="content" class="form-label">Nội dung (HTML):</label>
                         <textarea class="form-control flex-grow-1 " rows="10" id="content" name="content" required></textarea>
                         <!-- "whatever2 page editor" would enhance this textarea or work with its value -->
                     </div>
-  
+                    <div class="form-group mb-3 flex-grow-1 d-flex flex-column">
+                        <label for="content2" class="form-label">Nội dung (HTML):</label>
+                        <textarea class="form-control flex-grow-1 " rows="10" id="content2" name="content2" required></textarea>
+                        <!-- "whatever2 page editor" would enhance this textarea or work with its value -->
+                    </div>
 
                     <!-- Preview Column -->
                     <div style="min-height: 800px;" class="preview-column">
@@ -194,7 +202,7 @@
                     </div>
 
                     <div class="d-flex">
-                        <button type="submit" class="btn btn-primary me-2">Lưu Trang</button>
+                        <button type="submit"  class="btn btn-primary me-2">Lưu Trang</button>
                         
                         <a th:href="@{/admin/pages}" class="btn btn-secondary">Hủy</a>
                     </div>
@@ -211,7 +219,7 @@
 
     <!-- Include Footer -->
     <th:block th:replace="~{fragments/footer}"></th:block>
-
+    
     <script>
         function generateSlug(str) {
             let slug = str.toLowerCase()
@@ -239,21 +247,13 @@
         
 
         const contentTextArea = document.getElementById('content');
+        const contentTextAreaTemp = document.getElementById('content2');
         const previewIframe = document.getElementById('preview-iframe');
         const headerSelect = document.getElementById('headerTemplate');
         const footerSelect = document.getElementById('footerTemplate');
-        function updatePreview() {
-            const rawContent = contentTextArea.value;
-            const selectedHeaderKey = headerSelect.value;
-            const headerTemplateElement = document.getElementById(`template-${selectedHeaderKey}`);
-            if (headerTemplateElement) {
-                headerHtml = headerTemplateElement.innerHTML;
-            }
-
-            // Basic HTML structure for the preview.
-            // You might want to include common CSS links your site uses here as well
-            // or link to a dedicated preview CSS file.
-            const fullHtml = `
+        let fullContentHTML;
+        function fullHtmlTemplate(rawContent,headerHtml,footerHtml){
+            return `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
@@ -274,8 +274,22 @@
                 </body>
                 </html>
             `;
+        }
+    
+        function updatePreview(rawContent) {
+            //const rawContent = contentTextArea.value;
+            const selectedHeaderKey = headerSelect.value;
+            const headerTemplateElement = document.getElementById(`template-${selectedHeaderKey}`);
+            let headerHtml, footerHtml;
+            if (headerTemplateElement) {
+                headerHtml = headerTemplateElement.innerHTML;
+            }
+
+            fullContentHTML = fullHtmlTemplate(rawContent,headerHtml);
             // Using srcdoc is generally safer and easier for dynamic content
-            previewIframe.srcdoc = fullHtml;
+            previewIframe.srcdoc = fullContentHTML;
+            contentTextArea.value = fullContentHTML
+            
         }
 
         // Event Listeners
@@ -286,10 +300,8 @@
             });
         }
 
-        if (contentTextArea && previewIframe) {
-            contentTextArea.addEventListener('input', updatePreview);
-            
-            updatePreview();
+        if (contentTextArea && previewIframe ) {
+            //contentTextArea.addEventListener('input', updatePreview);
         }
         if (headerSelect) {
             headerSelect.addEventListener('change', updatePreview);
@@ -298,6 +310,26 @@
             footerSelect.addEventListener('change', updatePreview);
         }
 
+    </script>
+   <script>
+        ClassicEditor
+        .create(contentTextAreaTemp, {
+            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
+        })
+        .then(editor => {
+            // Sync CKEditor content with Thymeleaf form field
+            editor.model.document.on('change:data', () => {
+                const data = editor.getData();
+                contentTextAreaTemp.value = data;
+                updatePreview(data)
+               
+            });
+            // Ensure initial content is loaded from Thymeleaf
+            editor.setData(contentTextArea.value);
+        })
+        .catch(error => {
+            console.error('CKEditor initialization failed:', error);
+        });
     </script>
 </body>
 

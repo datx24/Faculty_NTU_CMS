@@ -232,11 +232,11 @@
 <script>
   ClassicEditor
     .create(document.querySelector('#message'), {
-      toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo'],
-      height: '200px'
+      toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
     })
     .then(editor => {
       // Sync CKEditor content with Thymeleaf form field
+      editor.ui.view.editable.element.style.minHeight = '300px';
       editor.model.document.on('change:data', () => {
         const data = editor.getData();
         document.querySelector('#message').value = data;
