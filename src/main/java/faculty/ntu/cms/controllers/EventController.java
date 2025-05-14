@@ -32,7 +32,7 @@ public class EventController {
     @GetMapping("/create")
     public String showCreateForm(Model m) {
         m.addAttribute("event", new Event());
-        return "pages/admin/events/list";
+        return "pages/admin/events/create";
     }
 
     //Xử lý tạo sự kiện mới với file banner
