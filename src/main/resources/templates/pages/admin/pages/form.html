@@ -136,16 +136,16 @@
         <div class="container-fluid mt-4">
             <h2 class="mb-4">Tạo Trang Mới</h2>
 
-            <form id="createPageForm" th:action="@{/admin/pages/create}" th:method="post" enctype="multipart/form-data">
+            <form id="createPageForm" th:action="@{/admin/pages}" th:object="${page}" th:method="post" enctype="multipart/form-data">
                 <div class="card p-4 mb-4">
                     <div class="mb-3">
                         <label for="title" class="form-label">Tiêu đề:</label>
-                        <input type="text" class="form-control" id="title" name="title" required>
+                        <input type="text" class="form-control" id="title" th:field="*{title}" name="title" required>
                     </div>
-
+                    <input type="hidden" th:field="*{id}" />
                     <div class="mb-3">
                         <label for="slug" class="form-label">Slug (URL thân thiện):</label>
-                        <input type="text" class="form-control" id="slug" name="slug">
+                        <input type="text" class="form-control" id="slug" th:field="*{slug}" name="slug">
                         <small class="form-text text-muted">Để trống sẽ tự động tạo.</small>
                     </div>
                     <div class="form-group mb-3">
@@ -168,7 +168,7 @@
                     </div>
                     <div class="form-group mb-3 " style="display: none;">
                         <label for="content" class="form-label">Nội dung (HTML):</label>
-                        <textarea class="form-control flex-grow-1 " rows="10" id="content" name="content" required></textarea>
+                        <textarea class="form-control flex-grow-1 " rows="10" id="content" th:field="*{content}" name="content" required></textarea>
                         <!-- "whatever2 page editor" would enhance this textarea or work with its value -->
                     </div>
                     <div class="form-group mb-3 flex-grow-1 d-flex flex-column">
@@ -197,7 +197,7 @@
 
 
                     <div class="form-check mb-3">
-                        <input type="checkbox" class="form-check-input" id="isActive" name="isActive" checked>
+                        <input type="checkbox" class="form-check-input" id="isActive" th:field="*{isActive}" name="isActive" checked>
                         <label class="form-check-label" for="isActive">Xuất bản</label>
                     </div>
 

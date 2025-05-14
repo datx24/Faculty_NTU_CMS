@@ -53,11 +53,11 @@ public class PageController {
         .collect(Collectors.groupingBy(MenuItem::getMenuName));
         model.addAttribute("menuItemsByMenuName", menuItemsByMenuName);
         model.addAttribute("menuNames", new ArrayList<>(menuItemsByMenuName.keySet()));
-        return "pages/admin/pages/create";
+        return "pages/admin/pages/form";
     }
 
     // Handle Creation
-    @PostMapping("/admin/pages/create")
+    @PostMapping("/admin/pages")
     public String createPage(@ModelAttribute("page") Page page) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth != null && auth.getPrincipal() instanceof UserDetails) {
@@ -73,6 +73,14 @@ public class PageController {
     // Edit Form
     @GetMapping("/admin/pages/edit/{id}")
     public String showEditForm(@PathVariable Integer id, Model model) {
+        String requestURI = "/";
+        model.addAttribute("page", new Page());
+        model.addAttribute("currentPath", requestURI);
+
+        Map<String, List<MenuItem>> menuItemsByMenuName = menuItemService.getAllMenuItems().stream()
+        .collect(Collectors.groupingBy(MenuItem::getMenuName));
+        model.addAttribute("menuItemsByMenuName", menuItemsByMenuName);
+        model.addAttribute("menuNames", new ArrayList<>(menuItemsByMenuName.keySet()));
         pageService.getPageById(id)
             .ifPresentOrElse(
                 page -> model.addAttribute("page", page),
@@ -80,24 +88,10 @@ public class PageController {
                     throw new IllegalArgumentException("Page with ID " + id + " not found.");
                 }
             );
-        return "pages/admin/pages/edit";
+        return "pages/admin/pages/form";
     }
 
-    // Handle Update
-    @PostMapping("/admin/pages/edit/{id}")
-    public String updatePage(@PathVariable Integer id, @ModelAttribute("page") Page updatedPage) {
-        Page existingPage = pageService.getPageById(id)
-            .orElseThrow(() -> new IllegalArgumentException("Page with ID " + id + " not found."));
-        
-        existingPage.setTitle(updatedPage.getTitle());
-        existingPage.setSlug(updatedPage.getSlug());
-        existingPage.setContent(updatedPage.getContent());
-        existingPage.setIsActive(updatedPage.getIsActive());
-        existingPage.setUpdatedAt(LocalDateTime.now());
-        
-        pageService.savePage(existingPage);
-        return "redirect:/admin/pages";
-    }
+   
 
     // Handle Deletion
     @GetMapping("/admin/pages/delete/{id}")
