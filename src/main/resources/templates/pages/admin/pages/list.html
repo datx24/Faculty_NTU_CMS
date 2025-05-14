@@ -163,7 +163,7 @@
                             <th>Trạng thái</th>
                             <th>Người tạo</th>
                             <th>Ngày tạo</th>
-                            <th>CRUD Action</th>
+                            <th>Hành động</th>
                         </tr>
                         </thead>
                         <tbody>
@@ -175,14 +175,10 @@
                             <td th:text="${page.createdBy != null} ? ${page.createdBy.name} : 'không có'"></td>
                             <td th:text="${#temporals.format(page.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>
-                                <div class="action-container">
-                                    <button class="btn btn-sm btn-info detail-btn">Chi tiết</button>
-                                    <div class="actions">
-                                        <a th:href="'/' + ${page.slug}" class="btn btn-sm btn-primary">Xem</a>
-                                        <a th:href="@{/admin/pages/edit/{id}(id=${page.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                                        <a th:href="@{/admin/pages/delete/{id}(id=${page.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa trang này?')">Xóa</a>
-                                    </div>
-                                </div>
+                                <a th:href="'/' + ${page.slug}" class="btn btn-sm btn-primary">Xem</a>
+                                <a th:href="@{/admin/pages/edit/{id}(id=${page.id})}" class="btn btn-sm btn-warning">Sửa</a>
+                                <a th:href="@{/admin/pages/delete/{id}(id=${page.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa trang này?')">Xóa</a>
+                                    
                             </td>
                         </tr>
                         </tbody>
