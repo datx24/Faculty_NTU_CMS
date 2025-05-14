@@ -1,213 +1,90 @@
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin CMS - Khoa CNTT ĐH Nha Trang</title>
-  <!-- Bootstrap 5 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <!-- Font Awesome -->
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet">
-  <!-- Custom CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Post List</title>
   <style>
-    .action-container {
-        position: relative;
-        display: inline-block;
+    .list-group-item .post-title {
+      display: block;
+      max-width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #343a40;
     }
-    .detail-btn {
-        margin: 0;
+    .featured-post {
+      max-width: 100%;
     }
-    .actions {
-        display: none;
-        position: absolute;
-        top: 100%;
-        left: 0;
-        background-color: #fff;
-        border: 1px solid #ccc;
-        border-radius: 4px;
-        padding: 5px;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-        z-index: 1000;
-    }
-    .action-container:hover .actions {
-        display: block;
-        animation: slideDown 0.3s ease-out;
-    }
-    @keyframes slideDown {
-        from {
-            opacity: 0;
-            transform: translateY(-10px);
-        }
-        to {
-            opacity: 1;
-            transform: translateY(0);
-        }
-    }
-    .actions a {
-        display: block;
-        margin: 2px 0;
-    }
-    body {
-        font-family: 'Roboto', sans-serif;
-        background-color: #f4f7fa;
-    }
-    .sidebar {
-        min-height: 100vh;
-        background-color: #1e3a8a;
-        color: white;
-        position: fixed;
-        width: 250px;
-        transition: all 0.3s;
-    }
-    .sidebar .nav-link {
-        color: #d1d5db;
-        padding: 10px 20px;
-        border-radius: 5px;
-        margin: 5px 10px;
-        transition: all 0.3s;
-    }
-    .sidebar .nav-link:hover, .sidebar .nav-link.active {
-        background-color: #2563eb;
-        color: white;
-    }
-    .sidebar .nav-link[type="submit"] {
-        background: none;
-        border: none;
-        text-align: left;
-        width: 92%;
-        cursor: pointer;
-        appearance: none;
-        box-sizing: border-box; /* Đảm bảo padding không làm tăng chiều rộng */
-    }
-    .sidebar .nav-link[type="submit"]:hover {
-        background-color: #2563eb;
-        color: white;
-    }
-    .content {
-        margin-left: 250px;
-        padding: 20px;
-    }
-    .navbar {
-        background-color: white;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-    }
-    .card {
-        border: none;
-        border-radius: 10px;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        transition: all 0.3s;
-    }
-    .card:hover {
-        transform: translateY(-5px);
-    }
-    .footer {
-        background-color: #1e3a8a;
-        color: white;
-        padding: 40px 0;
-        margin-left: 250px;
-        margin-top: 40px;
-        border-top: 4px solid #2563eb;
-    }
-    .footer a {
-        color: #d1d5db;
-        text-decoration: none;
-        transition: color 0.3s;
-    }
-    .footer a:hover {
-        color: #ffffff;
-    }
-    .footer .social-icons a {
-        font-size: 1.5rem;
-        margin: 0 10px;
-    }
-    @media (max-width: 768px) {
-        .sidebar {
-            width: 70px;
-        }
-        .sidebar .nav-link span {
-            display: none;
-        }
-        .content {
-            margin-left: 70px;
-        }
-        .footer {
-            margin-left: 70px;
-        }
+    .hidden-post {
+      display: none; /* Ẩn các bài viết ngoài 5 bài mới nhất */
     }
   </style>
 </head>
 <body>
-
-<!-- Include Sidebar -->
-<th:block th:replace="~{fragments/sidebar}"></th:block>
-
-<div class="content">
-  <!-- Include Navbar -->
-  <th:block th:replace="~{fragments/navbar}"></th:block>
-
-  <!-- Dashboard Content -->
-  <div class="container-fluid mt-4">
-    <h2 class="mb-4">Bài đăng</h2>
-    <a th:href="@{/admin/posts/create}" class="btn btn-success mb-4">Thêm mới</a>
-
-    <!-- Table Section (Replaces Chart Section) -->
+<!-- Fragment danh sách bài viết -->
+<th:block th:fragment="post-list (featuredPost, otherPosts)">
+  <div class="container mt-4">
+    <h3 class="mb-4 text-primary">Tin tức nổi bật</h3>
     <div class="row">
-      <div class="col-md-12">
-        <div class="card p-4 mb-4">
-          <h5>Danh sách bài viết</h5>
-          <table class="table table-bordered">
-            <thead>
-            <tr>
-              <th>ID Bài viết</th>
-              <th>Tiêu đề</th>
-              <th>Slug</th>
-              <th>Trích dẫn</th>
-              <th>Danh mục</th>
-              <th>Trạng thái</th>
-              <th>Tác giả</th>
-              <th>Lượt xem</th>
-              <th>Hình ảnh</th>
-              <th>Ngày tạo</th>
-              <th>CRUD Action</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr th:each="post : ${posts}">
-              <td th:text="${post.id}"></td>
-              <td th:text="${post.title}"></td>
-              <td th:text="${post.slug}"></td>
-              <td th:text="${post.excerpt}"></td>
-              <td th:text="${post.category != null} ? ${post.category.name} : 'Chưa có danh mục'"></td>
-              <td th:text="${post.postsStatus}"></td>
-              <td th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></td>
-              <td th:text="${post.viewCount}"></td>
-              <td>
-                <img th:if="${post.thumbnail != null}" th:src="@{'/images/'+ ${post.thumbnail}}" alt="Thumbnail" style="max-width: 100px;" />
-                <span th:if="${post.thumbnail == null}">Không có hình</span>
-              </td>
-              <td th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
-              <td>
-                <div class="action-container">
-                  <button class="btn btn-sm btn-info detail-btn">Chi tiết</button>
-                  <div class="actions">
-                    <a th:href="'/' + ${post.slug}" class="btn btn-sm btn-primary">Xem</a>
-                    <a th:href="@{/admin/posts/edit/{id}(id=${post.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                    <a th:href="@{/admin/posts/delete/{id}(id=${post.id})}" class="btn btn-sm btn-danger">Xóa</a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-            </tbody>
-          </table>
+      <!-- Bài viết nổi bật -->
+      <div class="col-md-7 mb-4">
+        <div th:if="${featuredPost}">
+          <img th:src="${featuredPost.thumbnail} ?: 'https://via.placeholder.com/600x400'"
+               th:alt="${featuredPost.title}" class="img-fluid rounded featured-post"
+               onerror="this.src='https://via.placeholder.com/600x400';">
+          <a th:href="@{/posts/{slug}(slug=${featuredPost.slug})}"
+             th:text="${featuredPost.title}" class="d-block mt-2 h5 text-dark"></a>
         </div>
+      </div>
+
+      <!-- Danh sách bài viết khác -->
+      <div class="col-md-5">
+        <h4>Tất cả bài viết</h4>
+        <div class="list-group" id="post-list">
+          <div th:each="post, iterStat : ${otherPosts}"
+               class="list-group-item d-flex align-items-start"
+               th:classappend="${iterStat.index >= 5} ? 'hidden-post' : ''">
+            <img th:src="${post.thumbnail} ?: 'https://via.placeholder.com/100x100'"
+                 th:alt="${post.title}" class="img-thumbnail mr-2"
+                 style="width: 60px; height: auto;"
+                 onerror="this.src='https://via.placeholder.com/100x100';">
+            <div style="flex-grow: 1;" class="post-title text-truncate d-block">
+              <a th:href="@{/posts/{slug}(slug=${post.slug})}"
+                 th:text="${post.title}"
+                 class="text-dark"></a>
+            </div>
+          </div>
+        </div>
+        <a href="#" id="load-more" class="d-block mt-2 text-primary" th:if="${otherPosts.size() > 5}">Xem thêm...</a>
       </div>
     </div>
   </div>
-</div>
+</th:block>
 
-<!-- Include Footer -->
-<th:block th:replace="~{fragments/footer}"></th:block>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  // Đảm bảo JavaScript chạy sau khi DOM được tải hoàn toàn
+  document.addEventListener('DOMContentLoaded', function() {
+    const loadMoreButton = document.getElementById('load-more');
 
+    if (loadMoreButton) {
+      loadMoreButton.addEventListener('click', function(e) {
+        e.preventDefault(); // Ngăn hành vi mặc định của thẻ <a>
 
+        // Hiển thị tất cả bài viết ẩn
+        document.querySelectorAll('.hidden-post').forEach(post => {
+          post.classList.remove('hidden-post');
+        });
+
+        // Ẩn nút "Xem thêm"
+        loadMoreButton.style.display = 'none';
+      });
+    }
+  });
+</script>
 </body>
 </html>

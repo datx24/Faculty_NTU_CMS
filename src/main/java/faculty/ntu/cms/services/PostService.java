@@ -62,4 +62,7 @@ public class PostService {
     public Post findBySlug(String slug) {
         return postRepository.findBySlug(slug);
     }
+    public List<Post> getPublishedPosts() {
+        return postRepository.findByStatus(Post.PostStatus.published);
+    }
 }

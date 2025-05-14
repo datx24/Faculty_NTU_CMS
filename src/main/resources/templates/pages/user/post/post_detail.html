@@ -1,45 +1,215 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-  <title th:text="${post.title} + ' - Chi tiết'">Chi tiết Bài viết</title>
-  <!-- Bootstrap CSS -->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đại học Nha Trang - Khoa CNTT</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="/css/public.css">
   <style>
+    .news-section {
+        padding: 20px 0;
+    }
+    .featured-news .card {
+        height: 300px;
+        overflow: hidden;
+    }
+    .featured-list {
+        height: 300px;
+        overflow-y: auto;
+        font-size: 0.9em;
+    }
+    .featured-list .list-group-item {
+        border: none;
+        padding: 5px 10px;
+    }
+    .news-carousel .card {
+        width: 300px;
+        margin: 0 10px;
+    }
+    .owl-nav {
+        position: absolute;
+        top: 50%;
+        width: 100%;
+        transform: translateY(-50%);
+    }
+    .owl-prev, .owl-next {
+        position: absolute;
+        font-size: 2em;
+        color: #000;
+    }
+    .owl-prev { left: 10px; }
+    .owl-next { right: 10px; }
     .content {
         margin-top: 20px;
         white-space: pre-wrap; /* Giữ định dạng dòng của content */
     }
-    .thumbnail {
-        max-width: 300px;
+    .post-thumbnail {
+        width: 100%;
+        max-height: 400px;
+        object-fit: cover;
+        border-radius: 10px;
         margin-bottom: 10px;
+    }
+    .post-meta {
+        color: #6c757d;
+        font-size: 0.9rem;
+        margin-bottom: 20px;
+    }
+    /* Style cho phần bình luận */
+    .comment-section {
+        margin-top: 40px;
+        padding: 20px;
+        background-color: #f5f7fa;
+        border-radius: 10px;
+    }
+    .comment-section h4 {
+        font-size: 1.5rem;
+        margin-bottom: 20px;
+    }
+    .comment-section .form-control {
+        margin-bottom: 15px;
+        border-radius: 5px;
+    }
+    .comment-section textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+    .comment-section .btn-send {
+        background-color: #00c4b4;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 20px;
+        color: white;
+    }
+    .comment-section .btn-send:hover {
+        background-color: #00a89a;
+    }
+    .social-icons {
+        display: flex;
+        gap: 10px;
+    }
+    .social-icons a {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        color: white;
+        font-size: 1.2rem;
+    }
+    .social-icons .facebook { background-color: #3b5998; }
+    .social-icons .whatsapp { background-color: #25d366; }
+    .social-icons .x { background-color: #000000; }
+    .social-icons .linkedin { background-color: #0077b5; }
+    .social-icons .twitter { background-color: #1da1f2; }
+    .share-section {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+    .share-section .share-btn {
+        color: #6c757d;
+        text-decoration: none;
+        font-weight: 500;
+    }
+    .recaptcha-section {
+        margin-bottom: 15px;
     }
   </style>
 </head>
 <body>
+<!-- Header -->
+<header class="header">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md-2">
+        <img src="/images/logo.png" alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
+      </div>
+      <div class="col-md-10">
+        <h1>Đại học Nha Trang - Khoa Công nghệ Thông tin</h1>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- Menu List Fragment -->
+<th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}"></th:block>
+
+<!-- Main Content -->
 <div class="container">
-  <h1 th:text="${post.title}">Tiêu đề Bài viết</h1>
-  <div class="mb-3">
-    <strong>Danh mục:</strong> <span th:text="${post.category != null} ? ${post.category.name} : 'Chưa có danh mục'"></span>
+  <!-- Tiêu đề -->
+  <h1 th:text="${post.title}" class="mb-4">Tiêu đề Bài viết</h1>
+
+  <!-- Hình ảnh -->
+  <div th:if="${post.thumbnail != null}" class="mb-3">
+    <img th:src="@{${post.thumbnail}}" alt="Thumbnail" class="post-thumbnail" />
   </div>
-  <div class="mb-3">
-    <strong>Tác giả:</strong> <span th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></span>
+  <div th:if="${post.thumbnail == null}" class="mb-3 text-muted">
+    Không có hình ảnh
   </div>
-  <div class="mb-3">
-    <strong>Trạng thái:</strong> <span th:text="${post.status}"></span>
+
+  <!-- Thời gian -->
+  <div class="post-meta">
+    <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">2024-02-17</span>
   </div>
-  <div class="mb-3">
+
+  <!-- Nội dung -->
+  <div class="content" th:text="${post.content}">Nội dung bài viết...</div>
+
+  <!-- Tác giả và lượt xem -->
+  <div class="post-meta mt-3">
+    <strong>Tác giả:</strong> <span th:text="${post.author != null} ? ${post.author.name} : 'Chưa có tác giả'"></span><br>
     <strong>Lượt xem:</strong> <span th:text="${post.viewCount}"></span>
   </div>
-  <div class="mb-3">
-    <strong>Ngày tạo:</strong> <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy HH:mm')}"></span>
+
+  <!-- Phần bình luận -->
+  <div class="comment-section">
+    <!-- Share Section -->
+    <div class="share-section">
+      <a href="#" class="share-btn"><i class="fas fa-share-alt me-2"></i>Share</a>
+      <div class="social-icons">
+        <a href="#" class="facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" class="whatsapp"><i class="fab fa-whatsapp"></i></a>
+        <a href="#" class="x"><i class="fab fa-x-twitter"></i></a>
+        <a href="#" class="linkedin"><i class="fab fa-linkedin-in"></i></a>
+        <a href="#" class="twitter"><i class="fab fa-twitter"></i></a>
+      </div>
+    </div>
+
+    <!-- Comment Form -->
+    <h4>Add New Comment</h4>
+    <form th:action="@{/posts/{slug}/comments(slug=${post.slug})}" method="post">
+      <div class="row">
+        <div class="col-md-6">
+          <input type="text" class="form-control" placeholder="Your Name" name="name" required>
+        </div>
+        <div class="col-md-6">
+          <input type="email" class="form-control" placeholder="Your Email" name="email" required>
+        </div>
+      </div>
+      <textarea class="form-control" placeholder="Comment" name="comment" required></textarea>
+      <div class="recaptcha-section">
+        <input type="checkbox" id="recaptcha" name="recaptcha">
+        <label for="recaptcha">I'm not a robot</label>
+        <img src="https://www.google.com/recaptcha/about/images/recaptcha-badge.svg" alt="reCAPTCHA" style="width: 50px; vertical-align: middle; margin-left: 10px;">
+        <small class="d-block text-muted">reCAPTCHA - Privacy - Terms</small>
+      </div>
+      <button type="submit" class="btn btn-send"><i class="fas fa-paper-plane me-2"></i>Send Comment</button>
+    </form>
   </div>
-  <div class="mb-3">
-    <strong>Hình ảnh:</strong>
-    <img th:if="${post.thumbnail != null}" th:src="@{'/images/' + ${post.thumbnail}}" alt="Thumbnail" class="thumbnail" />
-    <span th:if="${post.thumbnail == null}">Không có hình</span>
-  </div>
-  <div class="content" th:text="${post.content}">Nội dung bài viết...</div>
-  <a th:href="@{/admin/posts}" class="btn btn-secondary mt-3">Quay lại</a>
 </div>
+
+<!-- Footer -->
+<th:block th:replace="~{fragments/footer}"></th:block>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
