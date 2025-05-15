@@ -122,6 +122,22 @@
     .recaptcha-section {
         margin-bottom: 15px;
     }
+    .related-posts-section .card {
+    border: none;
+    border-radius: 10px;
+    overflow: hidden;
+    }
+    .related-posts-section .card-img-top {
+        transition: transform 0.3s ease;
+    }
+    .related-posts-section .card:hover .card-img-top {
+        transform: scale(1.05);
+    }
+    .related-posts-section .card-text {
+        font-size: 0.9rem;
+        color: #333;
+        margin-bottom: 0;
+    }
   </style>
 </head>
 <body>
@@ -201,9 +217,28 @@
         <img src="https://www.google.com/recaptcha/about/images/recaptcha-badge.svg" alt="reCAPTCHA" style="width: 50px; vertical-align: middle; margin-left: 10px;">
         <small class="d-block text-muted">reCAPTCHA - Privacy - Terms</small>
       </div>
-      <button type="submit" class="btn btn-send"><i class="fas fa-paper-plane me-2"></i>Send Comment</button>
+      <button type="reset" class="btn btn-send"><i class="fas fa-paper-plane me-2"></i>Send Comment</button>
     </form>
   </div>
+  <!-- Related Posts Section -->
+  <div class="related-posts-section mt-5">
+    <h4 class="mb-4"><i class="fas fa-bookmark me-2"></i>Related Topics</h4>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+      <div th:each="relatedPost : ${relatedPosts}" class="col">
+        <a th:href="@{'/posts/' + ${relatedPost.slug}}" class="text-decoration-none">
+          <div class="card h-100">
+            <img th:src="@{${relatedPost.thumbnail != null} ? ${relatedPost.thumbnail} : '/images/default.jpg'}"
+                 class="card-img-top" alt="Thumbnail" style="height: 200px; object-fit: cover;">
+            <div class="card-body">
+              <p class="card-text" th:text="${#strings.abbreviate(relatedPost.title, 50)}">Tiêu đề bài viết</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    </div>
+  </div>
+
+
 </div>
 
 <!-- Footer -->

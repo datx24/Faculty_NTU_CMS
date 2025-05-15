@@ -23,6 +23,8 @@ import faculty.ntu.cms.services.FileStorageService;
 
 import java.io.IOException;
 import java.nio.file.*;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("")
@@ -154,7 +156,20 @@ public class PostController {
             System.out.println("Post not found for slug: " + slug); // Debug
             return "error"; // Trang lỗi tùy chỉnh
         }
+        // Tăng lượt xem
+        post.setViewCount(post.getViewCount() + 1);
+        postService.savePost(post);
+
+        // Lấy danh sách bài viết đã published, trừ bài viết hiện tại
+        List<Post> publishedPosts = postService.getPublishedPosts()
+                .stream()
+                .filter(p -> !p.getSlug().equals(slug)) // Loại trừ bài viết hiện tại
+                .sorted((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())) // Sắp xếp theo createdAt giảm dần
+                .limit(9) // Giới hạn 3 bài viết
+                .collect(Collectors.toList());
+
         model.addAttribute("post", post);
+        model.addAttribute("relatedPosts", publishedPosts); // Truyền danh sách bài viết liên quan vào model
         return "pages/user/post/post_detail";
     }
 }
