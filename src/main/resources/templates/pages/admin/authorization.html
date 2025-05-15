@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Phân quyền</title>
+</head>
+<body>
+<h2>Cấp quyền cho người dùng</h2>
+<!-- Hiển thị thông báo lỗi -->
+<div th:if="${error}" style="color: red;">
+    <p th:text="${error}"></p>
+</div>
+<!-- Hiển thị thông báo thành công -->
+<div th:if="${param.success}" style="color: green;">
+    <p>Role assigned successfully!</p>
+</div>
+<form th:action="@{/admin/authorization/assign}" method="post">
+    <label for="user">Chọn người dùng:</label>
+    <select name="userId" id="user">
+        <option value="">Chọn người dùng</option>
+        <option th:each="user : ${users}" th:value="${user.id}" th:text="${user.name}"></option>
+    </select>
+    <label for="role">Chọn vai trò:</label>
+    <select name="roleId" id="role">
+        <option value="">Chọn vai trò</option>
+        <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>
+    </select>
+    <button type="submit">Cấp quyền</button>
+</form>
+</body>
+</html>

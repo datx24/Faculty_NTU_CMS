@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+import java.util.Optional;
+
 @Service
 public class UserService implements UserDetailsService {
 
@@ -24,5 +27,14 @@ public class UserService implements UserDetailsService {
     //phương thức đăng kí
     public void registerUser(User user) {
         userRepository.save(user);
+    }
+    // Thêm phương thức để lấy tất cả người dùng
+    public List<User> findAll() {
+        return userRepository.findAll();
+    }
+
+    // Thêm phương thức findById
+    public Optional<User> findById(Integer userId) {
+        return userRepository.findById(userId);
     }
 }
