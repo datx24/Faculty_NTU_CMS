@@ -3,6 +3,7 @@ package faculty.ntu.cms.controllers;
 import faculty.ntu.cms.models.User;
 import faculty.ntu.cms.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -25,12 +26,14 @@ public class AuthController {
         return "pages/admin/login";
     }
 
+    // @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/register")
     public String showRegisterForm(Model m) {
         m.addAttribute("user", new User());
         return "pages/admin/register";
     }
 
+    // @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public String register(@ModelAttribute User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));

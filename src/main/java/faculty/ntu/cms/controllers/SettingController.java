@@ -77,7 +77,7 @@ public class SettingController {
 
     // Xử lý lưu hàng loạt các setting
     @PostMapping("/bulk")
-    public String saveSettings(@RequestParam Map<String, String> settingsMap, @RequestParam(value = "site_logo", required = false) MultipartFile siteLogo) {
+    public String saveSettings(@RequestParam Map<String, String> settingsMap, @RequestParam(value = "site_logo", required = false) MultipartFile siteLogo,@RequestParam(value = "site_banner", required = false) MultipartFile siteBanner) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User createdBy;
         if (auth != null && auth.getPrincipal() instanceof UserDetails) {
@@ -94,6 +94,14 @@ public class SettingController {
             }
             String fileUrl = fileStorageService.storeFile(siteLogo);
             settingsMap.put("site_logo", fileUrl);
+        }
+
+        if (siteBanner != null && !siteBanner.isEmpty()) {
+            if (!siteBanner.getContentType().startsWith("image/")) {
+                throw new RuntimeException("Invalid file type for site_logo. Only images are allowed.");
+            }
+            String fileUrl = fileStorageService.storeFile(siteBanner);
+            settingsMap.put("site_banner", fileUrl);
         }
 
         settingsMap.remove("createdById");
