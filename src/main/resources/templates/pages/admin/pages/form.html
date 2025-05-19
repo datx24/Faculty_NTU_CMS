@@ -119,7 +119,7 @@
             }
         }
         .ck-editor__editable {
-            min-height: 200px;
+            min-height: 200px !important; /* Ensure CKEditor height */
         }
     </style>
 </head>
@@ -134,7 +134,7 @@
         <th:block th:replace="~{fragments/navbar}"></th:block>
 
         <div class="container-fluid mt-4">
-            <h2 class="mb-4">Tạo Trang Mới</h2>
+            <h2 class="mb-4">Tạo hoặc sửa Trang</h2>
 
             <form id="createPageForm" th:action="@{/admin/pages}" th:object="${page}" th:method="post" enctype="multipart/form-data">
                 <div class="card p-4 mb-4">
@@ -149,62 +149,54 @@
                         <small class="form-text text-muted">Để trống sẽ tự động tạo.</small>
                     </div>
                     <div class="form-group mb-3">
-                        <label for="headerTemplate" class="form-label">Chọn Header:</label>
-                        <select class="form-select" id="headerTemplate" name="headerTemplate">
-                            <option th:each="template : ${menuNames}" 
+                        <label for="menuTemplate" class="form-label">Chọn menu:</label>
+                        <select class="form-select" id="menuTemplate" name="menuTemplate">
+                            <option th:each="template : ${menuNames}"
                                     th:value="${template}"
                                     th:text="${template}"
-                                    th:selected="${template == 'primary2'}">
+                                    th:selected="${template}">
                             </option>
                         </select>
                     </div>
                     <div class="form-group mb-3">
                         <label for="footerTemplate" class="form-label">Chọn Footer:</label>
                         <select class="form-select" id="footerTemplate" name="footerTemplate">
-                            <option value="default_footer">Footer Mặc định</option>
-                            <option value="simple_footer">Footer Đơn giản</option>
+                            <option value="default_footer" >Footer Mặc định</option>
+                            <option value="simple_footer" >Footer Đơn giản</option>
                             <!-- Add more options populated from your system -->
                         </select>
                     </div>
-                    <div class="form-group mb-3 " style="display: none;">
+                    <div class="form-group mb-3" style="display: none;"> <!-- Hidden original content textarea -->
                         <label for="content" class="form-label">Nội dung (HTML):</label>
-                        <textarea class="form-control flex-grow-1 " rows="10" id="content" th:field="*{content}" name="content" required></textarea>
-                        <!-- "whatever2 page editor" would enhance this textarea or work with its value -->
+                        <textarea class="form-control" rows="1" id="content" th:field="*{content}" name="content"></textarea>
                     </div>
                     <div class="form-group mb-3 flex-grow-1 d-flex flex-column">
                         <label for="content2" class="form-label">Nội dung (HTML):</label>
-                        <textarea class="form-control flex-grow-1 " rows="10" id="content2" name="content2" required></textarea>
-                        <!-- "whatever2 page editor" would enhance this textarea or work with its value -->
+                        <!-- This textarea will be replaced by CKEditor -->
+                        <textarea class="form-control flex-grow-1" rows="10" id="content2" name="content2_ckeditor_instance"></textarea>
                     </div>
-
-                    <!-- Preview Column -->
-                    <div style="min-height: 800px;" class="preview-column">
-                        <div class="card  h-100 p-1">
-                            <div class="card-header">
-                                Xem trước trực tiếp
-                            </div>
-                            <div class="card-body h-100">
-                                <iframe width="100%" height="780px" id="preview-iframe" sandbox="allow-scripts allow-same-origin"></iframe>
-                                <!-- sandbox attribute is important for security if user HTML contains scripts -->
-                                <!-- 'allow-same-origin' allows the iframe to be treated as same-origin for CSS/JS from your domain if needed -->
-                                <!-- 'allow-scripts' allows scripts within the user's HTML to run (e.g., for carousels, maps) -->
-                            </div>
-                        </div>
-                    </div>
-
-
-            
-
 
                     <div class="form-check mb-3">
                         <input type="checkbox" class="form-check-input" id="isActive" th:field="*{isActive}" name="isActive" checked>
                         <label class="form-check-label" for="isActive">Xuất bản</label>
                     </div>
 
-                    <div class="d-flex">
-                        <button type="submit"  class="btn btn-primary me-2">Lưu Trang</button>
-                        
+                    <div class="d-flex mb-3">
+                        <button type="submit" class="btn btn-primary me-2">Lưu Trang</button>
+                        <button type="button" id="previewButton" class="btn btn-info me-2">Xem trước</button> <!-- Preview Button -->
                         <a th:href="@{/admin/pages}" class="btn btn-secondary">Hủy</a>
+                    </div>
+
+                    <!-- Preview Column -->
+                    <div style="min-height: 800px;" class="preview-column">
+                        <div class="card h-100 p-1">
+                            <div class="card-header">
+                                Xem trước
+                            </div>
+                            <div class="card-body h-100">
+                                <iframe width="100%" height="780px" id="preview-iframe" name="preview-iframe-target" sandbox="allow-scripts allow-same-origin"></iframe>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -215,11 +207,10 @@
             <th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItemsByMenuName.get(menuName)}, currentPath=${currentPath})}"></th:block>
         </div>
     </div>
-    
 
     <!-- Include Footer -->
     <th:block th:replace="~{fragments/footer}"></th:block>
-    
+
     <script>
         function generateSlug(str) {
             let slug = str.toLowerCase()
@@ -235,102 +226,180 @@
 
         const titleInput = document.getElementById('title');
         const slugInput = document.getElementById('slug');
-
-        titleInput.addEventListener('input', () => {
-
-            const slug = generateSlug(titleInput.value);
-
-
-            slugInput.value = slug;
-        });
-
-        
-
-        const contentTextArea = document.getElementById('content');
-        const contentTextAreaTemp = document.getElementById('content2');
+        const contentTextArea = document.getElementById('content'); // Hidden original content
+        const contentTextAreaCK = document.getElementById('content2'); // For CKEditor
         const previewIframe = document.getElementById('preview-iframe');
-        const headerSelect = document.getElementById('headerTemplate');
+        const headerSelect = document.getElementById('menuTemplate');
         const footerSelect = document.getElementById('footerTemplate');
-        let fullContentHTML;
-        function fullHtmlTemplate(rawContent,headerHtml,footerHtml){
+        const previewButton = document.getElementById('previewButton');
+        let ckEditorInstance;
+
+        function fullHtmlTemplate(rawContent, headerHtml, footerHtml) {
+            // Basic footer for preview, replace with actual dynamic footer if needed
+            const defaultFooterHtml = `
+                <footer style="background-color: #333; color: white; text-align: center; padding: 20px; margin-top: 20px;">
+                    <p>Đây là Footer Mặc định (Preview)</p>
+                </footer>`;
+            const simpleFooterHtml = `
+                <footer style="background-color: #f0f0f0; color: #333; text-align: center; padding: 10px; margin-top: 20px; border-top: 1px solid #ccc;">
+                    <p>Đây là Footer Đơn giản (Preview)</p>
+                </footer>`;
+            
+            let selectedFooterHtml = defaultFooterHtml; // Default
+            if (footerSelect.value === 'simple_footer') {
+                selectedFooterHtml = simpleFooterHtml;
+            }
+            // Add more conditions for other footers if you have them
+
             return `
                 <!DOCTYPE html>
                 <html lang="en">
                 <head>
                     <meta charset="UTF-8">
-                    
-                    <title>Đại học Nha Trang - Khoa CNTT</title>
+                    <title>Preview - Đại học Nha Trang - Khoa CNTT</title>
                     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
                     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
                     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-                    <link rel="stylesheet" href="/css/public.css">
+                    <link rel="stylesheet" href="/css/public.css">  <!-- Ensure this path is correct for preview context -->
+                    <style>
+                        /* Add any specific preview styles here if needed */
+                        body { padding-top: 0; } /* Example: Remove admin padding for preview */
+                        #page-content-preview img { max-width: 100%; height: auto; } /* Basic responsive images */
+                    </style>
                 </head>
                 <body>
-                    ${headerHtml}
-                    <main id="page-content-preview" style="padding: 15px;">
+                    <header class="header">
+                        <div class="container">
+                            <div class="row align-items-center">
+                                <div class="col-md-2">
+                                    <img src="/images/logo-ntu.png"
+                                        alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
+                                </div>
+                                <div class="col-md-10">
+                                    <h1>khoa viện mẫu</h1>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                    ${headerHtml || ''}
+                    <main id="page-content-preview" style="padding: 15px; min-height: 300px;">
                         ${rawContent}
                     </main>
-                    
+                    ${selectedFooterHtml}
+                    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script>
                 </body>
                 </html>
             `;
         }
-    
-        function updatePreview(rawContent) {
-            //const rawContent = contentTextArea.value;
+
+        function updatePreview() {
+            const rawContentFromEditor = ckEditorInstance ? ckEditorInstance.getData() : contentTextAreaCK.value;
             const selectedHeaderKey = headerSelect.value;
-            const headerTemplateElement = document.getElementById(`template-${selectedHeaderKey}`);
-            let headerHtml, footerHtml;
-            if (headerTemplateElement) {
-                headerHtml = headerTemplateElement.innerHTML;
+            const menuTemplateElement = document.getElementById(`template-${selectedHeaderKey}`);
+            let headerHtml = '';
+
+            if (menuTemplateElement) {
+                headerHtml = menuTemplateElement.innerHTML;
             }
 
-            fullContentHTML = fullHtmlTemplate(rawContent,headerHtml);
-            // Using srcdoc is generally safer and easier for dynamic content
+            const fullContentHTML = fullHtmlTemplate(rawContentFromEditor, headerHtml);
             previewIframe.srcdoc = fullContentHTML;
-            contentTextArea.value = fullContentHTML
-            
+            // contentTextArea.value = rawContentFromEditor; // Update the hidden field for submission
         }
 
         // Event Listeners
         if (titleInput && slugInput) {
             titleInput.addEventListener('input', () => {
-                const slug = generateSlug(titleInput.value);
-                slugInput.value = slug;
+                if (!slugInput.getAttribute('data-user-edited')) { // Only auto-generate if not manually edited
+                    const slug = generateSlug(titleInput.value);
+                    slugInput.value = slug;
+                }
+            });
+            slugInput.addEventListener('input', () => { // Mark slug as manually edited
+                slugInput.setAttribute('data-user-edited', 'true');
             });
         }
 
-        if (contentTextArea && previewIframe ) {
-            //contentTextArea.addEventListener('input', updatePreview);
+        if (previewButton) {
+            previewButton.addEventListener('click', updatePreview);
         }
-        if (headerSelect) {
-            headerSelect.addEventListener('change', updatePreview);
-        }
-        if (footerSelect) {
-            footerSelect.addEventListener('change', updatePreview);
-        }
+        
+        // Initial load for editing an existing page:
+        // If there's content in the hidden 'content' field, populate CKEditor and then update preview once.
+        // This is mostly for when the page loads with existing data.
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set initial header selection if page.menuTemplate is available
+            const initialHeader = document.getElementById('menuTemplate').value;
+            if (initialHeader) {
+                 // You might want to trigger an initial preview update if needed,
+                 // or ensure CKEditor is ready before calling updatePreview()
+            }
 
-    </script>
-   <script>
-        ClassicEditor
-        .create(contentTextAreaTemp, {
-            toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', '|', 'undo', 'redo']
-        })
-        .then(editor => {
-            // Sync CKEditor content with Thymeleaf form field
-            editor.model.document.on('change:data', () => {
-                const data = editor.getData();
-                contentTextAreaTemp.value = data;
-                updatePreview(data)
-               
-            });
-            // Ensure initial content is loaded from Thymeleaf
-            editor.setData(contentTextArea.value);
-        })
-        .catch(error => {
-            console.error('CKEditor initialization failed:', error);
+            // If editing, set slug as user-edited if it has a value
+            if (slugInput.value) {
+                slugInput.setAttribute('data-user-edited', 'true');
+            }
         });
-    </script>
-</body>
+        class Base64UploadAdapter {
+            constructor(loader) {
+                this.loader = loader;
+            }
+            upload() {
+                return this.loader.file
+                    .then(file => new Promise((resolve, reject) => {
+                        const reader = new FileReader();
+                        reader.onload = () => {
+                            resolve({ default: reader.result });
+                        };
+                        reader.onerror = error => {
+                            reject(error);
+                        };
+                        reader.onabort = () => {
+                            reject();
+                        };
+                        reader.readAsDataURL(file);
+                    }));
+            }
+            abort() {
+                // Abort logic if needed, often minimal for base64
+            }
+        }
+        
+        ClassicEditor
+            .create(contentTextAreaCK, { // Use contentTextAreaCK (id="content2")
+                toolbar: ['heading', '|', 'bold', 'italic', 'link', 'bulletedList', 'numberedList', 'imageUpload', 'blockQuote', 'mediaEmbed', '|', 'undo', 'redo', 'sourceEditing'],
+                
+            })
+            .then(editor => {
+                ckEditorInstance = editor;
 
+                editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+                    return new Base64UploadAdapter(loader);
+                };
+                // Sync CKEditor content with the hidden Thymeleaf form field ('content')
+                editor.model.document.on('change:data', () => {
+                    const data = editor.getData();
+                    contentTextArea.value = data; // Update the actual hidden field for form submission
+                });
+
+                // Ensure initial content is loaded from Thymeleaf's hidden 'content' field
+                // The th:field="*{content}" on the hidden textarea handles this for initial load.
+                // We just need to set the editor's data from it.
+                const initialContent = contentTextArea.value;
+                editor.setData(initialContent || ''); // Set to empty string if null/undefined
+
+                // Optionally, trigger an initial preview if content exists
+                if(initialContent){
+                    // Delay slightly to ensure header/footer selectors are processed if they also have initial values
+                    setTimeout(updatePreview, 100); 
+                }
+
+            })
+            .catch(error => {
+                console.error('CKEditor initialization failed:', error);
+            });
+
+    </script>
+
+</body>
 </html>

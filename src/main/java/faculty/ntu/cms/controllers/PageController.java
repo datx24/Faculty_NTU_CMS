@@ -72,8 +72,8 @@ public class PageController {
 
     // Edit Form
     @GetMapping("/admin/pages/edit/{id}")
-    public String showEditForm(@PathVariable Integer id, Model model) {
-        String requestURI = "/";
+    public String showEditForm(@PathVariable Integer id, Model model, HttpServletRequest request) {
+        String requestURI = request != null ? request.getRequestURI() : "/";
         model.addAttribute("page", new Page());
         model.addAttribute("currentPath", requestURI);
 
@@ -102,18 +102,21 @@ public class PageController {
 
     // Public View
     @GetMapping("/{slug}")
-    @ResponseBody
-    public String viewPage(@PathVariable String slug, Model model) {
+    //@ResponseBody
+    public String viewPage(@PathVariable String slug, Model model, HttpServletRequest request) {
+        String requestURI = request != null ? request.getRequestURI() : "/";
+        model.addAttribute("currentPath", requestURI);
+        model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
         Page page = pageService.findBySlug(slug);
         if (page == null || !page.getIsActive()) {
             return "error"; 
         }
         // 2 cachs render page content tùy thuộc thiết kế
         //neeus full raw html có cả <!DOCTYPE>
-        return page.getContent();
+        //return page.getContent();
         
         //nếu chỉ lưu body tag
-        //model.addAttribute("page", page);
-        //return "pages/user/page/page_detail";
+        model.addAttribute("page", page);
+        return "pages/user/page/page_detail";
     }
 }
