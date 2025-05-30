@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Đại học Nha Trang - Khoa CNTT</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.theme.default.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/public.css">
+    <style>
+        .news-section {
+            padding: 20px 0;
+        }
+        .featured-news .card {
+            height: 300px;
+            overflow: hidden;
+        }
+        .featured-list {
+            height: 300px;
+            overflow-y: auto;
+            font-size: 0.9em;
+        }
+        .featured-list .list-group-item {
+            border: none;
+            padding: 5px 10px;
+        }
+        .news-carousel .card {
+            width: 300px;
+            margin: 0 10px;
+        }
+        .owl-nav {
+            position: absolute;
+            top: 50%;
+            width: 100%;
+            transform: translateY(-50%);
+        }
+        .owl-prev, .owl-next {
+            position: absolute;
+            font-size: 2em;
+            color: #000;
+        }
+        .owl-prev { left: 10px; }
+        .owl-next { right: 10px; }
+    </style>
+</head>
+<body>
+<!-- Header -->
+<header class="header">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-2">
+                <img th:src="${settingMap['site_logo'] != null ? settingMap['site_logo'] : '/images/logo-ntu.png'}" alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
+            </div>
+            <div class="col-md-10">
+                <h1 th:text="${settingMap['site_university'] + ' - ' + settingMap['site_department']}"></h1>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Menu List Fragment -->
+<th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}"></th:block>
+
+
+<!-- Main Content -->
+<div class="container news-section my-4">
+    <div class="row">
+        <!-- Bên trái: Danh sách bài viết -->
+        <div class="col-lg-8">
+            <h2 class="mb-4 text-primary p-2" th:text="${category != null ? category.name : 'Tin tức Đào tạo'}"></h2>
+            <div class="row" th:if="${posts != null and !posts.isEmpty()}">
+                <div class="col-md-12 mb-4" th:each="post : ${posts}">
+                    <div class="card border-0 shadow-sm p-2">
+                        <div class="row g-0">
+                            <div class="col-md-4">
+                                <img th:src="${post.thumbnail != null ? post.thumbnail : '/images/news-placeholder.jpg'}" class="img-fluid rounded-start" alt="Hình ảnh tin tức">
+                            </div>
+                            <div class="col-md-8">
+                                <div class="card-body">
+                                    <span class="badge bg-danger text-white mb-2" th:text="${post.category != null ? post.category.name : 'Chưa có danh mục'}"></span>
+                                    <h5 class="card-title">
+                                        <a th:href="@{'/post/' + ${post.slug}}" th:text="${post.title}" class="text-dark text-decoration-none"></a>
+                                    </h5>
+                                    <p class="card-text text-muted">
+                                        <i class="fas fa-user-circle me-1"></i>
+                                        <span th:text="${post.author != null ? post.author.username : 'Không có tác giả'}"></span> -
+                                        <span th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}"></span>
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="alert alert-info" th:if="${posts == null or posts.isEmpty()}" role="alert">
+                Không có bài viết nào trong danh mục này!
+            </div>
+        </div>
+
+        <!-- Bên phải: Tìm kiếm, Danh mục, Bài viết nổi bật -->
+        <div class="col-lg-4">
+            <!-- Tìm kiếm -->
+            <div class="mb-4 position-relative">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Tìm kiếm bài viết" id="searchInput" th:value="${searchQuery != null ? searchQuery : ''}" oninput="fetchSuggestions()">
+                    <button class="btn btn-primary" type="button" onclick="handleSearch()"><i class="fas fa-search"></i></button>
+                </div>
+                <!-- Dropdown gợi ý -->
+                <ul class="dropdown-menu w-100" id="suggestionsList" style="display: none;"></ul>
+            </div>
+
+            <!-- Danh mục -->
+            <div class="card mb-4 border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Danh mục</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        <li class="list-group-item" th:each="cat : ${categories}">
+                            <a th:href="@{'/post-categories/' + ${cat.slug}}" th:text="${cat.name}" th:class="${category != null and cat.id == category.id ? 'text-primary fw-bold' : 'text-decoration-none'}"></a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Bài viết nổi bật -->
+            <div class="card border-0 shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Bài viết nổi bật</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush" th:if="${featuredPosts != null and !featuredPosts.isEmpty()}">
+                        <li class="list-group-item" th:each="post : ${featuredPosts}">
+                            <i class="fas fa-file-alt me-2 text-primary"></i>
+                            <a th:href="@{'/post/' + ${post.slug}}" th:text="${post.title}" class="text-decoration-none"></a>
+                            <p class="text-muted small mb-0" th:text="${#temporals.format(post.createdAt, 'dd/MM/yyyy')}"></p>
+                        </li>
+                    </ul>
+                    <div class="alert alert-info" th:if="${featuredPosts == null or featuredPosts.isEmpty()}" role="alert">
+                        Không có bài viết nổi bật!
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .news-section .card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .news-section .card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+    }
+    .news-section .card-title a:hover {
+        color: #007bff;
+    }
+    .list-group-item a {
+        color: #333;
+    }
+    .list-group-item a:hover {
+        color: #007bff;
+    }
+    .news-section .card-img {
+        width: 100%;
+        height: 150px;
+        object-fit: cover;
+    }
+    .card-header {
+        background-color: #007bff;
+        border-bottom: none;
+    }
+    .dropdown-menu {
+        max-height: 200px;
+        overflow-y: auto;
+        border-radius: 0.25rem;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .dropdown-menu li {
+        padding: 8px 12px;
+        cursor: pointer;
+    }
+    .dropdown-menu li:hover {
+        background-color: #f8f9fa;
+    }
+</style>
+
+<script>
+    function fetchSuggestions() {
+        const query = document.getElementById('searchInput').value;
+        const suggestionsList = document.getElementById('suggestionsList');
+
+        if (query.trim() === '') {
+            suggestionsList.style.display = 'none';
+            suggestionsList.innerHTML = '';
+            return;
+        }
+
+        fetch(`/search-suggestions?query=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                suggestionsList.innerHTML = '';
+                if (data.length > 0) {
+                    data.forEach(suggestion => {
+                        const li = document.createElement('li');
+                        li.className = 'dropdown-item';
+                        li.textContent = suggestion;
+                        li.onclick = () => {
+                            document.getElementById('searchInput').value = suggestion;
+                            suggestionsList.style.display = 'none';
+                            handleSearch();
+                        };
+                        suggestionsList.appendChild(li);
+                    });
+                    suggestionsList.style.display = 'block';
+                } else {
+                    suggestionsList.style.display = 'none';
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching suggestions:', error);
+                suggestionsList.style.display = 'none';
+            });
+    }
+
+    function handleSearch() {
+        const searchTerm = document.getElementById('searchInput').value;
+        if (searchTerm.trim() !== '') {
+            window.location.href = '/search?query=' + encodeURIComponent(searchTerm);
+        } else {
+            alert('Vui lòng nhập từ khóa tìm kiếm!');
+        }
+    }
+
+    // Ẩn dropdown khi click ra ngoài
+    document.addEventListener('click', function(event) {
+        const suggestionsList = document.getElementById('suggestionsList');
+        const searchInput = document.getElementById('searchInput');
+        if (!searchInput.contains(event.target) && !suggestionsList.contains(event.target)) {
+            suggestionsList.style.display = 'none';
+        }
+    });
+</script>
+
+<!-- Footer -->
+<th:block th:replace="~{fragments/footer}"></th:block>
+
+<!-- Scripts -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
