@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "notifications")
 @Data
@@ -34,6 +36,7 @@ public class Notification {
     private AnnouncementType announcementType = AnnouncementType.INFO;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 

@@ -335,3 +335,71 @@ body {
         margin: 15px 0;
     }
 }
+
+.category-post-card {
+    border: 1px solid #e0e0e0;
+    border-radius: 0.25rem; /* Bootstrap's default card radius */
+    background-color: #fff;
+    transition: box-shadow 0.3s ease-in-out, transform 0.3s ease-in-out;
+    display: flex; /* For h-100 to work well across children */
+    flex-direction: column;
+    position: relative; /* For stretched-link to work on the whole card */
+  }
+  
+  .category-post-card:hover {
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transform: translateY(-3px);
+  }
+  
+  .category-header h3 {
+    font-size: 2rem; 
+    margin-bottom: 0;
+  }
+  
+  .category-link, .post-link {
+    text-decoration: none;
+    color: #333;
+  }
+  
+  .category-link:hover, .post-link:hover {
+    color: #007bff; /* Or your primary link color */
+  }
+  
+  .category-post-thumbnail {
+    width: 100%;
+    height: 180px; /* Or your desired fixed height */
+    object-fit: cover; /* Ensures image covers the area without distortion */
+    /* border-bottom: 1px solid #e0e0e0; */ /* Optional separator */
+  }
+  
+  .post-details {
+    flex-grow: 1; /* Allows this section to take remaining space if card has fixed height */
+  }
+  
+  .post-title {
+    font-size: 1rem; /* Adjust as needed */
+    font-weight: bold;
+  }
+  
+  .post-excerpt {
+    font-size: 0.875rem;
+    color: #555;
+    line-height: 1.4;
+    /* For multi-line ellipsis (optional, more advanced) */
+    /* display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-height: calc(1.4em * 3); */ /* line-height * number of lines */
+  }
+  
+  .no-post-message {
+    text-align: center;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    min-height: 150px; /* Ensure some space even without a post image */
+  }

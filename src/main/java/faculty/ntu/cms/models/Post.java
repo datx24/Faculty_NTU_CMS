@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "posts")
 @Data
@@ -27,10 +29,12 @@ public class Post {
     private String content;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "author_id", nullable = false)
     private User author;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "category_id")
     private Category category;
 

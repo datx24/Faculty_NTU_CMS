@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "pages")
 @Data
@@ -27,6 +29,7 @@ public class Page {
     private Boolean isActive = true;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 

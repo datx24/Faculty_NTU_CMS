@@ -4,6 +4,8 @@ import lombok.*;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 @Entity
 @Table(name = "events")
 @Data
@@ -36,10 +38,12 @@ public class Event {
     private String registrationUrl;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "recap_post")
     private Post recapPost;
 
     @ManyToOne
+    @JsonIgnore
     @JoinColumn(name = "created_by", nullable = false)
     private User createdBy;
 

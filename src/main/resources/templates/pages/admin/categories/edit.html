@@ -107,51 +107,66 @@
     <div class="content">
         <!-- Include Navbar -->
         <th:block th:replace="~{fragments/navbar}"></th:block>
-    
-        <!-- Dashboard Content -->
+
         <div class="container-fluid mt-4">
-            <h2 class="mb-4">Thể loại</h2>
-            <a th:href="@{/admin/categories/create}" class="btn btn-success mb-4">Thêm mới</a>
-            
-            <!-- Table Section (Replaces Chart Section) -->
-            <div class="row">
-                <div class="col-md-12">
-                    <div class="card p-4 mb-4">
-                        <h5>Danh sách thể loại</h5>
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Tên loại</th>
-                                    <th>slug</th>
-                                    <th>mô tả</th>
-                                    <th>Hành động</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="category : ${categories}"> 
-                                    <td th:text="${category.id}"></td>
-                                    <td th:text="${category.name}"></td>
-                                    <td th:text="${category.slug}"></td>
-                                    <td th:text="${category.description}"></td>
-                                    <td>
-                                        <a th:href="@{/admin/categories/edit/{id}(id=${category.id})}" class="btn btn-sm btn-warning">Sửa</a>
-                                        <a th:href="@{/admin/categories/delete/{id}(id=${category.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa thể loại này?')">Xóa</a>
-        
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                        
+            <h2 class="mb-4">Sửa thể loại</h2>
+
+            <form th:action="@{/admin/categories/edit/{id}(id=${category.id})}" th:object="${category}" th:method="post">
+                <div class="card p-4 mb-4">
+                    <div class="form-group">
+                        <label for="name">Tên:</label>
+                        <input type="text" class="form-control" id="name" th:field="*{name}" name="name" required>
                     </div>
+
+                    <div class="form-group">
+                        <label for="slug">Slug (URL thân thiện):</label>
+                        <input type="text" class="form-control" id="slug" th:field="*{slug}" name="slug">
+                        <small class="form-text text-muted">Để trống sẽ tự động tạo.</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description">Mô tả ngắn:</label>
+                        <textarea class="form-control" id="description" name="description" th:field="*{description}" rows="3"></textarea>
+                    </div>
+
+
+                    <button type="submit" class="btn btn-primary">Sửa</button>
+                    <a th:href="@{/admin/categories}" class="btn btn-secondary ml-2">Hủy</a>
                 </div>
-            </div>
+            </form>
         </div>
     </div>
 
     <!-- Include Footer -->
  	<th:block th:replace="~{fragments/footer}"></th:block>
 
-  
+    <script>
+        function generateSlug(str) {
+            let slug = str.toLowerCase();
+            slug = slug.normalize('NFD');
+            slug = slug.replace(/[\u0300-\u036f]/g, '');
+            slug = slug.replace(/đ/g, 'd');
+            slug = slug.replace(/[^a-z0-9]+/g, '-');
+            slug = slug.replace(/-+/g, '-');
+            slug = slug.replace(/^-|-$/g, '');
+            if (slug.length > 100) {
+                slug = slug.substring(0, 100);
+                slug = slug.replace(/-$/, '');
+            }
+            return slug;
+        }
+
+        const titleInput = document.getElementById('name');
+        const slugInput = document.getElementById('slug');
+
+        titleInput.addEventListener('input', () => {
+
+            const slug = generateSlug(titleInput.value);
+            
+
+            slugInput.value = slug;
+        });
+
+    </script>
 </body>
 </html>

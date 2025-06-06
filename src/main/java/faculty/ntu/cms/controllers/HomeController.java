@@ -1,6 +1,7 @@
 package faculty.ntu.cms.controllers;
 
 import faculty.ntu.cms.models.Category;
+import faculty.ntu.cms.models.CategoryWithPostDTO;
 import faculty.ntu.cms.models.Event;
 import faculty.ntu.cms.models.Post;
 import faculty.ntu.cms.services.*;
@@ -58,6 +59,9 @@ public class HomeController {
 						.toList();
 		m.addAttribute("otherPosts", otherPosts);
 
+		//danh sách thể loại với bài viết mới nhất 
+		List<CategoryWithPostDTO> categoriesWithPosts = categoryService.getAllCategoriesWithNewestPost();
+		m.addAttribute("categoriesWithPosts", categoriesWithPosts);
 		return "pages/user/home";
 	}
 
