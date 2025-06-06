@@ -81,14 +81,19 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-md-2">
-                <img src="/images/logo.png" alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
+                <a href="/">
+                    <img th:src="${settingMap['site_logo'] != null ? settingMap['site_logo'] : '/images/logo-ntu.png'}" alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
+                </a>    
             </div>
             <div class="col-md-10">
-                <h1>Đại học Nha Trang - Khoa Công nghệ Thông tin</h1>
+                <h1 th:text="${settingMap['site_university'] + ' - ' + settingMap['site_department']}"></h1>
             </div>
         </div>
     </div>
 </header>
+<th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}">
+</th:block>
+
 <div class="container">
     <div class="notification-card">
         <h1 th:text="${notification.title}"></h1>

@@ -158,14 +158,7 @@
                             </option>
                         </select>
                     </div>
-                    <div class="form-group mb-3">
-                        <label for="footerTemplate" class="form-label">Chọn Footer:</label>
-                        <select class="form-select" id="footerTemplate" name="footerTemplate">
-                            <option value="default_footer" >Footer Mặc định</option>
-                            <option value="simple_footer" >Footer Đơn giản</option>
-                            <!-- Add more options populated from your system -->
-                        </select>
-                    </div>
+                    
                     <div class="form-group mb-3" style="display: none;"> <!-- Hidden original content textarea -->
                         <label for="content" class="form-label">Nội dung (HTML):</label>
                         <textarea class="form-control" rows="1" id="content" th:field="*{content}" name="content"></textarea>
@@ -209,7 +202,7 @@
     </div>
 
     <!-- Include Footer -->
-    <th:block th:replace="~{fragments/footer}"></th:block>
+    <div id="footer-container" th:replace="~{fragments/footer}"></div>
 
     <script>
         function generateSlug(str) {
@@ -235,27 +228,14 @@
         const contentTextAreaCK = document.getElementById('content2'); // For CKEditor
         const previewIframe = document.getElementById('preview-iframe');
         const headerSelect = document.getElementById('menuTemplate');
-        const footerSelect = document.getElementById('footerTemplate');
         const previewButton = document.getElementById('previewButton');
         let ckEditorInstance;
 
-        function fullHtmlTemplate(rawContent, headerHtml, footerHtml) {
-            // Basic footer for preview, replace with actual dynamic footer if needed
-            const defaultFooterHtml = `
-                <footer style="background-color: #333; color: white; text-align: center; padding: 20px; margin-top: 20px;">
-                    <p>Đây là Footer Mặc định (Preview)</p>
-                </footer>`;
-            const simpleFooterHtml = `
-                <footer style="background-color: #f0f0f0; color: #333; text-align: center; padding: 10px; margin-top: 20px; border-top: 1px solid #ccc;">
-                    <p>Đây là Footer Đơn giản (Preview)</p>
-                </footer>`;
+        function fullHtmlTemplate(rawContent, headerHtml) {
+          
+            let selectedFooterHtml = document.getElementsByTagName('footer')[0].innerHTML;; // Default
+           
             
-            let selectedFooterHtml = defaultFooterHtml; // Default
-            if (footerSelect.value === 'simple_footer') {
-                selectedFooterHtml = simpleFooterHtml;
-            }
-            // Add more conditions for other footers if you have them
-
             return `
                 <!DOCTYPE html>
                 <html lang="en">
@@ -290,7 +270,9 @@
                     <main id="page-content-preview" style="padding: 15px; min-height: 300px;">
                         ${rawContent}
                     </main>
-                    ${selectedFooterHtml}
+                    <footer class="footer">
+                        ${selectedFooterHtml}
+                    </footer>
                     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"><\/script>
                 </body>
                 </html>
