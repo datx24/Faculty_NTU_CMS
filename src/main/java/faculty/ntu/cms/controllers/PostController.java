@@ -17,6 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import faculty.ntu.cms.models.Post;
 import faculty.ntu.cms.models.User;
+import faculty.ntu.cms.services.CategoryService;
+import faculty.ntu.cms.services.PostService;
+import jakarta.servlet.http.HttpServletRequest;
+import faculty.ntu.cms.services.FileStorageService;
+import faculty.ntu.cms.services.MenuItemService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -34,10 +39,10 @@ public class PostController {
     private CategoryService categoryService;
 
     @Autowired
+    private MenuItemService menuItemService;
+    @Autowired
     private FileStorageService fileStorageService;
 
-    @Autowired
-    private MenuItemService menuItemService;
 
     @Autowired
     private EventService eventService;
@@ -150,7 +155,10 @@ public class PostController {
         return "redirect:/admin/posts";
     }
     @GetMapping("posts/{slug}")
-    public String viewPost(@PathVariable String slug, Model model) {
+    public String viewPost(@PathVariable String slug, Model model, HttpServletRequest request) {
+        String requestURI = request != null ? request.getRequestURI() : "/";
+		model.addAttribute("currentPath", requestURI);
+		model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
         System.out.println("Processing slug: " + slug); // Debug
         Post post = postService.findBySlug(slug);
         if (post == null) {

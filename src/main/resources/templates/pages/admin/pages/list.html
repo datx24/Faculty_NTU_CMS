@@ -171,7 +171,8 @@
                         
                             <td th:text="${page.title}"></td>
                             <td th:text="${page.slug}"></td>
-                            <td th:text="${page.isActive}"></td>
+                            <td th:text="${page.isActive} ? 'hiện' : 'ẩn'"
+                                th:class="${page.isActive} ? 'text-success' : 'text-danger'"></td>
                             <td th:text="${page.createdBy != null} ? ${page.createdBy.name} : 'không có'"></td>
                             <td th:text="${#temporals.format(page.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
                             <td>

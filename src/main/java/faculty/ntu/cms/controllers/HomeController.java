@@ -39,9 +39,9 @@ public class HomeController {
 	public String getHome(Model m, HttpServletRequest request) {
 		String requestURI = request != null ? request.getRequestURI() : "/";
 		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		m.addAttribute("events", eventService.getAllActiveEvents());
 		m.addAttribute("notifications", notificationService.getAllNotifications());
-		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		// Lấy tất cả bài viết đã xuất bản
 		List<Post> publishedPosts = postService.getPublishedPosts();
 		publishedPosts.sort((p1, p2) -> p2.getCreatedAt().compareTo(p1.getCreatedAt())); // Sắp xếp theo createdAt giảm dần
@@ -69,7 +69,10 @@ public class HomeController {
 	@GetMapping("events/{id}")
 	public String viewEvent(@PathVariable Integer id,
 							Model m,
-							RedirectAttributes redirectAttributes) {
+							RedirectAttributes redirectAttributes, HttpServletRequest request) {
+		String requestURI = request != null ? request.getRequestURI() : "/";
+		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		try {
 			Event event = eventService.getEventById(id)
 					.orElseThrow(() -> new RuntimeException("Sự kiện không tồn tại"));
@@ -84,7 +87,10 @@ public class HomeController {
 
 	//Xử lý xem chi tiết thông báo
 	@GetMapping("notifications/{id}")
-	public String viewNotification(@PathVariable Integer id, Model m) {
+	public String viewNotification(@PathVariable Integer id, Model m, HttpServletRequest request) {
+		String requestURI = request != null ? request.getRequestURI() : "/";
+		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		notificationService.getNotificationById(id).ifPresent(n -> m.addAttribute("notification", n));
 		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		return "pages/user/notifications/detail";

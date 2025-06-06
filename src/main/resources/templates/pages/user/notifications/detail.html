@@ -84,17 +84,17 @@
             <div class="col-md-2">
                 <a href="/">
                     <img th:src="${settingMap['site_logo'] != null ? settingMap['site_logo'] : '/images/logo-ntu.png'}" alt="Logo ĐH Nha Trang" class="img-fluid" style="max-height: 80px;">
-                </a>
+                </a>    
             </div>
             <div class="col-md-10">
+                <h1 th:text="${settingMap['site_university'] + ' - ' + settingMap['site_department']}"></h1>
                 <h1 th:text="${settingMap['site_university'] + ' - ' + settingMap['site_department']}"></h1>
             </div>
         </div>
     </div>
 </header>
-
-<!-- Menu List Fragment -->
-<th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}"></th:block>
+<th:block th:replace="~{pages/user/menu/list :: menuList(menuItems=${menuItems}, currentPath=${currentPath})}">
+</th:block>
 
 <div class="container">
     <div class="notification-card">
