@@ -1,6 +1,6 @@
 package faculty.ntu.cms.controllers;
 
-import faculty.ntu.cms.services.EventService;
+import faculty.ntu.cms.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,6 +42,8 @@ public class PostController {
     private MenuItemService menuItemService;
     @Autowired
     private FileStorageService fileStorageService;
+
+
     @Autowired
     private EventService eventService;
     private final String uploadDir = "/uploads/";
@@ -176,6 +178,7 @@ public class PostController {
                 .collect(Collectors.toList());
 
         model.addAttribute("post", post);
+        model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
         model.addAttribute("relatedPosts", publishedPosts); // Truyền danh sách bài viết liên quan vào model
         return "pages/user/post/post_detail";
     }

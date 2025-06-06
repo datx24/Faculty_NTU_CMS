@@ -23,14 +23,14 @@ public class SecurityConfig {
         http
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/login", "/register", "/css/**", "/js/**").permitAll()
-                        .requestMatchers("/dashboard/**", "/admin/**").authenticated()
+                        .requestMatchers("/admin/**").authenticated()
                         .requestMatchers("/menu").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/menu/create", "/menu/edit/**", "/menu/delete/**").hasAuthority("ADMIN")
                         .anyRequest().permitAll()
                 )
                 .formLogin(form -> form
                         .loginPage("/login")
-                        .defaultSuccessUrl("/dashboard", true)
+                        .defaultSuccessUrl("/admin/pages", true)
                         .permitAll()
                 )
                 .logout(logout -> logout

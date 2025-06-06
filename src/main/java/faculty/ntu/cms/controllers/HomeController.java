@@ -91,6 +91,7 @@ public class HomeController {
 		m.addAttribute("currentPath", requestURI);
 		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		notificationService.getNotificationById(id).ifPresent(n -> m.addAttribute("notification", n));
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		return "pages/user/notifications/detail";
 	}
 	@GetMapping("post-categories")
