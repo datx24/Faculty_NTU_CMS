@@ -13,8 +13,4 @@ public class DashboardController {
 	@Autowired
 	private SettingService settingService;
 
-	@GetMapping("/dashboard")
-	public String getDashBoard(Model m) {
-		return "pages/admin/dashboard";
-	}
 }
