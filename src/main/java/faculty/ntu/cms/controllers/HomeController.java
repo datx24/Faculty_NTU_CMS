@@ -73,6 +73,7 @@ public class HomeController {
 		try {
 			Event event = eventService.getEventById(id)
 					.orElseThrow(() -> new RuntimeException("Sự kiện không tồn tại"));
+			m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 			m.addAttribute("event", event);
 			return "pages/user/events/view";
 		}catch (RuntimeException e) {
