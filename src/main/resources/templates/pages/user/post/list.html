@@ -31,9 +31,9 @@
       <!-- Bài viết nổi bật -->
       <div class="col-md-7 mb-4">
         <div th:if="${featuredPost}">
-          <img th:src="${featuredPost.thumbnail} ?: 'https://via.placeholder.com/600x400'"
+          <img th:src="${featuredPost.thumbnail} ?: 'https://placehold.co/600x400'"
                th:alt="${featuredPost.title}" class="img-fluid rounded featured-post"
-               onerror="this.src='https://via.placeholder.com/600x400';">
+               onerror="this.src='https://placehold.co/600x400';">
           <a th:href="@{/posts/{slug}(slug=${featuredPost.slug})}"
              th:text="${featuredPost.title}" class="d-block mt-2 h5 text-dark"></a>
         </div>
@@ -46,10 +46,10 @@
           <div th:each="post, iterStat : ${otherPosts}"
                class="list-group-item d-flex align-items-start"
                th:classappend="${iterStat.index >= 5} ? 'hidden-post' : ''">
-            <img th:src="${post.thumbnail} ?: 'https://via.placeholder.com/100x100'"
+            <img th:src="${post.thumbnail} ?: 'https://placehold.co/100x100'"
                  th:alt="${post.title}" class="img-thumbnail mr-2"
                  style="width: 60px; height: auto;"
-                 onerror="this.src='https://via.placeholder.com/100x100';">
+                 onerror="this.src='https://placehold.co/100x100';">
             <div style="flex-grow: 1;" class="post-title text-truncate d-block">
               <a th:href="@{/posts/{slug}(slug=${post.slug})}"
                  th:text="${post.title}"
@@ -63,50 +63,39 @@
   </div>
 </th:block>
 <th:block th:fragment="categories-post-pane(categoriesWithPosts)">
-
-  <div class="row">
-    
+  <div class="row mt-4">
     <th:block th:each="item, iterStat : ${categoriesWithPosts}">
       <div class="col-12 col-sm-6 col-md-3 mb-4" th:if="${iterStat.count <= 4}">
-        
+
         <div class="category-header pb-3 ">
           <h3>
-            <a th:href="@{'/post-categories/' + ${item.category.slug}}"
-               th:text="${item.category.name}"
-               class="category-link stretched-link">Category Name 
+            <a th:href="@{'/post-categories/' + ${item.category.slug}}" th:text="${item.category.name}"
+              class="category-link">Category Name
             </a>
           </h3>
         </div>
-          <th:block th:if="${item.post != null}">
-            <a th:href="@{'/posts/' + ${item.post.slug}}" th:title="${item.post.title}" class="post-thumbnail-link">
-              <img class="img-fluid category-post-thumbnail" 
-                   th:src="${item.post.thumbnail != null ? item.post.thumbnail : '/uploads/1747104672986_1-18.jpg'}"
-                   th:alt="${item.post.title}"
-                   onerror="this.onerror=null; this.src='/uploads/1747104672986_1-18.jpg';">
-            </a>
-            <div class="post-details p-3">
-              <h4 class="post-title mb-2">
-                <a th:href="@{'/posts/' + ${item.post.slug}}"
-                   th:title="${item.post.title}"
-                   th:text="${item.post.title}"
-                   class="post-link stretched-link">Post Title 
-              </h4>
-              <p class="post-excerpt" th:if="${item.post.excerpt}" th:text="${#strings.abbreviate(item.post.excerpt, 100)}"></p> <!-- Abbreviate excerpt -->
-            </div>
-          </th:block>
-
-          <th:block th:if="${item.post == null}">
-            <div class="no-post-message p-3">
-             
-              <img src="/path/to/default-category-image.jpg" class="img-fluid mb-2" alt="No post available">
-              <p class="text-muted mt-3">Không có bài viết mới trong danh mục này.</p>
-            </div>
-          </th:block>
+        <th:block th:if="${item.post != null}">
+          <a th:href="@{'/posts/' + ${item.post.slug}}" th:title="${item.post.title}" class="post-thumbnail-link">
+            <img class="img-fluid category-post-thumbnail"
+              th:src="${item.post.thumbnail != null ? item.post.thumbnail : '/uploads/1747104672986_1-18.jpg'}"
+              th:alt="${item.post.title}" onerror="this.onerror=null; this.src='/uploads/1747104672986_1-18.jpg';">
+          </a>
+          <div class="post-details p-3">
+            <h4 class="post-title mb-2">
+              <a th:href="@{'/posts/' + ${item.post.slug}}" th:title="${item.post.title}" th:text="${item.post.title}"
+                class="post-link">
+                Post Title
+              </a>
+            </h4>
+            <p class="post-excerpt" th:if="${item.post.excerpt}" th:text="${item.post.excerpt}"></p>
+          </div>
+        </th:block>
 
         
-      </div> 
+      </div>
     </th:block>
   </div>
+    
 
 </th:block>
 

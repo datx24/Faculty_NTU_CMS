@@ -147,8 +147,15 @@
                         </div>
                         <!-- Đường dẫn (Path) -->
                         <div class="mb-3">
-                            <label for="path" class="form-label">Đường dẫn</label>
-                            <input type="text" id="path" th:field="*{path}" class="form-control" required>
+                           
+                            <label for="pathMenu" class="form-label">Đường dẫn</label>
+                            <select id="pathMenu" class="form-control" th:field="*{path}">
+                                <option th:each="p : ${pathList}" 
+                                        th:value="${p}" 
+                                        th:text="${p}" 
+                                        th:selected="${p == menuItem.path}">
+                                </option>
+                            </select>
                         </div>
                         <!-- Trạng thái (Active) -->
                         <div class="mb-3">
@@ -205,8 +212,12 @@
       $('#menuName').select2({
         placeholder: 'Chọn hoặc nhập tên menu',
         allowClear: true,
-        tags: true // allows custom entries like a free-text input
+        tags: true 
       });
+      $('#pathMenu').select2({
+        placeholder: 'đường dẫn',
+        tags: true
+      })
     });
   </script>
 </body>

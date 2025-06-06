@@ -2,6 +2,8 @@ package faculty.ntu.cms.controllers;
 
 import faculty.ntu.cms.models.MenuItem;
 import faculty.ntu.cms.services.MenuItemService;
+import faculty.ntu.cms.services.PageService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
@@ -18,6 +20,8 @@ import java.util.Optional;
 public class MenuItemController {
     @Autowired
     private MenuItemService menuItemService;
+    @Autowired
+    private PageService pageService;
 
     // Hiển thị danh sách menu cho admin dựa vào role
     @GetMapping()
@@ -41,6 +45,9 @@ public class MenuItemController {
         m.addAttribute("menuItem", menuItem);
         m.addAttribute("menuItems", menuItemService.getAllMenuItems());
         m.addAttribute("menuNames", menuItemService.getMenuNameList());
+
+        List<String> pathList = pageService.findAllActivePages().stream().map(page -> page.getSlug()).toList();
+        m.addAttribute("pathList",pathList);
         return "pages/admin/menu/create";
     }
 

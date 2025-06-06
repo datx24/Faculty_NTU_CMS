@@ -101,29 +101,32 @@
 
 <!-- Main Content -->
 <div class="container">
+    
     <div class="row">
+        
         <!-- News -->
         <div class="col-md-8">
             <div class="news-section">
                 <!-- Thay bằng fragment post-list -->
                 <div th:replace="~{pages/user/post/list :: post-list(featuredPost=${featuredPost}, otherPosts=${otherPosts})}"></div>
-
+                
             </div>
         </div>
-
+        
         <!-- Events and Notifications -->
         <div class="col-md-4">
             <!-- Events -->
             <div th:replace="~{pages/user/events/list :: event-list(events=${events})}"></div>
-
+            
             <!-- Notifications -->
             <div th:replace="~{pages/user/notifications/list :: notification-list(notifications=${notifications})}"></div>
         </div>
+        
     </div>
-    <br>
-
+    
     <div th:replace="~{pages/user/post/list :: categories-post-pane(categoriesWithPosts=${categoriesWithPosts})}"></div>
-
+    
+    
 </div>
 
 <!-- Footer -->
