@@ -88,13 +88,19 @@ public class HomeController {
 		return "pages/user/notifications/detail";
 	}
 	@GetMapping("post-categories")
-	public String viewPostMenu(Model m) {
+	public String viewPostMenu(Model m, HttpServletRequest request) {
+		String requestURI = request != null ? request.getRequestURI() : "/";
+		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		List<Category> categories = categoryService.getAllCategories();
 		m.addAttribute("categories", categories);
 		return "pages/user/post/categories_post";
 	}
 	@GetMapping("post-categories/{slug}")
-	public String viewPostsByCategory(@PathVariable String slug, Model m) {
+	public String viewPostsByCategory(@PathVariable String slug, Model m, HttpServletRequest request) {
+		String requestURI = request != null ? request.getRequestURI() : "/";
+		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		// Lấy danh mục theo slug
 		Optional<Category> categoryOpt = categoryService.getAllCategories().stream()
 						.filter(cat -> cat.getSlug().equals(slug))

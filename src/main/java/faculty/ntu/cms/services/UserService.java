@@ -37,4 +37,9 @@ public class UserService implements UserDetailsService {
     public Optional<User> findById(Integer userId) {
         return userRepository.findById(userId);
     }
+
+  public User findByUsername(String username) {
+      return userRepository.findByUsername(username)
+              .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+  }
 }

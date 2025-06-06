@@ -100,8 +100,32 @@
     </style>
 </head>
 <body>
+<!-- Place the first <script> tag in your HTML's <head> -->
+<script src="https://cdn.tiny.cloud/1/0b71ba7e0wh5rufyy5p0bqt4jf9mjeqodlfvhvfpnis1xbob/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
-    <!-- Include Sidebar -->
+<!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+<script>
+    tinymce.init({
+      selector: 'textarea',
+      plugins: [
+        // Core editing features
+        'anchor', 'autolink', 'charmap', 'codesample', 'emoticons', 'image', 'link', 'lists', 'media', 'searchreplace', 'table', 'visualblocks', 'wordcount',
+        // Your account includes a free trial of TinyMCE premium features
+        // Try the most popular premium features until Jun 20, 2025:
+        'checklist', 'mediaembed', 'casechange', 'formatpainter', 'pageembed', 'a11ychecker', 'tinymcespellchecker', 'permanentpen', 'powerpaste', 'advtable', 'advcode', 'editimage', 'advtemplate', 'ai', 'mentions', 'tinycomments', 'tableofcontents', 'footnotes', 'mergetags', 'autocorrect', 'typography', 'inlinecss', 'markdown','importword', 'exportword', 'exportpdf'
+      ],
+      toolbar: 'undo redo | blocks fontfamily fontsize | bold italic underline strikethrough | link image media table mergetags | addcomment showcomments | spellcheckdialog a11ycheck typography | align lineheight | checklist numlist bullist indent outdent | emoticons charmap | removeformat',
+      tinycomments_mode: 'embedded',
+      tinycomments_author: 'Author name',
+      mergetags_list: [
+        { value: 'First.Name', title: 'First Name' },
+        { value: 'Email', title: 'Email' },
+      ],
+      ai_request: (request, respondWith) => respondWith.string(() => Promise.reject('See docs to implement AI Assistant')),
+    });
+</script>
+
+<!-- Include Sidebar -->
     <th:block th:replace="~{fragments/sidebar}"></th:block>
 
     <div class="content">
@@ -142,12 +166,12 @@
 
                     <div class="form-group">
                         <label for="excerpt">Mô tả ngắn:</label>
-                        <textarea class="form-control" id="excerpt" name="excerpt" rows="3"></textarea>
+                        <input type="text" class="form-control" id="excerpt" name="excerpt" rows="3"/>
                     </div>
 
                     <div class="form-group">
                         <label for="content">Nội dung:</label>
-                        <textarea class="form-control" id="content" name="content" rows="10" required></textarea>
+                        <textarea class="form-control" id="content" name="content" rows="10"></textarea>
                         <!-- You might want to integrate a rich text editor here -->
                     </div>
 
