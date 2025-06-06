@@ -85,6 +85,7 @@ public class HomeController {
 	@GetMapping("notifications/{id}")
 	public String viewNotification(@PathVariable Integer id, Model m) {
 		notificationService.getNotificationById(id).ifPresent(n -> m.addAttribute("notification", n));
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		return "pages/user/notifications/detail";
 	}
 	@GetMapping("post-categories")

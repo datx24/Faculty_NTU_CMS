@@ -1,6 +1,6 @@
 package faculty.ntu.cms.controllers;
 
-import faculty.ntu.cms.services.EventService;
+import faculty.ntu.cms.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,9 +17,6 @@ import org.springframework.web.multipart.MultipartFile;
 
 import faculty.ntu.cms.models.Post;
 import faculty.ntu.cms.models.User;
-import faculty.ntu.cms.services.CategoryService;
-import faculty.ntu.cms.services.PostService;
-import faculty.ntu.cms.services.FileStorageService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -38,6 +35,10 @@ public class PostController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private MenuItemService menuItemService;
+
     @Autowired
     private EventService eventService;
     private final String uploadDir = "/uploads/";
@@ -169,6 +170,7 @@ public class PostController {
                 .collect(Collectors.toList());
 
         model.addAttribute("post", post);
+        model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
         model.addAttribute("relatedPosts", publishedPosts); // Truyền danh sách bài viết liên quan vào model
         return "pages/user/post/post_detail";
     }
