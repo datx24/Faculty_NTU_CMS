@@ -232,6 +232,21 @@
                 padding: 0.5rem;
             }
         }
+        .advanced-settings-toggle {
+            cursor: pointer;
+            font-weight: bold;
+        
+        }
+        .advanced-settings-toggle:hover {
+            text-decoration: underline;
+        }
+        .advanced-settings-toggle .fas { /* Icon styling */
+            margin-left: 8px;
+            transition: transform 0.2s ease-in-out;
+        }
+        .advanced-settings-toggle[aria-expanded="true"] .fa-chevron-down {
+            transform: rotate(180deg);
+        }
     </style>
 </head>
 <body>
@@ -411,10 +426,53 @@
                 <!-- Buttons -->
                 <div class="d-flex align-items-center mt-4">
                     <button type="submit" class="btn btn-primary me-3">Lưu thay đổi</button>
-                    <a th:href="@{/admin/settings/new}" class="btn btn-link">Thêm cài đặt mới</a>
+                    
                 </div>
             </form>
+            <div class="advanced-settings-card card mt-4"> <!-- New card for the table section -->
+                <div class="card-header">
+                    <a class="advanced-settings-toggle d-block text-decoration-none" data-bs-toggle="collapse" href="#collapseAdvancedSettings" role="button" aria-expanded="false" aria-controls="collapseAdvancedSettings">
+                        <h2>
+                            Cài đặt Nâng cao
+                            <i class="fas fa-chevron-down float-end"></i>
+                        </h2>   
+                    </a>
+               </div>
+               <div class="collapse" id="collapseAdvancedSettings">
+                    <a th:href="@{/admin/settings/new}" class="btn my-4 btn-success">Thêm cài đặt mới</a>
+                    <table class="table table-striped table-hover table-settings" style="width: 100%; overflow: hidden; table-layout: fixed;">
+                        <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Giá trị cài đặt</th>
+                                <th style="width: 150px">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="setting, iterStat : ${settings}">
+                                <td th:text="${setting.settingKey}">SITE_NAME</td>
+                                <td class="value-preview" style="word-wrap: break-word;">
+                                
+                                    <div th:if="${(setting.settingValue != null)}">
+                                        <span class="text-preview" th:text="${setting.settingValue}">Sample Text Value</span>
+                                    </div>
+                                    
+                                </td>
+                                <td>
+                                    <a th:href="@{/admin/settings/edit/{id}(id=${setting.id})}" class="btn btn-primary btn-sm" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a th:href="@{/admin/settings/delete/{id}(id=${setting.id})}" class="btn btn-sm btn-danger" onclick="return confirm('Bạn có chắc muốn xóa?')">Xóa</a>
+            
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+               </div> 
+           </div> 
+   
         </div>
+        
     </div>
 </div>
 

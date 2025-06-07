@@ -45,6 +45,23 @@ public class SettingController {
         m.addAttribute("setting", new Setting());
         return "pages/admin/settings/form";
     }
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Integer id,Model m) {
+        
+        settingService.getSettingById(id)
+        .ifPresentOrElse(
+            set -> m.addAttribute("setting", set),
+            () -> {
+                throw new IllegalArgumentException("setting not found");
+            }
+        );
+        return "pages/admin/settings/form";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteSetting(@PathVariable Integer id) {
+        settingService.deleteSetting(id);
+        return "redirect:/admin/settings";
+    }
 
     // Thêm mới hoặc cập nhật setting
     @PostMapping
