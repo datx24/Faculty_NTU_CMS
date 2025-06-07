@@ -69,28 +69,30 @@
 <!-- Carousel -->
 <div id="carouselExample" class="container carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img th:src="${settingMap['site_banner'] != null ? settingMap['site_banner'] : '/images/logo-ntu.png'}" class="d-block w-100" alt="Slide 1">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Chào mừng đến với Khoa CNTT</h5>
-                <p>Khám phá các chương trình đào tạo chất lượng cao.</p>
+        <th:block th:if="${settingMap['site_banner'] != null and !#strings.isEmpty(settingMap['site_banner'])}">
+            <th:block th:with="bannerUrls=${#strings.listSplit(settingMap['site_banner'], ',')}">
+                <div th:each="bannerUrl, iterStat : ${bannerUrls}"
+                     th:classappend="${iterStat.first ? 'active' : ''}" class="carousel-item">
+                    <img th:src="@{${#strings.trim(bannerUrl)}}" class="d-block w-100" th:alt="s">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h5 th:text="${settingMap['site_department']}" >Sự kiện nổi bật</h5>
+                        <p>Khám phá các chương trình đào tạo chất lượng cao.</p>
+                    </div>
+                </div>
+            </th:block>
+        </th:block>
+    
+        <th:block th:unless="${settingMap['site_banner'] != null and !#strings.isEmpty(settingMap['site_banner'])}">
+            <div class="carousel-item active">
+                <img th:src="@{/images/logo-ntu.png}" class="d-block w-100" alt="Default Banner">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5>Chào mừng đến với Khoa CNTT</h5>
+                    <p>Khám phá các chương trình đào tạo chất lượng cao.</p>
+                </div>
             </div>
-        </div>
-        <div class="carousel-item">
-            <img th:src="${settingMap['site_banner'] != null ? settingMap['site_banner'] : '/images/logo-ntu.png'}" class="d-block w-100" alt="Slide 2">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Sự kiện nổi bật</h5>
-                <p>Tham gia các sự kiện công nghệ sắp tới.</p>
-            </div>
-        </div>
-        <div class="carousel-item">
-            <img th:src="${settingMap['site_banner'] != null ? settingMap['site_banner'] : '/images/logo-ntu.png'}" class="d-block w-100" alt="Slide 3">
-            <div class="carousel-caption d-none d-md-block">
-                <h5>Tin tức mới nhất</h5>
-                <p>Cập nhật thông tin từ Khoa CNTT.</p>
-            </div>
-        </div>
+        </th:block>
     </div>
+
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     </button>

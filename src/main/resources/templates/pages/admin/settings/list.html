@@ -285,13 +285,25 @@
                             <label for="site_banner" class="form-label">Banner</label>
                             <div class="input-group">
                                 <span class="input-group-text"><i class="fas fa-image"></i></span>
-                                <input type="file" name="site_banner" class="form-control" id="site_banner" accept="image/*">
+                                <input type="file" name="site_banner" class="form-control" id="site_banner" accept="image/*" multiple>
                             </div>
-                            <div th:if="${s.settingValue != null and s.settingValue.startsWith('/uploads/')}" class="mt-2">
-                                <img th:src="@{${s.settingValue}}" class="image-preview" alt="Current Logo" />
-                                <div class="form-text">Banner hiện tại. Tải lên Banner mới để thay thế.</div>
+                            
+                            <div th:if="${s.settingValue != null and s.settingValue != ''}" class="mt-2">
+                                <p><strong>Banners hiện tại:</strong></p>
+                                <div class="d-flex flex-wrap"> 
+                                    <th:block th:each="imageUrl : ${s.settingValue.split(',')}">
+                                        <div th:if="${#strings.trim(imageUrl).startsWith('/uploads/')}" class="me-2 mb-2">
+                                            <img th:src="@{${#strings.trim(imageUrl)}}" class="image-preview" alt="Current Banner"
+                                                 style="max-width: 200px; max-height: 100px; object-fit: cover; border: 1px solid #ddd;" />
+                                        </div>
+                                    </th:block>
+                                </div>
+                                <div class="form-text">Tải lên Banner mới sẽ thay thế TOÀN BỘ các banner hiện tại.</div>
                             </div>
-                            <div class="form-text">Tải lên Banner của khoa (định dạng JPG, PNG, GIF).</div>
+                             <div th:unless="${s.settingValue != null and s.settingValue != ''}" class="form-text mt-1">
+                                Chưa có banner nào.
+                            </div>
+                            <div class="form-text">Tải lên Banner của khoa (định dạng JPG, PNG, GIF). Giữ Ctrl (hoặc Cmd trên Mac) để chọn nhiều file.</div>
                         </div>
                     </th:block>
                 </div>
