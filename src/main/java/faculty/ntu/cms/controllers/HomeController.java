@@ -104,7 +104,7 @@ public class HomeController {
 		m.addAttribute("categories", categories);
 		return "pages/user/post/categories_post";
 	}
-	@GetMapping("post-categories/{slug}")
+	@GetMapping("/post-categories/{slug}")
 	public String viewPostsByCategory(@PathVariable String slug, Model m, HttpServletRequest request) {
 		String requestURI = request != null ? request.getRequestURI() : "/";
 		m.addAttribute("currentPath", requestURI);
