@@ -64,11 +64,14 @@ public class MenuItemController {
     @GetMapping("/edit/{id}")
     public String showEditForm(@PathVariable Integer id,Model m) {
         Optional<MenuItem> menuItem = menuItemService.getMenuItemById(id);
+        List<String> pathList = pageService.findAllActivePages().stream().map(page -> page.getSlug()).toList();
+        m.addAttribute("pathList",pathList);
         if(menuItem.isPresent()){
             m.addAttribute("menuItem", menuItem.get());
             m.addAttribute("parentItems", menuItemService.getAllMenuItems());
             return "pages/admin/menu/edit";
         }
+        
         return "redirect:/admin/menu";
     }
 

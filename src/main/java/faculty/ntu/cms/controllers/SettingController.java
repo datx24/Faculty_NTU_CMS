@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -43,6 +44,23 @@ public class SettingController {
     public String showCreateForm(Model m) {
         m.addAttribute("setting", new Setting());
         return "pages/admin/settings/form";
+    }
+    @GetMapping("/edit/{id}")
+    public String showEditForm(@PathVariable Integer id,Model m) {
+        
+        settingService.getSettingById(id)
+        .ifPresentOrElse(
+            set -> m.addAttribute("setting", set),
+            () -> {
+                throw new IllegalArgumentException("setting not found");
+            }
+        );
+        return "pages/admin/settings/form";
+    }
+    @GetMapping("/delete/{id}")
+    public String deleteSetting(@PathVariable Integer id) {
+        settingService.deleteSetting(id);
+        return "redirect:/admin/settings";
     }
 
     // Thêm mới hoặc cập nhật setting
@@ -77,7 +95,7 @@ public class SettingController {
 
     // Xử lý lưu hàng loạt các setting
     @PostMapping("/bulk")
-    public String saveSettings(@RequestParam Map<String, String> settingsMap, @RequestParam(value = "site_logo", required = false) MultipartFile siteLogo,@RequestParam(value = "site_banner", required = false) MultipartFile siteBanner) {
+    public String saveSettings(@RequestParam Map<String, String> settingsMap, @RequestParam(value = "site_logo", required = false) MultipartFile siteLogo,@RequestParam(value = "site_banner", required = false) List<MultipartFile> siteBanner) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User createdBy;
         if (auth != null && auth.getPrincipal() instanceof UserDetails) {
@@ -96,12 +114,24 @@ public class SettingController {
             settingsMap.put("site_logo", fileUrl);
         }
 
+        List<String> bannerUrls = new ArrayList<>();
         if (siteBanner != null && !siteBanner.isEmpty()) {
-            if (!siteBanner.getContentType().startsWith("image/")) {
-                throw new RuntimeException("Invalid file type for site_logo. Only images are allowed.");
+            // if (!siteBanner.getContentType().startsWith("image/")) {
+            //     throw new RuntimeException("Invalid file type for site_logo. Only images are allowed.");
+            // }
+            // String fileUrl = fileStorageService.storeFile(file);
+            // settingsMap.put("site_banner", fileUrl);
+            for (MultipartFile file : siteBanner) {
+                if (file != null && !file.isEmpty()) {
+                    if (!file.getContentType().startsWith("image/")) {
+                        throw new RuntimeException("Invalid file type: " + file.getOriginalFilename() + ". Only images are allowed for banners.");
+                    }
+                    String fileUrl = fileStorageService.storeFile(file);
+                    bannerUrls.add(fileUrl);
+                }
             }
-            String fileUrl = fileStorageService.storeFile(siteBanner);
-            settingsMap.put("site_banner", fileUrl);
+            settingsMap.put("site_banner", String.join(",", bannerUrls));
+            
         }
 
         settingsMap.remove("createdById");

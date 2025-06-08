@@ -1,7 +1,6 @@
 package faculty.ntu.cms.controllers;
 
 import faculty.ntu.cms.services.*;
-import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,6 +17,11 @@ import org.springframework.web.multipart.MultipartFile;
 
 import faculty.ntu.cms.models.Post;
 import faculty.ntu.cms.models.User;
+import faculty.ntu.cms.services.CategoryService;
+import faculty.ntu.cms.services.PostService;
+import jakarta.servlet.http.HttpServletRequest;
+import faculty.ntu.cms.services.FileStorageService;
+import faculty.ntu.cms.services.MenuItemService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -30,14 +34,16 @@ public class PostController {
 
     @Autowired
     private PostService postService;
+
+    @Autowired
+    private CategoryService categoryService;
+
     @Autowired
     private MenuItemService menuItemService;
     @Autowired
-    private CategoryService categoryService;
-    @Autowired
-    private UserService userService;
-    @Autowired
     private FileStorageService fileStorageService;
+
+
     @Autowired
     private EventService eventService;
     private final String uploadDir = "/uploads/";
@@ -62,11 +68,10 @@ public class PostController {
     @PostMapping("/admin/posts/create")
     public String createPost(@ModelAttribute("post") Post post,  @RequestParam("thumbnailFile") MultipartFile thumbnailFile) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
-        if (auth != null && auth.getPrincipal() instanceof UserDetails) {
-            UserDetails userDetails = (UserDetails) auth.getPrincipal();
-            User user = userService.findByUsername(userDetails.getUsername());
-            post.setAuthor(user);
+        if(auth != null && auth.getPrincipal() instanceof UserDetails){
+            UserDetails userdetails = (UserDetails) auth.getPrincipal();
+            // User author = userService.loadUserByUsername(userdetails.getUsername());
+            post.setAuthor((User) userdetails);
         }
         if (!thumbnailFile.isEmpty()) {
             try {
@@ -152,8 +157,8 @@ public class PostController {
     @GetMapping("posts/{slug}")
     public String viewPost(@PathVariable String slug, Model model, HttpServletRequest request) {
         String requestURI = request != null ? request.getRequestURI() : "/";
-        model.addAttribute("currentPath", requestURI);
-        model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
+		model.addAttribute("currentPath", requestURI);
+		model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
         System.out.println("Processing slug: " + slug); // Debug
         Post post = postService.findBySlug(slug);
         if (post == null) {
@@ -173,6 +178,7 @@ public class PostController {
                 .collect(Collectors.toList());
 
         model.addAttribute("post", post);
+        model.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
         model.addAttribute("relatedPosts", publishedPosts); // Truyền danh sách bài viết liên quan vào model
         return "pages/user/post/post_detail";
     }
