@@ -95,15 +95,20 @@ public class HomeController {
 		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		return "pages/user/notifications/detail";
 	}
-	@GetMapping("post-categories")
-	public String viewPostMenu(Model m) {
+	@GetMapping("/post-categories")
+	public String viewPostMenu(Model m, HttpServletRequest request) {
+		String requestURI = request != null ? request.getRequestURI() : "/";
+		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		List<Category> categories = categoryService.getAllCategories();
 		m.addAttribute("categories", categories);
 		return "pages/user/post/categories_post";
 	}
-	@GetMapping("post-categories/{slug}")
-	public String viewPostsByCategory(@PathVariable String slug, Model m) {
-		// Lấy danh mục theo slug
+	@GetMapping("/post-categories/{slug}")
+	public String viewPostsByCategory(@PathVariable String slug, Model m, HttpServletRequest request) {
+		String requestURI = request != null ? request.getRequestURI() : "/";
+		m.addAttribute("currentPath", requestURI);
+		m.addAttribute("menuItems", menuItemService.getActiveMenuItemsByMenuName("primary"));
 		Optional<Category> categoryOpt = categoryService.getAllCategories().stream()
 						.filter(cat -> cat.getSlug().equals(slug))
 						.findFirst();
