@@ -151,8 +151,8 @@
                             <label for="pathMenu" class="form-label">Đường dẫn</label>
                             <select id="pathMenu" class="form-control" th:field="*{path}">
                                 <option th:each="p : ${pathList}" 
-                                        th:value="${p}" 
-                                        th:text="${p}" 
+                                        th:value="'/' + ${p}" 
+                                        th:text="'/' + ${p}" 
                                         th:selected="${p == menuItem.path}">
                                 </option>
                             </select>

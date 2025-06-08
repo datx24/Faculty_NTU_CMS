@@ -76,7 +76,7 @@
                     <img th:src="@{${#strings.trim(bannerUrl)}}" class="d-block w-100" th:alt="s">
                     <div class="carousel-caption d-none d-md-block">
                         <h5 th:text="${settingMap['site_department']}" >Sự kiện nổi bật</h5>
-                        <p>Khám phá các chương trình đào tạo chất lượng cao.</p>
+                        <p th:text="${settingMap['slogan_banner']}" ></p>
                     </div>
                 </div>
             </th:block>

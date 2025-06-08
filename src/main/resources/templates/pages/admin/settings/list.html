@@ -321,6 +321,15 @@
                             <div class="form-text">Tải lên Banner của khoa (định dạng JPG, PNG, GIF). Giữ Ctrl (hoặc Cmd trên Mac) để chọn nhiều file.</div>
                         </div>
                     </th:block>
+                    <!-- slogan banner -->
+                    <th:block th:each="s : ${settings}" th:if="${s.settingKey == 'slogan_banner'}">
+                        <div class="mb-3">
+                            <label for="slogan_banner" class="form-label">slogan banner giới thiệu</label>
+                            <input type="text" th:value="${s.settingValue}" name="slogan_banner" class="form-control" id="slogan_banner">
+                            <div class="form-text">slogan banner giới thiệu cho trang chủ</div>
+                        </div>
+                    </th:block>
+                    
                 </div>
 
                 <!-- Contact Information -->
